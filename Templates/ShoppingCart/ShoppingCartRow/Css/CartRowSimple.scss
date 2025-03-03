@@ -1,0 +1,12 @@
+.shopping-cart-row{
+  margin-bottom: 15px!important;
+  align-items: center;
+  gap: 5px;
+  .shopping-cart-row__price-total{
+    margin: 0 0 0 auto ;
+  }
+  .shopping-cart-row__content{
+    flex-grow: 1;
+  }
+
+}

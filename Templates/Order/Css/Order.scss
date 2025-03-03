@@ -1,0 +1,11 @@
+.order-blocks{
+  .card{
+    padding: 30px;
+  }
+  > div + div{
+    margin-top: 30px
+  }
+  .form__row[type="hidden"], .form__row[data-type="submit"]{
+    display: none!important;
+  }
+}

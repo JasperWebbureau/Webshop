@@ -117,4 +117,8 @@ class WebshopProductGroup extends ModuleEntity
 	{
 		return $this->teaserTitle;
 	}
+	public function getWebshopProductChildren()
+	{
+		return (new \App\Webshop\Repository\WebshopProductRepository())->select()->where('`group_id` = ?',[ $this->getId()])->get();
+	}
 }

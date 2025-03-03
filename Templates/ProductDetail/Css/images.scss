@@ -1,0 +1,14 @@
+.product_detail__image{
+  figure{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 630px;
+    img{
+      border-radius: var(--border-radius);
+      height: 100%;
+
+    }
+  }
+
+}

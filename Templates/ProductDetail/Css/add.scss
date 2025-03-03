@@ -1,0 +1,44 @@
+.product_detail__add{
+  padding: 60px ;
+  border-radius: var(--border-radius);
+  //padding-left: 100px;
+  background: #646464;
+  form{
+    @include grid();
+    --button-height: var(--input-height);
+  }
+  .add-input{
+    display: flex;
+  }
+
+
+  .add__options{
+    display: flex;
+    gap: 5px;
+
+
+    .add__option{
+      padding:2px 5px;
+      --font-size: 12px;
+      align-items: center;
+      display: flex;
+      border: 1px solid #efefef;
+      ---link-hover-font-size: 12px;
+      &:hover{
+      background-color: #efefef;
+    }
+      .color{
+        width: 18px;
+        height: 18px;
+        border-radius: 20px;
+        margin-right:4px;
+
+      }
+    }
+  }
+  form{
+    .form__row + .button{
+     // margin-top: 15px;
+    }
+  }
+}

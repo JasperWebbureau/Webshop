@@ -14,11 +14,13 @@ class WebshopClientAdress  extends ModuleEntity{
 	/**
 	 * @FG\Column[type=primary]
 	 * @FG\listForm[0=]
+	 * @FG\clientAdress[ignore=true]
 	 */
 	private $id;
 	/**
 	 * @FG\Column[type=varchar,fill=title]
 	 * @FG\listForm[width=3]
+	 * @FG\clientAdress[width=6,label=Huis nummer]
 	 */
 	private $street;
 
@@ -26,15 +28,31 @@ class WebshopClientAdress  extends ModuleEntity{
 	/**
 	 * @FG\Column[type=varchar,fill=title]
 	 * @FG\listForm[width=3]
+	 * @FG\clientAdress[width=6,label=Straat]
 	 */
 	private $streetNr;
 	/**
 	 * @FG\Column[type=varchar,fill=title]
 	 * @FG\listForm[width=3]
+	 * @FG\clientAdress[width=6,label=Postcode]
 	 */
 	private $zipCode;
-	
 
+	/**
+	 * @FG\Column[type=varchar,fill=title]
+	 * @FG\listForm[width=3]
+	 * @FG\clientAdress[width=6,required=true,label=Woonplaats]
+	 */
+	private $city;
+
+
+	/**
+	 * @FG\Column[type=int,fill=title]
+	 * @FG\listForm[width=3]
+	 * @FG\clientAdress[ignore=true]
+	 */
+	private $clientId;
+    
 	public function __construct()
     {
 
@@ -94,5 +112,21 @@ class WebshopClientAdress  extends ModuleEntity{
 	public function getZipCode()
 	{
 		return $this->zipCode;
+	}
+	public function setCity( $value)
+	{
+		$this->city= $value;
+	}
+	public function getCity()
+	{
+		return $this->city;
+	}
+	public function setClientId( $value)
+	{
+		$this->clientId= $value;
+	}
+	public function getClientId()
+	{
+		return $this->clientId;
 	}
 }

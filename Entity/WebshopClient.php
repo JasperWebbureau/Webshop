@@ -14,6 +14,7 @@ class WebshopClient  extends ModuleEntity{
 	/**
 	 * @FG\Column[type=primary]
 	 * @FG\listForm[0=]
+	 * @FG\clientOrder[ignore=true]
 	 */
 	private $id;
 	
@@ -22,16 +23,30 @@ class WebshopClient  extends ModuleEntity{
 	/**
 	 * @FG\Column[type=varchar,fill=title,roles=share_title|title]
 	 * @FG\listForm[width=3]
+	 * @FG\clientOrder[width=6,label=Naam]
 	 */
 	private $name;
 
 	
 	/**
 	 * @FG\Column[type=varchar,fill=title,roles=share_title|title]
-	 * @FG\listForm[width=3]
+	 * @FG\listForm[width=6]
+	 * @FG\clientOrder[width=6,label=Achternaam]
 	 */
 	private $surname;
-	
+	/**
+	 * @FG\Column[type=email,0=fill]
+	 * @FG\listForm[width=3]
+	 * @FG\clientOrder[width=6,label=Email]
+	 */
+	private $email;
+	/**
+	 * @FG\Column[type=varchar]
+	 * @FG\listForm[width=6]
+	 * @FG\clientOrder[width=6,label=Telefoonnummer]
+	 */
+	private $phone;
+
 
 	public function __construct()
     {
@@ -60,5 +75,21 @@ class WebshopClient  extends ModuleEntity{
 	public function getSurname()
 	{
 		return $this->surname;
+	}
+	public function setEmail( $value)
+	{
+		$this->email= $value;
+	}
+	public function getEmail()
+	{
+		return $this->email;
+	}
+	public function setPhone( $value)
+	{
+		$this->phone= $value;
+	}
+	public function getPhone()
+	{
+		return $this->phone;
 	}
 }

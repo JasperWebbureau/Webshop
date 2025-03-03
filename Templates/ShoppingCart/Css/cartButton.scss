@@ -1,0 +1,41 @@
+.shopping-cart.shopping-cart--small{
+  position: relative;
+  .card__content{
+    border: 0px solid transparent;
+  }
+  .shopping-cart__content{
+
+    position: absolute;
+    top:110%;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .3s, top .3s;
+    min-width: 300px;
+    //padding: 20px;
+    right: 0;
+    gap:15px;
+    display: flex;
+  }
+  .card__total{
+    price{
+      margin:0 0  0 auto;
+    }
+  }
+
+  .card__footer , .card__total{
+    padding: 0 15px;
+    border-top: 1px solid #efefef;
+  }
+  .card__footer{
+    padding: 15px;
+  }
+  &:hover, &.show{
+    .shopping-cart__content{
+      box-shadow: var(--box-shadow);
+      position: absolute;
+      top:100%;
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+}

@@ -82,12 +82,20 @@ class WebshopProduct extends ModuleEntity
 
 
 
+
+
 	/**
 	 * @FG\Column[type=float,length={11,2}]
 	 * @FG\listForm[ignore=true,width=3]
 	 * @FG\Filter::default[type=checkbox]
 	 */
 	private $price;
+
+	/**
+	 * @FG\Column[type=float,length={11,2}]
+	 * @FG\listForm[ignore=true]
+	 */
+	private $vat;
 
 	/**
 	 * @FG\Column[type=float,length={11,2}]
@@ -338,5 +346,17 @@ class WebshopProduct extends ModuleEntity
 	public function getWebshopProductImageChildren()
 	{
 		return (new \App\Webshop\Repository\WebshopProductImageRepository())->select()->where('`group_id` = ?',[ $this->getId()])->get();
+	}
+	public function getWebshopProductGroupParent()
+	{
+		return (new \App\Webshop\Repository\WebshopProductGroupRepository())->select()->where('id = ?',[ $this->getGroupId()])->get()[0];
+	}
+	public function setVat( $value)
+	{
+		$this->vat= $value;
+	}
+	public function getVat()
+	{
+		return $this->vat;
 	}
 }

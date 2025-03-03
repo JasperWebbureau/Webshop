@@ -15,6 +15,7 @@ Class Cart{
     static $instance = null;
     public $data;
     private $orderPage = null;
+    private $cartPage = null;
     public function __construct()
     {
 
@@ -51,20 +52,23 @@ Class Cart{
             $id = $rq->getInt('id');
             $amount = $rq->getInt('amount');
 
-
         }
+
+
         $products = $this->data->get('products') ?: [];
+
         if(! empty($products[$id])){
+
             $products[$id]['amount'] += $amount;
         }else{
             $products[$id]['amount'] = $amount;
         }
-        $products[$id]['amount'] = 1;
+
         $this->data->set('products', $products);
 
 
         $response = new AjaxResponse('');
-        $response->setContainer('.shopping-cart-small-wrapper', (string)new TemplateResponse('Templates/Webshop/ShoppingCart/cartButton.php', ['force'=>true]));
+        $response->setContainer('.shopping-cart-small-wrapper', (string)new TemplateResponse('App/Webshop/Templates/ShoppingCart/cartButton.php', ['force'=>true]));
         return $response;
     }
 
@@ -118,12 +122,27 @@ Class Cart{
 
     public function getOrderPage()
     {
-        new Settings();
+
         if($this->orderPage == null){
+            new Settings();
             $pageRepository = new \Flexgrid\Repository\PageRepository();
             $this->orderPage = $pageRepository->findById(\ Flexgrid\App\Settings\Settings::Page('shopping-order'));
         }
 
         return $this->orderPage;
     }
+
+    public function getCartPage()
+    {
+
+        if($this->cartPage == null){
+            new Settings();
+            $pageRepository = new \Flexgrid\Repository\PageRepository();
+            $this->cartPage = $pageRepository->findById(\ Flexgrid\App\Settings\Settings::Page('shopping-cart'));
+        }
+
+        return $this->cartPage;
+    }
+
+
 }

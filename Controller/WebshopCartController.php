@@ -22,15 +22,14 @@ use Response\TemplateResponse;
 class WebshopCartController extends Controller
 {
     /**
-     * @FG\Template [name=Cart , icon=fas fa-arrows-h];
+     * @FG\Template [name=Cart , icon=fas fa-shopping-cart];
      */
     public function Cart()
     {
-
-        $response =  new TemplateResponse('' ,[
-            'entityCollection'=>$this->getRepository()->getAll($limit), 'card'=>$card]);
+        $response =  new TemplateResponse('App/Webshop/Templates/ShoppingCart/cartButton.php' ,[]);
 
         return $response;
     }
+
 
 }
