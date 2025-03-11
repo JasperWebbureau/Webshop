@@ -5,6 +5,7 @@ use App\Webshop\Client\Client;
 use App\Webshop\Delivery\Delivery;
 use App\Webshop\Entity\WebshopClient;
 use App\Webshop\Entity\WebshopClientAdress;
+use App\Webshop\Entity\WebshopDeliveryMethod;
 use App\Webshop\Entity\WebshopOrder;
 use App\Webshop\Entity\WebshopOrderRow;
 use App\Webshop\Entity\WebshopProduct;
@@ -40,6 +41,7 @@ class Orders{
             // the order hasn't been placed yet.
             $result = $this->validateOrderData();
             if($result['result'] == false){
+
                 return false;
             }
             // ok everything is set:)
@@ -78,6 +80,7 @@ class Orders{
     {
         $client = $result['client']['class']->add();
         $address = $result['address']['class']->add($client->getId());
+        $delivery = $result['delivery']['class'];
 
         $order = new WebshopOrder();
         $order->setClientId($client->getId());
@@ -114,6 +117,17 @@ class Orders{
         }
         //clear cart here
 
+        //check for delivery costs
+        $deliveryMethod = $delivery->getSelected();
+        /**
+         * @var WebshopDeliveryMethod $deliveryMethod;
+         */
+
+        if($deliveryMethod->getPrice() > 0){
+
+            $price->add($deliveryMethod->getPrice());
+        };
+
         $mollie = new Mollie();
         $mollie
             ->setPrice($price)
@@ -133,45 +147,42 @@ class Orders{
     }
     public function validateOrderData()
     {
-        if(self::$validated !== null){
-            return self::$validated;
-        }
-        self::$validated = ['result'=>true];
         //now check if we have all the data;
-
+        $validated = ['result'=>true];
         $client = new Client();
         $clientArray = $client->validate();
-        self::$validated['client']['errors'] = $clientArray;
-        self::$validated['client']['class'] = $client;
+        $validated['client']['errors'] = $clientArray;
+     $validated['client']['class'] = $client;
         if(!empty($clientArray)){
-            self::$validated['result'] = false;
+            $validated['result'] = false;
         }
+
 
         $address = new Adress();
         $addressArray = $address->validate();
-        self::$validated['address']['errors'] = $addressArray;
-        self::$validated['address']['class'] = $address;
+     $validated['address']['errors'] = $addressArray;
+     $validated['address']['class'] = $address;
         if(!empty($addressArray)){
-            self::$validated['result'] = false;
+         $validated['result'] = false;
         }
 
         $payment = new Payment();
         $paymentArray = $payment->validate();
-        self::$validated['payment']['errors'] = $paymentArray;
-        self::$validated['payment']['class'] = $payment;
+     $validated['payment']['errors'] = $paymentArray;
+     $validated['payment']['class'] = $payment;
         if(!empty($paymentArray)){
-            self::$validated['result'] = false;
+         $validated['result'] = false;
         }
 
         $delivery = new Delivery();
         $deliveryArray =  $delivery->validate();
-        self::$validated['delivery']['errors'] = $deliveryArray;
-        self::$validated['delivery']['class'] = $delivery;
+     $validated['delivery']['errors'] = $deliveryArray;
+     $validated['delivery']['class'] = $delivery;
         if(!empty($deliveryArray)){
-            self::$validated['result'] = false;
+         $validated['result'] = false;
         }
 
-        return self::$validated ;
+        return $validated ;
 
 
     }
@@ -191,7 +202,7 @@ class Orders{
     public function getPlaceOrderPage()
     {
         if($this->placeOrderPage == null){
-            new Settings();
+            new \Flexgrid\App\Settings\Settings();
             $pageRepository = new \Flexgrid\Repository\PageRepository();
             $this->placeOrderPage = $pageRepository->findById(\ Flexgrid\App\Settings\Settings::Page('place-order'));
         }

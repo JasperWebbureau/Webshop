@@ -108,12 +108,16 @@ class WebshopProductController extends ModuleController
     /**
      * @FG\Template [name=Product Overzicht , icon=fas fa-bars];
      */
-    public function product( $limit = '999', $width = '')
+    public function product( $limit = '999', $width = '', $usePagination = '1')
     {
-
         $showMainArticlesFirst = 0;
         // PageResponse::addAsset('Templates/Modules/Product/Card/Css/'.$card. '.scss');
         $productRepo =  (new WebshopProductRepository());
+        $productRepo->setPagination(true);
+        if($usePagination != 'true'){
+
+            $productRepo->setPagination(false);
+        }
         $entity = FlexGrid::getApp()->server->getPath()->getEntity();
 
         $filters = $this->getFilters();
@@ -134,10 +138,14 @@ class WebshopProductController extends ModuleController
             }
             $products = $select->get();
         }else{
-            $products = $productRepo->getAll($limit);
+            $products = $productRepo->getAll($limit, null, $filters['query']);
         }
 
-        $response = new TemplateResponse('App/Webshop/Templates/Product/grid.php', ['products'=>$products, 'width'=>$width ]);;
+        $response = new TemplateResponse('App/Webshop/Templates/Product/grid.php',
+            [
+                'products'=>$products,
+                'width'=>$width,
+                'pagination'=>$productRepo->getPagination($limit) ]);;
         if($this->request->get('ajax') == 'true' ){
             $ajax = new AjaxResponse();
             $ajax->setContainer('[data-filter-result="'. md5(get_class($this)). '"]',(string)$response);

@@ -42,7 +42,18 @@ Class Cart{
             $products = $this->data->get('products') ?: [];
             unset($products[$id]);
             $this->data->set('products', $products);
+
         }
+
+        $response = new AjaxResponse('');
+        if($_REQUEST['container'] == 'wrapper'){
+            $response->setContainer('.cart--wrapper', (string)new TemplateResponse('App/Webshop/Templates/ShoppingCart/cartOverview.php', ['force'=>true,'editable'=>true]));
+
+        }
+        $response->setContainer('.shopping-cart-small-wrapper', (string)new TemplateResponse('App/Webshop/Templates/ShoppingCart/cartButton.php', ['force'=>true]));
+
+
+        return $response;
     }
     public function addArticle($id = null, $amount = null)
     {
@@ -58,19 +69,27 @@ Class Cart{
         $products = $this->data->get('products') ?: [];
 
         if(! empty($products[$id])){
-
-            $products[$id]['amount'] += $amount;
+            if($_REQUEST['container'] == 'wrapper'){
+                $products[$id]['amount'] = $amount;
+            }else {
+                $products[$id]['amount'] += $amount;
+            }
         }else{
             $products[$id]['amount'] = $amount;
         }
 
         $this->data->set('products', $products);
-
-
         $response = new AjaxResponse('');
+        if($_REQUEST['container'] == 'wrapper'){
+            $response->setContainer('.cart--wrapper', (string)new TemplateResponse('App/Webshop/Templates/ShoppingCart/cartOverview.php', ['force'=>true,'editable'=>true]));
+
+        }
         $response->setContainer('.shopping-cart-small-wrapper', (string)new TemplateResponse('App/Webshop/Templates/ShoppingCart/cartButton.php', ['force'=>true]));
-        return $response;
+
+
+     return $response;
     }
+
 
 
     public function getProductAmount()

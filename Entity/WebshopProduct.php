@@ -80,14 +80,10 @@ class WebshopProduct extends ModuleEntity
 	 */
 	private $type;
 
-
-
-
-
 	/**
 	 * @FG\Column[type=float,length={11,2}]
 	 * @FG\listForm[ignore=true,width=3]
-	 * @FG\Filter::default[type=checkbox]
+	 * @FG\Filter::default[type=range,html_title=Prijs]
 	 */
 	private $price;
 
@@ -100,7 +96,6 @@ class WebshopProduct extends ModuleEntity
 	/**
 	 * @FG\Column[type=float,length={11,2}]
 	 * @FG\listForm[ignore=true,width=3]
-	 * @FG\Filter::default[type=checkbox]
 	 */
 	private $priceDiscount;
 

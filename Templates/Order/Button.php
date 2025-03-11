@@ -3,14 +3,15 @@
  * @var $orders \App\Webshop\Webshop\Orders;
  */
 
-$result = $orders->validateOrderData();
+    $result = $orders->validateOrderData();
+
 ?>
 
 <?php if(! __AJAX__){ ?>
 <div class="card card--order card--order-button">
 <?php } ?>
 
-<?php if($result['result'] == 1){ ?>
+<?php if($result['result'] !== false){ ?>
     <a href="<?=__DOMAIN__ . '/'. $orders->getPlaceOrderPage()->getUrl()?>" class="button button-primary">
         Bestellen
     </a>
@@ -22,9 +23,7 @@ $result = $orders->validateOrderData();
                     <?= App\Webshop\Webshop\Orders::getErrorMessage($key, $value);?>
                 </div>
             <?php }
-
         }
-
         ?>
 
 

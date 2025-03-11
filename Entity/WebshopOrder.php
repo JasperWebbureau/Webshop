@@ -7,7 +7,7 @@ use Mollie\Api\Resources\Order;
 use Repository\ModuleEntity;
 use Utils\_Mail;
 
-/**
+	/**
 	 * @FG\Entity[name=WebshopOrder,repository=WebshopOrderRepository,type=Webshop]
 	 * Class Faq
 	 * @package App\Entity

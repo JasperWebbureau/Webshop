@@ -9,7 +9,7 @@
     $form->addEvent($event);
     $form->getFormElement()->setAttribute('ajax', 'true');
     $form->getFormElement()->setAttribute('onfocusout', '$(this).trigger(\'submit\')');
-
+    $form->getFormElement()->setAttribute('onfocusin', 'clearAjaxFormTimeout(this)');
 
 ?>
 <?php if(! __AJAX__){ ?>

@@ -1,5 +1,6 @@
 <?php
 $cart = App\Webshop\Cart\Cart::getInstance();
+$productsList = $cart->getProducts();
 
 $total = 0;
 \Response\PageResponse::addAsset('App/Webshop/Templates/ShoppingCart/Css/cartButton.scss');
@@ -17,9 +18,14 @@ if($_REQUEST['ajax'] == true){
         <i class="fas fa-shopping-cart"></i>
     </div>
     <div class="card shopping-cart__content ">
+        <?php if(empty($productsList)) { ?>
+            <div class="">
+                Uw winkel wagen is nog leeg
+            </div>
+        <?php }else { ?>
         <div class="card__content">
             <?php
-            $productsList = $cart->getProducts();
+
 
             $productRepository = new \App\Webshop\Repository\WebshopProductRepository();
             foreach ($productsList as $productId=>$list){
@@ -40,12 +46,14 @@ if($_REQUEST['ajax'] == true){
 
         </div>
         <div class="card__footer">
-            <a href="<?=__DOMAIN__ . '/'. $cart->getOrderPage()->getUrl()?>" class="button button-primary">Bestellen</a>
-            <a href="<?=__DOMAIN__ . '/'. $cart->getCartPage()->getUrl()?>" class="button button-secondary">winkelWagen</a>
+            <a href="<?=__DOMAIN__ . '/'. $cart->getOrderPage()->getUrl()?>" class="button button-secondary">Bestellen</a>
+            <a href="<?=__DOMAIN__ . '/'. $cart->getCartPage()->getUrl()?>" class="button button-primary">Winkel Wagen</a>
         </div>
+        <?php } ?>
     </div>
 
 </div>
+
 <?php if($_REQUEST['ajax'] == true){  ?>
     <script>
 

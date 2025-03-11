@@ -17,7 +17,6 @@ class Delivery{
     public function getDeliveryMethods()
     {
         return $this->getAll();
-        return [['name'=>'Verzenden'],['name'=>'Ophalen']];
     }
 
     public function edit()
@@ -67,5 +66,11 @@ class Delivery{
             self::$methods = (new WebshopDeliveryMethodRepository())->getAll();
         }
         return self::$methods;
+    }
+    public function getSelected()
+    {
+
+
+        return (new WebshopDeliveryMethodRepository())->findById($this->session->get('delivery'));
     }
 }

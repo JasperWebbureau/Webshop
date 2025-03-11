@@ -31,5 +31,13 @@ class WebshopCartController extends Controller
         return $response;
     }
 
+    /**
+     * @FG\Template [name=Winkelwagen overzicht , icon=fas fa-shopping-cart];
+     */
+    public function CartOverview()
+    {
+        $response =  new TemplateResponse('App/Webshop/Templates/ShoppingCart/cartOverview.php' ,['editable'=>true]);
 
+        return $response;
+    }
 }

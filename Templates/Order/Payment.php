@@ -20,7 +20,7 @@ foreach($payment->getPaymentMethods() as $paymentMethod){
 ?>
 
 
-<div class="card card--order">
+<div class="card card--order card--payment">
 
     <div class="card__content>">
         <h3>Betaalwijze</h3>

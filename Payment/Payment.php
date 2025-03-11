@@ -2,6 +2,7 @@
 namespace App\Webshop\Payment;
 use App\Webshop\Entity\WebshopDeliveryMethod;
 use App\Webshop\Repository\WebshopDeliveryMethodRepository;
+use Response\AjaxResponse;
 use Utils\_Session;
 
 class Payment{
@@ -13,9 +14,19 @@ class Payment{
     }
     public function edit()
     {
-        $this->session->set('payment', $_REQUEST['payment']['payment']);
-        //dump($this->session->getArray());
 
+        $this->session->set('payment', $_REQUEST['payment']['payment']);
+
+        //dump($this->session->getArray());
+        if(__AJAX__){
+
+            $response = new AjaxResponse('');
+
+            $response->setContainer('.card--payment', (string)(new \App\Webshop\Controller\WebshopOrderController())->PaymentMethod());
+            $response->setContainer('.card--order-button', (string)(new \App\Webshop\Controller\WebshopOrderController())->OrderButton());
+
+            return $response;
+        }
     }
 
 

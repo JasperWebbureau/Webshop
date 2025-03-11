@@ -13,6 +13,7 @@ class Client{
     public function __construct()
     {
         $this->session= new _Session('webshopClient');
+
     }
 
     public function load()
@@ -27,6 +28,7 @@ class Client{
             self::$user = $this->getRepository()->getNew();
             self::$user->populate($this->session->getArray());
         }
+
         return  self::$user;
     }
 
@@ -41,20 +43,21 @@ class Client{
             $this->session->set($key, $value);
         }
 
+
+
         if(__AJAX__){
             $response = new AjaxResponse('');
 
             $response->setContainer('.card--client', (string)(new \App\Webshop\Controller\WebshopOrderController())->User());
+
             $response->setContainer('.card--order-button', (string)(new \App\Webshop\Controller\WebshopOrderController())->OrderButton());
+
             return $response;
         }
-        $this->save();
-    }
-
-    public function save()
-    {
 
     }
+
+
     public function getForm($name = 'client')
     {
         $user = $this->load();
