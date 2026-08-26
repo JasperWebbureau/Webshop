@@ -82,6 +82,19 @@
     font-size: 25px;
     line-height: 1;
     text-decoration: none;
+    cursor: pointer;
+    transition: color 160ms ease, transform 160ms ease;
+  }
+
+  .webshop-product-card2__favorite:hover,
+  .webshop-product-card2__favorite:focus {
+    color: #6f1830;
+    outline: none;
+    transform: scale(1.06);
+  }
+
+  .webshop-product-card2__favorite.is-favorite {
+    color: #6f1830;
   }
 
   .webshop-product-card2__content {

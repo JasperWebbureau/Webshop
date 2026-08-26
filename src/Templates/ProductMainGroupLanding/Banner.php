@@ -45,9 +45,7 @@ $buttonUrl = $entity->getDetailUrl($productGroupPageId);
                 </button>
             <?php } ?>
         <?php } ?>
-        <?php if (trim((string)$buttonText) !== '') { ?>
-            <a class="button button-primary" href="<?=$buttonUrl?>"><?=htmlspecialchars((string)$buttonText, ENT_QUOTES, 'UTF-8')?></a>
-        <?php } ?>
+
     </div>
     <div class="webshop-main-group-banner__image">
         <img src="<?=$image->getResizeUrl(1280, 720, 1)?>" alt="<?=$title?>" loading="eager">

@@ -3,6 +3,7 @@
  * @var $entity \Flexgrid\Modules\Webshop\Entity\WebshopProduct
  */
 
+use Flexgrid\Response\TemplateResponse;
 use Flexgrid\Utils\_Color;
 
 $product = $entity;
@@ -84,9 +85,9 @@ $pricePrefix = count($variantProducts) > 1 ? t('webshop_product_card_from', 'Van
         <?php if ($badgeText !== '') { ?>
             <span class="webshop-product-card2__badge <?=$badgeClass?>"><?=$badgeText?></span>
         <?php } ?>
-        <a class="webshop-product-card2__favorite" href="<?=$detailUrl?>" aria-label="<?=$title?>">
-            <i class="far fa-heart" aria-hidden="true"></i>
-        </a>
+        <?=new TemplateResponse('Flexgrid/Modules/Webshop/src/Templates/Cards/Snippets/ProductCard2Favorite.php', [
+            'product' => $product,
+        ])?>
     </div>
 
     <div class="webshop-product-card2__content">

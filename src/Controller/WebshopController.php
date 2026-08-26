@@ -227,6 +227,13 @@ class WebshopController extends ModuleController
             ]),
             true
         );
+        $response->setContainer(
+            '[data-webshop-product-card2-favorite="' . $productId . '"]',
+            (string)new TemplateResponse('Flexgrid/Modules/Webshop/src/Templates/Cards/Snippets/ProductCard2Favorite.php', [
+                'product' => $product,
+            ]),
+            true
+        );
         $response->setContainer('.webshop-favorite-summary', (string)$this->favoriteSummary(), true);
         $response->setContainer('.js-webshop-favorite-count', (string)count($favoriteService->getItems()));
         $response->setContainer('.webshop-favorite-page', (string)$this->favoritePage(), true);
