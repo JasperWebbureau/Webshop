@@ -1,0 +1,16 @@
+.webshop-main-group-slider {
+  --webshop-main-green: #183d35;
+  --webshop-main-cream: #f7f2e8;
+
+  //padding: 28px clamp(18px, 5vw, 54px) 52px;
+  background: var(--webshop-main-cream);
+
+  h2 {
+    margin: 0 0 22px;
+
+  }
+
+  .webshop-main-group-slider__grid {
+    //row-gap: 28px;
+  }
+}

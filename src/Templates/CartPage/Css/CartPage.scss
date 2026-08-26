@@ -1,0 +1,353 @@
+:root{
+  --webshop-cart-surface: var(--off-white, #fffcf7);
+  --webshop-cart-card-surface: color-mix(in srgb, var(--webshop-cart-surface) 78%, #fff);
+  --webshop-cart-border: color-mix(in srgb, var(--secondary) 18%, var(--border-color));
+  --webshop-cart-accent: var(--primary);
+  --webshop-cart-title: var(--secondary);
+  --webshop-cart-muted: var(--muted);
+
+}
+
+.webshop-cart-page {
+
+
+
+
+  .webshop-cart-page__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: clamp(28px, 4vw, 58px);
+  }
+
+  .webshop-cart-page__title {
+    p {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 22px;
+      margin: 0 0 22px;
+      color: var(--webshop-cart-accent);
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+
+      &::after {
+        width: 76px;
+        height: 2px;
+        background: currentColor;
+        content: "";
+      }
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--webshop-cart-title);
+      line-height: 0.95;
+    }
+  }
+
+  .webshop-cart-page__clear {
+    --button-height: 44px;
+    --button-background: transparent;
+    --button-hover-background: var(--webshop-cart-accent);
+    --button-color: var(--webshop-cart-accent);
+    --button-hover-color: var(--off-white, #fff);
+    --button-border-color: var(--webshop-cart-accent);
+    --button-hover-border-color: var(--webshop-cart-accent);
+    --button-border-radius: 999px;
+    --button-font-size: 14px;
+
+    flex: 0 0 auto;
+    gap: 8px;
+    box-shadow: none;
+  }
+
+  .webshop-cart-page__items {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .webshop-cart-page__empty {
+    display: flex;
+    min-height: 280px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 40px 20px;
+    text-align: center;
+
+    i {
+      color: var(--webshop-cart-accent);
+      font-size: 36px;
+    }
+
+    h2,
+    p {
+      margin: 0;
+    }
+
+    h2 {
+      color: var(--webshop-cart-title);
+    }
+
+    p {
+      color: var(--webshop-cart-muted);
+    }
+  }
+
+  .webshop-cart-page__item {
+    display: grid;
+    grid-template-columns: minmax(120px, 204px) minmax(220px, 1fr) 116px 140px 48px;
+    align-items: center;
+    gap: clamp(18px, 2.2vw, 36px);
+    padding: clamp(14px, 1.5vw, 22px);
+    border: 1px solid var(--webshop-cart-border);
+    border-radius: 0;
+    background: var(--webshop-cart-card-surface);
+  }
+
+  .webshop-cart-page__image {
+    aspect-ratio: 1.18;
+    overflow: hidden;
+    background: var(--default-background);
+
+    img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+  }
+
+  .webshop-cart-page__info {
+    h3 {
+      max-width: 520px;
+      margin: 0 0 18px;
+      color: var(--webshop-cart-title);
+      font-size: clamp(24px, 2vw, 34px);
+      font-weight: 500;
+      line-height: 1.18;
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+    }
+
+    span {
+      color: var(--webshop-cart-muted);
+      font-size: 14px;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+  }
+
+  .webshop-cart-page__quantity {
+    form {
+      display: block;
+    }
+
+    label {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      color: var(--webshop-cart-color, var(--color));
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    input {
+      width: 100%;
+      min-height: 58px;
+      padding: 0 18px;
+      border: 1px solid var(--webshop-cart-border);
+      border-radius: 0;
+      background: var(--webshop-cart-surface);
+      color: var(--webshop-cart-title);
+      font: inherit;
+      font-size: 18px;
+    }
+
+    input:focus {
+      border-color: var(--webshop-cart-accent);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--webshop-cart-accent) 12%, transparent);
+      outline: none;
+    }
+  }
+
+  .webshop-cart-page__price {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    color: var(--webshop-cart-title);
+    font-size: 22px;
+    font-weight: 800;
+    text-align: right;
+
+    small {
+      color: var(--webshop-cart-muted);
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.25;
+    }
+  }
+
+  .webshop-cart-page__remove {
+    .button {
+      --button-height: 50px;
+      --button-background: var(--webshop-cart-accent);
+      --button-hover-background: var(--webshop-cart-title);
+      --button-color: var(--off-white, #fff);
+      --button-hover-color: var(--off-white, #fff);
+      --button-border-color: var(--webshop-cart-accent);
+      --button-hover-border-color: var(--webshop-cart-title);
+      --button-border-radius: 0;
+
+      box-shadow: none;
+    }
+  }
+
+  .webshop-cart-page__summary {
+    .panel {
+      position: sticky;
+      top: 20px;
+      overflow: hidden;
+      border: 1px solid var(--webshop-cart-border);
+      border-radius: 0;
+      background: var(--webshop-cart-card-surface);
+      box-shadow: none;
+    }
+
+    .panel__header {
+      padding: clamp(24px, 2.5vw, 38px) clamp(22px, 2.5vw, 38px) 18px;
+      border-top: 3px solid var(--webshop-cart-accent);
+      border-bottom: 1px solid color-mix(in srgb, var(--webshop-cart-border) 70%, transparent);
+
+      h3 {
+        margin: 0;
+        color: var(--webshop-cart-title);
+        font-size: clamp(28px, 2vw, 38px);
+        font-weight: 500;
+        line-height: 1;
+      }
+    }
+
+    .panel__body {
+      padding: clamp(22px, 2.4vw, 38px);
+    }
+
+    .button {
+      --button-height: 70px;
+      --button-border-radius: 0;
+      --button-font-size: 18px;
+      --button-font-weight: 800;
+      --button-letter-spacing: 0;
+      --button-box-shadow: none;
+      --button-hover-box-shadow: none;
+      max-width: none;
+    }
+
+    .button-primary {
+      --button-background: var(--webshop-cart-accent);
+      --button-hover-background: var(--webshop-cart-title);
+      --button-border-color: var(--webshop-cart-accent);
+      --button-hover-border-color: var(--webshop-cart-title);
+    }
+
+    .button-outline {
+      --button-background: transparent;
+      --button-hover-background: var(--webshop-cart-accent);
+      --button-color: var(--webshop-cart-accent);
+      --button-hover-color: var(--off-white, #fff);
+      --button-border-color: var(--webshop-cart-accent);
+      --button-hover-border-color: var(--webshop-cart-accent);
+    }
+
+    .button + .button {
+      margin-top: 14px;
+    }
+  }
+
+  .webshop-cart-page__summary-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 22px;
+    color: var(--webshop-cart-color, var(--color));
+    font-size: 18px;
+
+    strong {
+      color: var(--webshop-cart-title);
+      font-size: 20px;
+      white-space: nowrap;
+    }
+  }
+
+  .webshop-cart-page__summary-note {
+    max-width: 340px;
+    margin: 6px 0 30px;
+    color: var(--webshop-cart-muted);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .webshop-cart-page__configuration-error {
+    margin: 0 0 18px;
+    padding: 10px 12px;
+    border: 1px solid color-mix(in srgb, var(--urgent) 32%, var(--border-color));
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--urgent) 8%, #fff);
+    color: var(--urgent);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 980px) {
+    .webshop-cart-page__item {
+      grid-template-columns: 120px minmax(0, 1fr) 108px 48px;
+    }
+
+    .webshop-cart-page__price {
+      grid-column: 2 / 4;
+      flex-direction: row;
+      justify-content: space-between;
+      text-align: left;
+    }
+
+    .webshop-cart-page__remove {
+      grid-column: 4;
+      grid-row: 1;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .webshop-cart-page__header {
+      flex-direction: column;
+    }
+
+    .webshop-cart-page__item {
+      grid-template-columns: 96px minmax(0, 1fr) 44px;
+      gap: 14px;
+    }
+
+    .webshop-cart-page__quantity,
+    .webshop-cart-page__price {
+      grid-column: 1 / 4;
+    }
+
+    .webshop-cart-page__remove {
+      grid-column: 3;
+      grid-row: 1;
+    }
+
+    .webshop-cart-page__remove .button {
+      --button-height: 44px;
+    }
+  }
+}

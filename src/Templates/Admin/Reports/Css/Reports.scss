@@ -1,0 +1,52 @@
+.webshop-admin-reports {
+  .webshop-admin-reports__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+
+  .webshop-admin-reports__stat {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 28px;
+    line-height: 1.2;
+  }
+
+  .panel__body span {
+    display: block;
+  }
+
+  .webshop-admin-reports__table {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .webshop-admin-reports__row {
+    display: grid;
+    grid-template-columns: 1fr 0.7fr 1fr 0.7fr 1fr;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+  }
+
+  .webshop-admin-reports__row--head {
+    font-weight: 700;
+    background: var(--background-light);
+  }
+
+  @media (max-width: 900px) {
+    .webshop-admin-reports__header,
+    .webshop-admin-reports__row {
+      grid-template-columns: 1fr;
+    }
+
+    .webshop-admin-reports__header {
+      display: grid;
+    }
+  }
+}

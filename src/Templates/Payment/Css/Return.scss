@@ -1,0 +1,106 @@
+.webshop-payment-return {
+  .webshop-payment-return__hero {
+    display: flex;
+    min-height: 240px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 40px 20px;
+    text-align: center;
+
+    h1,
+    p {
+      margin: 0;
+    }
+
+    p {
+      max-width: 640px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+  }
+
+  .webshop-payment-return__icon {
+    width: 58px;
+    height: 58px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--primary) 14%, transparent);
+    color: var(--primary);
+    font-size: 24px;
+  }
+
+  &.webshop-payment-return--failed,
+  &.webshop-payment-return--cancelled,
+  &.webshop-payment-return--missing {
+    .webshop-payment-return__icon {
+      background: color-mix(in srgb, var(--urgent) 14%, transparent);
+      color: var(--urgent);
+    }
+  }
+
+  &.webshop-payment-return--pending {
+    .webshop-payment-return__icon {
+      background: color-mix(in srgb, var(--muted) 14%, transparent);
+      color: var(--muted);
+    }
+  }
+
+  .webshop-payment-return__details {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 0;
+
+    div {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    div:last-child {
+      border-bottom: 0;
+    }
+
+    dt {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    dd {
+      margin: 0;
+      font-weight: 700;
+      text-align: right;
+    }
+  }
+
+  .webshop-payment-return__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    p {
+      margin-top: 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .webshop-payment-return__details div {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .webshop-payment-return__details dd {
+      text-align: left;
+    }
+  }
+}

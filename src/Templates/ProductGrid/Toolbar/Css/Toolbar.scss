@@ -1,0 +1,49 @@
+.grid-toolbar {
+  --h3-margin-bottom:0px;
+  .grid-toolbar__summary{
+    align-self: center;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+
+  }
+  .grid-toolbar-sort{
+    display: flex;
+    justify-content: flex-end;
+    .grid-toolbar-sort__block{
+      display:flex;
+      max-width: 300px;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 12px;
+      span{
+        --font-family: var(--h2-font-family);
+      }
+      select{
+        background: var(--filters-sort-select-background);
+        option{
+          background: var(--body-background);
+        }
+      }
+    }
+  }
+  .grid-toolbar__bottom{
+     .filter__panel-toggle{
+      display:none!important;
+    }
+    .filter__active{
+      display:flex;
+      flex-direction: row;
+      --button-height: 40px;
+      justify-content: flex-start;
+      align-items: center;
+    }
+    .filter__title{
+
+        display:none!important;
+
+
+    }
+  }
+
+}

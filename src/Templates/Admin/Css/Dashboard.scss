@@ -1,0 +1,24 @@
+.webshop-admin-dashboard {
+  .webshop-admin-dashboard__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 18px;
+  }
+
+  .panel {
+    height: 100%;
+  }
+
+  .panel__body {
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  .webshop-admin-dashboard__stat {
+    display: block;
+    font-size: 28px;
+    line-height: 1.2;
+  }
+}

@@ -1,0 +1,52 @@
+.webshop-admin-invoices,
+.webshop-admin-invoice-detail {
+  .webshop-admin-invoices__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+
+  .webshop-admin-invoices__table {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .webshop-admin-invoices__row {
+    display: grid;
+    grid-template-columns: 1.2fr 1.3fr 1.4fr 0.8fr 0.8fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+
+    span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+    }
+  }
+
+  .webshop-admin-invoice-detail__line,
+  .webshop-admin-invoice-detail__total {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .webshop-admin-invoice-detail__total {
+    border-bottom: 0;
+    font-size: 18px;
+  }
+
+  @media (max-width: 900px) {
+    .webshop-admin-invoices__row {
+      grid-template-columns: 1fr;
+    }
+  }
+}

@@ -1,0 +1,50 @@
+.webshop-favorite-page {
+  .webshop-favorite-page__header {
+    margin-bottom: 28px;
+
+    h1,
+    p {
+      margin: 0;
+    }
+
+    p {
+      margin-top: 8px;
+      color: var(--muted);
+    }
+  }
+
+  .webshop-favorite-page__grid {
+    row-gap: 28px;
+  }
+
+  .webshop-favorite-page__empty {
+    display: flex;
+    min-height: 300px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 44px 20px;
+    text-align: center;
+
+    i {
+      color: var(--primary);
+      font-size: 36px;
+    }
+
+    h2,
+    p {
+      margin: 0;
+    }
+
+    p {
+      color: var(--muted);
+    }
+  }
+
+  @media (max-width: 692px) {
+    .webshop-favorite-page__grid {
+      row-gap: 20px;
+    }
+  }
+}

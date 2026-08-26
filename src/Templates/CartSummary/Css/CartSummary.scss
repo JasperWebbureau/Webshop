@@ -1,0 +1,178 @@
+.webshop-header-summary {
+  --webshop-header-summary-color: var(--secondary, var(--primary));
+  --webshop-header-summary-count-color: var(--off-white, #fff);
+  --webshop-header-summary-surface: var(--background, #fff);
+
+  position: relative;
+  display: inline-block;
+  font-weight: 700;
+  outline: 0;
+  &:before{
+    position: absolute;
+    height: 30px;
+    bottom:100%;
+    left:0;
+    right:0;
+    content:"";
+  }
+  .webshop-header-summary__trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--webshop-header-summary-color);
+    text-decoration: none;
+  }
+
+  .webshop-header-summary__icon {
+    display: inline-flex;
+    color: inherit;
+  }
+
+  .webshop-header-summary__count {
+    min-width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 7px;
+    border-radius: 999px;
+    background: var(--webshop-header-summary-color);
+    color: var(--webshop-header-summary-count-color);
+    font-size: 13px;
+    line-height: 1;
+  }
+
+  .webshop-header-summary__popover {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    z-index: 20;
+    width: min(360px, calc(100vw - 28px));
+    padding: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--webshop-header-summary-surface);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.14);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-4px);
+    transition: opacity 160ms ease, transform 160ms ease;
+  }
+
+  &:hover .webshop-header-summary__popover,
+  &:focus-within .webshop-header-summary__popover {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .webshop-header-summary__popover-header,
+  .webshop-header-summary__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .webshop-header-summary__popover-header {
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+
+    span {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 400;
+    }
+  }
+
+  .webshop-header-summary__items {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px 0;
+  }
+
+  .webshop-header-summary__item {
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+    color: inherit;
+    font-size: 14px;
+    text-decoration: none;
+  }
+
+  .webshop-header-summary__item:not(:has(.webshop-header-summary__item-image)) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .webshop-header-summary__item-image {
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 6px;
+    background: var(--default-background);
+
+    img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+  }
+
+  .webshop-header-summary__item-content {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 3px;
+
+    strong,
+    small {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    small {
+      color: var(--muted);
+      font-weight: 400;
+    }
+  }
+
+  .webshop-header-summary__empty,
+  .webshop-header-summary__more {
+    margin: 12px 0;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  .webshop-header-summary__configuration-error {
+    margin: 12px 0;
+    padding: 10px 12px;
+    border: 1px solid color-mix(in srgb, var(--urgent) 32%, var(--border-color));
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--urgent) 8%, #fff);
+    color: var(--urgent);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  .webshop-header-summary__actions {
+    padding-top: 10px;
+    border-top: 1px solid var(--border-color);
+  }
+
+  @media (max-width: 520px) {
+    .webshop-header-summary__popover {
+      right: -12px;
+    }
+
+    .webshop-header-summary__actions {
+      align-items: stretch;
+      flex-direction: column;
+    }
+  }
+}

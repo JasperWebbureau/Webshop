@@ -1,0 +1,77 @@
+:root {
+  --webshop-pagination-gap: 28px;
+  --webshop-pagination-margin: 24px 0;
+  --webshop-pagination-color: var(--color);
+  --webshop-pagination-color-hover: var(--theme-color, var(--primary));
+  --webshop-pagination-active-color: var(--theme-color, var(--primary));
+  --webshop-pagination-font-family: var(--font-family);
+  --webshop-pagination-font-size: var(--font-size);
+  --webshop-pagination-font-weight: 600;
+  --webshop-pagination-link-size: 34px;
+  --webshop-pagination-underline-height: 2px;
+  --webshop-pagination-underline-offset: -3px;
+}
+
+.webshop-product-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--webshop-pagination-gap);
+  margin: var(--webshop-pagination-margin);
+  color: var(--webshop-pagination-color);
+  font-family: var(--webshop-pagination-font-family);
+  font-size: var(--webshop-pagination-font-size);
+  font-weight: var(--webshop-pagination-font-weight);
+
+  &.is-empty {
+    display: none;
+  }
+
+  .webshop-product-pagination__link {
+    position: relative;
+    display: inline-flex;
+    min-width: var(--webshop-pagination-link-size);
+    min-height: var(--webshop-pagination-link-size);
+    align-items: center;
+    justify-content: center;
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+
+    &::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: var(--webshop-pagination-underline-offset);
+      width: 100%;
+      height: var(--webshop-pagination-underline-height);
+      background: currentColor;
+      transform: translateX(-50%) scaleX(0);
+      transform-origin: center;
+      transition: transform 0.16s ease;
+    }
+
+    &:hover {
+      color: var(--webshop-pagination-color-hover);
+    }
+
+    &.is-active {
+      color: var(--webshop-pagination-active-color);
+
+      &::after {
+        transform: translateX(-50%) scaleX(1);
+      }
+    }
+  }
+
+  .webshop-product-pagination__next {
+    font-size: 1.15em;
+  }
+
+  .webshop-product-pagination__gap {
+    display: inline-flex;
+    min-width: var(--webshop-pagination-link-size);
+    justify-content: center;
+    color: var(--webshop-pagination-gap-color, currentColor);
+  }
+}
