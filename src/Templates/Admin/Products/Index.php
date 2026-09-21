@@ -72,6 +72,9 @@
                             <div>
                                 <strong><?=htmlspecialchars((string)$product->getTitle(), ENT_QUOTES, 'UTF-8')?></strong>
                                 <span><?=htmlspecialchars((string)$product->getSku(), ENT_QUOTES, 'UTF-8')?></span>
+                                <?php if (method_exists($product, 'getLabel') && trim((string)$product->getLabel()) !== '') { ?>
+                                    <span><?=htmlspecialchars((string)$product->getLabel(), ENT_QUOTES, 'UTF-8')?></span>
+                                <?php } ?>
                                 <?php if (trim((string)$product->getColor()) !== '' || trim((string)$product->getSize()) !== '') { ?>
                                     <span>
                                         <?=htmlspecialchars(trim((string)$product->getColor() . ' ' . (string)$product->getSize()), ENT_QUOTES, 'UTF-8')?>

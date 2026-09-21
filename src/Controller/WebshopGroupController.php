@@ -16,6 +16,11 @@ class WebshopGroupController extends ModuleController
         return (new WebshopProductGroupController())->productGroupMenu($limit, $pageId, $mainGroupId);
     }
 
+    public function productMainGroupGrid($pageId = 0, $limit = 99, $cardWidth = 4, $card = 'ProductMainGroupCard')
+    {
+        return (new WebshopProductMainGroupController())->productMainGroupGrid($pageId, $limit, $cardWidth, $card);
+    }
+
     public function productMainGroupMenu($limit = 99, $pageId = 0, $groupLimit = 99)
     {
         return (new WebshopProductMainGroupController())->productMainGroupMenu($limit, $pageId, $groupLimit);

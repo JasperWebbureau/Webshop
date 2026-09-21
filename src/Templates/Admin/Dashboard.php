@@ -82,6 +82,17 @@
 
             <div class="panel" style="--cw:4;--cw-sm:6;--cw-xs:12">
                 <div class="panel__header">
+                    <h4><?=t('webshop_admin_moodboards_title', 'Inspiratieblokken')?></h4>
+                </div>
+                <div class="panel__body">
+                    <a href="<?=__DOMAIN__?>/Flexgrid/WebshopAdmin/moodboards">
+                        <i class="fas fa-map-marker-alt"></i> <?=t('webshop_admin_moodboards_open', 'Inspiratieblokken beheren')?>
+                    </a>
+                </div>
+            </div>
+
+            <div class="panel" style="--cw:4;--cw-sm:6;--cw-xs:12">
+                <div class="panel__header">
                     <h4><?=t('webshop_admin_invoices_title', 'Facturen')?></h4>
                 </div>
                 <div class="panel__body">

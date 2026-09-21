@@ -10,6 +10,7 @@ $product = $entity;
 $detailUrl = $product->getDetailUrl($pageId);
 $title = htmlspecialchars((string)$product->getTitle(), ENT_QUOTES, 'UTF-8');
 $groupTitle = trim((string)$product->getWebshopProductGroupValue());
+$customLabel = method_exists($product, 'getLabel') ? trim((string)$product->getLabel()) : '';
 $price = (float)$product->getPrice();
 $salePrice = (float)$product->getSalePrice();
 $hasSale = $salePrice > 0 && $salePrice < $price;
@@ -69,8 +70,8 @@ if (count($variantProducts) > 1) {
 
 $makeTime = method_exists($product, 'getMakeTime') ? strtotime((string)$product->getMakeTime()) : false;
 $isNew = !$hasSale && $makeTime !== false && $makeTime >= strtotime('-30 days');
-$badgeText = $hasSale ? t('webshop_product_card_sale', 'AANBIEDING') : ($isNew ? t('webshop_product_card_new', 'NIEUW') : '');
-$badgeClass = $hasSale ? 'is-sale' : ($isNew ? 'is-new' : '');
+$badgeText = $customLabel !== '' ? $customLabel : ($hasSale ? t('webshop_product_card_sale', 'AANBIEDING') : ($isNew ? t('webshop_product_card_new', 'NIEUW') : ''));
+$badgeClass = $customLabel !== '' ? 'is-custom' : ($hasSale ? 'is-sale' : ($isNew ? 'is-new' : ''));
 $pricePrefix = count($variantProducts) > 1 ? t('webshop_product_card_from', 'Vanaf') . ' ' : '';
 ?>
 <article class="webshop-product-card2 clickable" style="--cw:<?=$cardWidth?>;--cw-sm:6;--cw-xs:12">
@@ -83,7 +84,7 @@ $pricePrefix = count($variantProducts) > 1 ? t('webshop_product_card_from', 'Van
             >
         </a>
         <?php if ($badgeText !== '') { ?>
-            <span class="webshop-product-card2__badge <?=$badgeClass?>"><?=$badgeText?></span>
+            <span class="webshop-product-card2__badge <?=$badgeClass?>"><?=htmlspecialchars($badgeText, ENT_QUOTES, 'UTF-8')?></span>
         <?php } ?>
         <?=new TemplateResponse('Flexgrid/Modules/Webshop/src/Templates/Cards/Snippets/ProductCard2Favorite.php', [
             'product' => $product,

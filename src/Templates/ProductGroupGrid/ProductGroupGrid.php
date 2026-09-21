@@ -20,6 +20,7 @@
             'pageId' => $pageId,
             'cardWidth' => $cardWidth,
             'parentWidth' => $parentWidth,
+            'cardIndex' => $count - 1,
         ])?>
     <?php } ?>
 </grid>

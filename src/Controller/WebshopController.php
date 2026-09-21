@@ -2,6 +2,7 @@
 
 namespace Flexgrid\Modules\Webshop\Controller;
 
+use Flexgrid\App\Routing\Routing;
 use Flexgrid\App\Settings\Settings;
 use Flexgrid\Controller\ModuleController;
 use Flexgrid\Modules\Webshop\Service\CartService;
@@ -21,6 +22,7 @@ use Flexgrid\Utils\Request\Request;
  */
 class WebshopController extends ModuleController
 {
+
     public function productGrid($pageId = 0, $template = 'ProductGrid', $card = 'ProductCard', $mainGroupId = 0, $groupId = 0, $limit = 12, $cardWidth = 4, $color = '', $size = '')
     {
         return (new WebshopProductController())
@@ -55,9 +57,24 @@ class WebshopController extends ModuleController
         return (new WebshopProductGroupController())->productGroupMenu($limit, $pageId, $mainGroupId);
     }
 
+    public function productMainGroupGrid($pageId = 0, $limit = 99, $cardWidth = 4, $card = 'ProductMainGroupCard')
+    {
+        return (new WebshopProductMainGroupController())->productMainGroupGrid($pageId, $limit, $cardWidth, $card);
+    }
+
     public function productMainGroupMenu($limit = 99, $pageId = 0, $groupLimit = 99)
     {
         return (new WebshopProductMainGroupController())->productMainGroupMenu($limit, $pageId, $groupLimit);
+    }
+
+    /**
+     * @FG\Template [name=Inspiratie blok, icon=fas fa-map-marker-alt, html={<div data-type='plugin'><h5>Inspiratie blok</h5></div>},create_override=true]
+     * @param int $moodboardId [name=Moodboard,type=WebshopMoodboard]
+     * @param int $productGridPageId [name=Product detail pagina,type=page]
+     */
+    public function moodboard($moodboardId = 0, $productGridPageId = 0)
+    {
+        return (new WebshopMoodboardController())->moodboard($moodboardId, $productGridPageId);
     }
 
     /**

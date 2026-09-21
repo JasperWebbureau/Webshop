@@ -7,6 +7,7 @@ use Flexgrid\Autowire\Definition\TemplateDefinition;
 use Flexgrid\Autowire\Registry\TemplateRegistry;
 use Flexgrid\Controller\ModuleController;
 use Flexgrid\Modules\Webshop\Repository\WebshopProductGroupRepository;
+use Flexgrid\Modules\Webshop\Service\RoutingService;
 use Flexgrid\Response\TemplateResponse;
 
 /**
@@ -19,14 +20,14 @@ class WebshopProductGroupController extends ModuleController
      */
     public function groupHero($groupId = 0)
     {
-
-        if ((int)$groupId === 0) {
-            $current = Routing::currentEntity();
-            if (is_object($current) && get_class($current) === 'Flexgrid\Modules\Webshop\Entity\WebshopProductGroup') {
-                $groupId = $current->getId();
-            }
-        }
         $currentGroup = null;
+        $current = RoutingService::getCurrentWebshopGroup();
+        if( $current !== false){
+            $groupId = $current->getId();
+            $currentGroup = $current;
+
+        }
+
         if ((int)$groupId > 0) {
             $currentGroup = (new WebshopProductGroupRepository())->findById((int)$groupId);
         }
@@ -84,6 +85,11 @@ class WebshopProductGroupController extends ModuleController
 
     protected function getModuleTemplate(string $relativePath, string $fallback): string
     {
+        $appPath = 'App/Webshop/Templates/' . ltrim($relativePath, '/');
+        if (is_file($appPath)) {
+            return $appPath;
+        }
+
         $path = 'Flexgrid/Modules/Webshop/src/Templates/' . ltrim($relativePath, '/');
 
         if (is_file($path)) {

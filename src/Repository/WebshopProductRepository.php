@@ -9,7 +9,21 @@ class WebshopProductRepository extends Repository
 {
     public function getEntity()
     {
+        if (class_exists(\App\Webshop\Entity\WebshopProduct::class) && $this->hasAppEntityDefinition(\App\Webshop\Entity\WebshopProduct::class)) {
+            return new \App\Webshop\Entity\WebshopProduct();
+        }
+
         return new WebshopProduct();
+    }
+
+    protected function hasAppEntityDefinition(string $className): bool
+    {
+        try {
+            $cache = \Flexgrid\Autowire\AutowireEngine::getCache();
+            return !empty($cache[$className]['definition']);
+        } catch (\Throwable $exception) {
+            return false;
+        }
     }
 
     public function getActive($limit = 99, $order = 'title:ASC'): array
@@ -35,11 +49,19 @@ class WebshopProductRepository extends Repository
         $active = trim((string)($filters['active'] ?? ''));
         $color = trim((string)($filters['color'] ?? ''));
         $size = trim((string)($filters['size'] ?? ''));
+        $hasLabel = $this->hasAppEntityDefinition(\App\Webshop\Entity\WebshopProduct::class);
 
         if ($search !== '') {
+            $searchFields = ['title', 'sku', 'short_description', 'color', 'size', 'manufacturer'];
+            if ($hasLabel) {
+                $searchFields[] = 'label';
+            }
+
             $query->where(
-                '(`title` LIKE CONCAT("%",?,"%") OR `sku` LIKE CONCAT("%",?,"%") OR `short_description` LIKE CONCAT("%",?,"%") OR `color` LIKE CONCAT("%",?,"%") OR `size` LIKE CONCAT("%",?,"%") OR `manufacturer` LIKE CONCAT("%",?,"%"))',
-                [$search, $search, $search, $search, $search, $search]
+                '(' . implode(' OR ', array_map(static function ($field) {
+                    return '`' . $field . '` LIKE CONCAT("%",?,"%")';
+                }, $searchFields)) . ')',
+                array_fill(0, count($searchFields), $search)
             );
         }
 
@@ -79,8 +101,9 @@ class WebshopProductRepository extends Repository
     public function getByGroupId($groupId, $limit = 99, $order = 'title:ASC'): array
     {
         $orderConfig = $this->getOrderConfig($order, 'title');
+
         $products = $this->select(true)
-            ->where('group_id = ? AND is_active = ? AND status = ?', [(int)$groupId, 1, 'published'])
+            ->where('group_id = ?', [(int)$groupId])
             ->orderBy($orderConfig['field'], $orderConfig['direction'])
             ->limit(max((int)$limit * 3, (int)$limit))
             ->get();

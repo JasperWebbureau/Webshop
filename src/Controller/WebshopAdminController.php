@@ -10,6 +10,10 @@ use Flexgrid\Modules\Webshop\Repository\WebshopOrderRepository;
 use Flexgrid\Modules\Webshop\Repository\WebshopInvoiceLineRepository;
 use Flexgrid\Modules\Webshop\Repository\WebshopInvoiceRepository;
 use Flexgrid\Modules\Webshop\Service\InvoiceService;
+use Flexgrid\Modules\Webshop\Entity\WebshopMoodboard;
+use Flexgrid\Modules\Webshop\Entity\WebshopMoodboardItem;
+use Flexgrid\Modules\Webshop\Repository\WebshopMoodboardItemRepository;
+use Flexgrid\Modules\Webshop\Repository\WebshopMoodboardRepository;
 use Flexgrid\Modules\Webshop\Repository\WebshopPaymentTransactionRepository;
 use Flexgrid\Modules\Webshop\Repository\WebshopProductMainGroupRepository;
 use Flexgrid\Modules\Webshop\Repository\WebshopProductGroupRepository;
@@ -229,6 +233,84 @@ class WebshopAdminController
             'activeOptions' => $this->getActiveOptions(),
             'productGridPageId' => $this->getProductGridPageId(),
         ]);
+    }
+
+    public function moodboards()
+    {
+        PageResponse::addAsset('Flexgrid/Modules/Webshop/src/Templates/Admin/Moodboards/Css/Moodboards.scss');
+        $request = new Request();
+
+        return new TemplateResponse('Flexgrid/Modules/Webshop/src/Templates/Admin/Moodboards/Index.php', [
+            'moodboards' => (new WebshopMoodboardRepository())->search(trim((string)$request->get('q', '')), 100),
+            'query' => trim((string)$request->get('q', '')),
+        ]);
+    }
+
+    public function moodboardDetail($args = [])
+    {
+        PageResponse::addAsset('Flexgrid/Modules/Webshop/src/Templates/Admin/Moodboards/Css/Moodboards.scss');
+        PageResponse::addAsset('Flexgrid/Modules/Webshop/src/Templates/Admin/Moodboards/Js/Moodboards.js');
+
+        $moodboardId = is_array($args) ? (int)($args[0] ?? 0) : (int)$args;
+        $repository = new WebshopMoodboardRepository();
+        $moodboard = $moodboardId > 0 ? $repository->findById($moodboardId) : new WebshopMoodboard();
+
+        if (!$moodboard || ($moodboardId > 0 && (int)$moodboard->getId() <= 0)) {
+            return $this->moodboards();
+        }
+
+        return new TemplateResponse('Flexgrid/Modules/Webshop/src/Templates/Admin/Moodboards/Detail.php', [
+            'moodboard' => $moodboard,
+            'items' => (int)$moodboard->getId() > 0 ? (new WebshopMoodboardItemRepository())->getByMoodboardId((int)$moodboard->getId()) : [],
+            'productOptions' => $this->getMoodboardProductOptions(),
+            'productGridPageId' => $this->getProductGridPageId(),
+        ]);
+    }
+
+    public function saveMoodboard()
+    {
+        $repository = new WebshopMoodboardRepository();
+        $request = new Request();
+        $moodboardId = (int)$request->get('id', 0);
+        $moodboard = $moodboardId > 0 ? $repository->findById($moodboardId) : new WebshopMoodboard();
+
+        if (!$moodboard || ($moodboardId > 0 && (int)$moodboard->getId() <= 0)) {
+            header('Location: ' . __DOMAIN__ . '/Flexgrid/WebshopAdmin/moodboards');
+            exit;
+        }
+
+        $moodboard
+            ->setTitle(trim((string)$request->get('title', '')))
+            ->setEyebrow(trim((string)$request->get('eyebrow', '')))
+            ->setIntro(trim(strip_tags((string)$request->get('intro', ''))))
+            ->setButtonText(trim((string)$request->get('button_text', '')))
+            ->setIsActive((int)$request->get('is_active', 0) === 1 ? 1 : 0);
+
+        $moodboard = $repository->add($moodboard);
+        $this->saveMoodboardItems((int)$moodboard->getId());
+
+        header('Location: ' . __DOMAIN__ . '/Flexgrid/WebshopAdmin/moodboardDetail/' . (int)$moodboard->getId());
+        exit;
+    }
+
+    public function deleteMoodboard()
+    {
+        $request = new Request();
+        $moodboardId = (int)$request->get('id', 0);
+        $repository = new WebshopMoodboardRepository();
+        $moodboard = $repository->findById($moodboardId);
+
+        if ($moodboard && (int)$moodboard->getId() > 0) {
+            $itemRepository = new WebshopMoodboardItemRepository();
+            foreach ($itemRepository->getByMoodboardId((int)$moodboard->getId()) as $item) {
+                $itemRepository->delete($item);
+            }
+
+            $repository->delete($moodboard);
+        }
+
+        header('Location: ' . __DOMAIN__ . '/Flexgrid/WebshopAdmin/moodboards');
+        exit;
     }
 
     public function invoices()
@@ -547,6 +629,25 @@ class WebshopAdminController
         return ['' => $emptyLabel] + (new WebshopProductRepository())->getPropertyOptions($property);
     }
 
+    protected function getMoodboardProductOptions(): array
+    {
+        $options = [0 => '-'];
+        foreach ((new WebshopProductRepository())->setPagination(false)->getAll(500, null, null, true, 'title:ASC') as $product) {
+            if (!$product || (int)$product->getId() <= 0) {
+                continue;
+            }
+
+            $label = (string)$product->getTitle();
+            if (trim((string)$product->getSku()) !== '') {
+                $label .= ' (' . (string)$product->getSku() . ')';
+            }
+
+            $options[(int)$product->getId()] = $label;
+        }
+
+        return $options;
+    }
+
     protected function getProductStatusOptions(): array
     {
         return [
@@ -714,5 +815,52 @@ class WebshopAdminController
         }
 
         return max(0, (float)$value);
+    }
+
+    protected function saveMoodboardItems(int $moodboardId): void
+    {
+        if ($moodboardId <= 0) {
+            return;
+        }
+
+        $request = new Request('items');
+        $rows = $request->getAll();
+        if (!is_array($rows)) {
+            return;
+        }
+
+        $repository = new WebshopMoodboardItemRepository();
+        foreach ($rows as $row) {
+            if (!is_array($row)) {
+                continue;
+            }
+
+            $id = (int)($row['id'] ?? 0);
+            $productId = (int)($row['product_id'] ?? 0);
+            $delete = (int)($row['delete'] ?? 0) === 1;
+
+            if ($delete && $id > 0) {
+                $repository->delete($id);
+                continue;
+            }
+
+            if ($productId <= 0) {
+                continue;
+            }
+
+            $item = $id > 0 ? $repository->findById($id) : new WebshopMoodboardItem();
+            if ($id > 0 && (!$item || (int)$item->getId() <= 0)) {
+                continue;
+            }
+
+            $item
+                ->setMoodboardId($moodboardId)
+                ->setProductId($productId)
+                ->setPositionX($row['position_x'] ?? 50)
+                ->setPositionY($row['position_y'] ?? 50)
+                ->setOrder((int)($row['order'] ?? 0));
+
+            $repository->add($item);
+        }
     }
 }

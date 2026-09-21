@@ -5,6 +5,7 @@
   overflow: hidden;
 
   .card__image {
+    position: relative;
     aspect-ratio: 4 / 3;
     overflow: hidden;
     background: var(--default-background);
@@ -16,6 +17,20 @@
       display: block;
       object-fit: cover;
     }
+  }
+
+  .webshop-product-card__label {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    background: #094c58;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
   }
 
   .card__content {

@@ -32,6 +32,12 @@ $pages = [
         'icon' => 'fas fa-box',
     ],
     [
+        'title' => 'Inspiratie',
+        'href' => __DOMAIN__ . '/Flexgrid/WebshopAdmin/moodboards',
+        'methods' => ['moodboards', 'moodboardDetail'],
+        'icon' => 'fas fa-map-marker-alt',
+    ],
+    [
         'title' => 'Rapporten',
         'href' => __DOMAIN__ . '/Flexgrid/WebshopAdmin/reports',
         'methods' => ['reports'],

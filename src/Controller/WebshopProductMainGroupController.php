@@ -3,6 +3,8 @@
 namespace Flexgrid\Modules\Webshop\Controller;
 
 use Flexgrid\App\Routing\Routing;
+use Flexgrid\Autowire\Definition\TemplateDefinition;
+use Flexgrid\Autowire\Registry\TemplateRegistry;
 use Flexgrid\Controller\ModuleController;
 use Flexgrid\Modules\Webshop\Entity\WebshopProductMainGroup;
 use Flexgrid\Modules\Webshop\Repository\WebshopProductGroupRepository;
@@ -15,6 +17,29 @@ use Flexgrid\Response\TemplateResponse;
  */
 class WebshopProductMainGroupController extends ModuleController
 {
+    /**
+     * @FG\Template [name=Product hoofdgroep grid, icon=fas fa-sitemap, html={<div data-type='plugin'><h5>Product hoofdgroepen</h5></div>}]
+     * @param int $pageId [name=Product hoofdgroep pagina,type=page]
+     * @param int $limit [name=Aantal,type=int]
+     * @param int $cardWidth [name=Kaart breedte,type=int]
+     * @param string $card [name=kaart,type=Template,default=ProductMainGroupCard]
+     */
+    public function productMainGroupGrid($pageId = 0, $limit = 99, $cardWidth = 4, $card = 'ProductMainGroupCard')
+    {
+        $cardFile = $this->getTemplate('Cards', false, $card);
+        $cardFile = $this->getModuleTemplate('Cards/' . $card . '.php', $cardFile);
+        $limit = (int)$limit;
+
+        return new TemplateResponse('Flexgrid/Modules/Webshop/src/Templates/ProductMainGroupGrid/ProductMainGroupGrid.php', [
+            'entities' => array_slice((new WebshopProductMainGroupRepository())->getActive(), 0, $limit > 0 ? $limit : 99),
+            'pageId' => (int)$pageId,
+            'limit' => $limit,
+            'cardWidth' => (int)$cardWidth ?: 4,
+            'card' => $cardFile,
+            'parentWidth' => 12,
+        ]);
+    }
+
     /**
      * @FG\Template [name=Product hoofdgroep menu, icon=fas fa-sitemap, html={<div data-type='plugin'><h5>Product hoofdgroepen</h5></div>}]
      * @param int $limit [name=Aantal hoofdgroepen,type=int]
@@ -153,5 +178,43 @@ class WebshopProductMainGroupController extends ModuleController
         }
 
         return null;
+    }
+
+    protected function getModuleTemplate(string $relativePath, string $fallback): string
+    {
+        $appPath = 'App/Webshop/Templates/' . ltrim($relativePath, '/');
+        if (is_file($appPath)) {
+            return $appPath;
+        }
+
+        $path = 'Flexgrid/Modules/Webshop/src/Templates/' . ltrim($relativePath, '/');
+
+        if (is_file($path)) {
+            return $path;
+        }
+
+        return $fallback;
+    }
+
+    public function getTemplate($name, $detail = false, $file = null)
+    {
+        if ($name == null) {
+            return null;
+        }
+
+        $templateDefintion = TemplateRegistry::getTemplateByControllerAndMethod(get_class($this), $name);
+
+        /**
+         * @var TemplateDefinition $templateDefintion
+         */
+        if (empty($templateDefintion)) {
+            return parent::getTemplate($name, $detail, $file);
+        }
+
+        if (is_object($templateDefintion)) {
+            return path($templateDefintion->getPath());
+        }
+
+        return '';
     }
 }

@@ -9,6 +9,9 @@ class WebshopProductGroupRepository extends Repository
 {
     public function getEntity()
     {
+        if(class_exists(\App\Webshop\Entity\WebshopProductGroup::class)){
+            return new \App\Webshop\Entity\WebshopProductGroup();
+        }
         return new WebshopProductGroup();
     }
 

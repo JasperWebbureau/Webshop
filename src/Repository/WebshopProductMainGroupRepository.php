@@ -15,7 +15,8 @@ class WebshopProductMainGroupRepository extends Repository
     public function getActive(): array
     {
         return $this->select(true)
-            ->orderBy('title:ASC')
+            ->orderBy('order:ASC')
+            ->where('is_hidden IS NULL OR is_hidden = ?', [0])
             ->get();
     }
 }

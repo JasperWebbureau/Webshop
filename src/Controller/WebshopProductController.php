@@ -10,6 +10,7 @@ use Flexgrid\Controller\ModuleController;
 use Flexgrid\Modules\Webshop\Repository\WebshopProductGroupRepository;
 use Flexgrid\Modules\Webshop\Repository\WebshopProductRepository;
 use Flexgrid\Modules\Webshop\Service\CartService;
+use Flexgrid\Modules\Webshop\Service\RoutingService;
 use Flexgrid\Response\AjaxResponse;
 use Flexgrid\Response\TemplateResponse;
 use Flexgrid\Utils\Request\Request;
@@ -39,14 +40,17 @@ class WebshopProductController extends ModuleController
         $url = Routing::currentUrl();
 
         if ($url !== null && ($_SERVER['in_detail'] ?? false) != true) {
-            if ((int)$url->getEntityId() > 0 && $url->getRepositoryField() === get_class($repository)) {
+            $entity = RoutingService::getCurrentWebshopProduct();
+            if( $entity != false) {
+
                 return $this->renderProductDetail((int)$url->getEntityId(), (int)$pageId);
+
             }
         }
 
         if ((int)$groupId === 0) {
-            $current = Routing::currentEntity();
-            if (is_object($current) && get_class($current) === 'Flexgrid\Modules\Webshop\Entity\WebshopProductGroup') {
+            $current = RoutingService::getCurrentWebshopGroup();
+            if (is_object($current) ) {
                 $groupId = $current->getId();
             }
         }
@@ -75,8 +79,9 @@ class WebshopProductController extends ModuleController
 
 
         if ($filterQuery !== '') {
+
             $products = $repository->getAll(
-                max((int)$limit * 3, (int)$limit),
+                max((int)$limit * 3, (int)$limit), // waarom is dit?!
                 null,
                 $filterQuery,
                 false,
@@ -280,25 +285,19 @@ class WebshopProductController extends ModuleController
         $size = trim((string)$size);
 
         if ($groupId === 0) {
-            $current = Routing::currentEntity();
-            if (is_object($current) && get_class($current) === 'Flexgrid\Modules\Webshop\Entity\WebshopProductGroup') {
+            $current = RoutingService::getCurrentWebshopGroup();
+            if (is_object($current)) {
                 $groupId = (int)$current->getId();
             }
         }
 
         $constraints = [
             [
-                'sql' => 'is_active = :product_is_active',
+                'sql' => 'is_hidden = :is_hidden || is_hidden IS NULL',
                 'params' => [
-                    ':product_is_active' => 1,
+                    ':is_hidden' => 0,
                 ],
-            ],
-            [
-                'sql' => 'status = :product_status',
-                'params' => [
-                    ':product_status' => 'published',
-                ],
-            ],
+            ]
         ];
 
         if ($groupId > 0) {
@@ -411,6 +410,11 @@ class WebshopProductController extends ModuleController
 
     protected function getModuleTemplate(string $relativePath, string $fallback): string
     {
+        $appPath = 'App/Webshop/Templates/' . ltrim($relativePath, '/');
+        if (is_file($appPath)) {
+            return $appPath;
+        }
+
         $path = 'Flexgrid/Modules/Webshop/src/Templates/' . ltrim($relativePath, '/');
 
         if (is_file($path)) {

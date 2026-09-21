@@ -52,6 +52,9 @@ if ((int)$productGridPageId > 0) {
             <div class="panel__body webshop-admin-product-edit__grid">
                 <?=$field('title', 'Productnaam')?>
                 <?=$field('sku', 'SKU')?>
+                <?php if (method_exists($product, 'getLabel')) { ?>
+                    <?=$field('label', 'Label')?>
+                <?php } ?>
                 <?=$field('groupId', 'Productgroep', null, $groupOptions)?>
                 <?=$field('manufacturer', 'Fabrikant/merk')?>
                 <?=$field('color', 'Kleur')?>

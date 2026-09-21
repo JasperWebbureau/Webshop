@@ -731,4 +731,16 @@ class WebshopProduct extends ModuleEntity
         return (new \App\Review\Repository\ReviewRepository)->select()->where('`product_id` = ?',[ $this->getId()])->get();;
     }
 
+
+
+    // --- Auto-generated getters and setters ---
+
+    /**
+     * Get the children of WebshopMoodboardItem
+     */
+    public function getWebshopMoodboardItemChildren()
+    {
+        return (new \Flexgrid\Modules\Webshop\Repository\WebshopMoodboardItemRepository)->select()->where('`product_id` = ?',[ $this->getId()])->get();;
+    }
+
 }

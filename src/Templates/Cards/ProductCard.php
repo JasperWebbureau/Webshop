@@ -6,6 +6,7 @@
 use Flexgrid\Response\TemplateResponse;
 
 $product = $entity;
+$customLabel = method_exists($product, 'getLabel') ? trim((string)$product->getLabel()) : '';
 $price = (float)$product->getPrice();
 $salePrice = (float)$product->getSalePrice();
 $activePrice = $salePrice > 0 && $salePrice < $price ? $salePrice : $price;
@@ -39,6 +40,9 @@ $detailUrl = $product->getDetailUrl($pageId);
             alt="<?=htmlspecialchars((string)$product->getTitle(), ENT_QUOTES, 'UTF-8')?>"
             loading="lazy"
         >
+        <?php if ($customLabel !== '') { ?>
+            <span class="webshop-product-card__label"><?=htmlspecialchars($customLabel, ENT_QUOTES, 'UTF-8')?></span>
+        <?php } ?>
     </a>
 
     <div class="card__content">
