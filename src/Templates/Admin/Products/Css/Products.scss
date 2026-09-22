@@ -95,10 +95,22 @@
     }
 
     input[type="text"],
+    input[type="url"],
     input[type="number"],
-    input[type="file"] {
+    input[type="file"],
+    textarea {
       width: 100%;
       min-height: 42px;
+    }
+
+    textarea {
+      min-height: 180px;
+      resize: vertical;
+    }
+
+    small {
+      color: var(--muted);
+      line-height: 1.4;
     }
 
     .webshop-admin-product-ai-create__checkbox {

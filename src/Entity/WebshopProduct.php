@@ -728,6 +728,7 @@ class WebshopProduct extends ModuleEntity
      */
     public function getReviewChildren()
     {
+        return [];
         return (new \App\Review\Repository\ReviewRepository)->select()->where('`product_id` = ?',[ $this->getId()])->get();;
     }
 

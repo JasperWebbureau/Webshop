@@ -169,6 +169,8 @@ class WebshopAdminController
 
         $request = new Request();
         $title = trim((string)$request->get('title', ''));
+        $sourceUrl = trim((string)$request->get('source_url', ''));
+        $sourceHtml = (string)$request->get('source_html', '');
         $manufacturer = trim((string)$request->get('manufacturer', ''));
         $purchasePrice = $this->normalizeMoney((string)$request->get('purchase_price', '0'));
         $useWebSearch = (int)$request->get('use_web_search', 0) === 1;
@@ -190,13 +192,17 @@ class WebshopAdminController
             $allowPurchasePriceEstimate,
             $minimumDescriptionParagraphs,
             $allowTitleRewrite,
-            $allowVariantDetection
+            $allowVariantDetection,
+            $sourceUrl,
+            $sourceHtml
         );
 
         if (empty($result['success'])) {
             return new TemplateResponse('Flexgrid/Modules/Webshop/src/Templates/Admin/Products/AiCreate.php', [
                 'error' => (string)($result['message'] ?? 'Product kon niet worden gegenereerd.'),
                 'title' => $title,
+                'sourceUrl' => $sourceUrl,
+                'sourceHtml' => $sourceHtml,
                 'manufacturer' => $manufacturer,
                 'purchasePrice' => $purchasePrice,
                 'useWebSearch' => $useWebSearch,

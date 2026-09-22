@@ -10,7 +10,9 @@ class RoutingService{
         if( ! is_object($current)){
             return false;
         }
-        if(strpos(get_class($current), 'WebshopProduct') !== false){
+
+        $class = get_class($current);
+        if(strpos($class, 'WebshopProduct') !== false && strpos($class, 'Group') === false ){
 
             return $current;
         }

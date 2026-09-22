@@ -37,6 +37,26 @@ $minimumDescriptionParagraphs = max(1, min(8, (int)($minimumDescriptionParagraph
 
                 <form class="webshop-admin-product-ai-create__form" method="post" enctype="multipart/form-data" action="<?=__DOMAIN__?>/Flexgrid/WebshopAdmin/generateProductWithAi">
                     <label>
+                        <span><?=t('webshop_admin_product_ai_source_url', 'Productlink')?></span>
+                        <input
+                            type="url"
+                            name="source_url"
+                            value="<?=htmlspecialchars((string)($sourceUrl ?? ''), ENT_QUOTES, 'UTF-8')?>"
+                            placeholder="<?=t('webshop_admin_product_ai_source_url_placeholder', 'https://voorbeeld.nl/product/...')?>">
+                        <small><?=t('webshop_admin_product_ai_source_url_help', 'Optioneel. AI haalt alleen productfeiten uit deze pagina, schrijft nieuwe teksten en downloadt geen afbeeldingen.')?></small>
+                    </label>
+
+                    <label>
+                        <span><?=t('webshop_admin_product_ai_source_html', 'Ruwe product-HTML')?></span>
+                        <textarea
+                            name="source_html"
+                            rows="9"
+                            maxlength="200000"
+                            placeholder="<?=t('webshop_admin_product_ai_source_html_placeholder', 'Plak hier eventueel de HTML van een productpagina...')?>"><?=htmlspecialchars((string)($sourceHtml ?? ''), ENT_QUOTES, 'UTF-8')?></textarea>
+                        <small><?=t('webshop_admin_product_ai_source_html_help', 'Optioneel. Scripts, opmaak en afbeeldingen worden verwijderd; de resterende productinformatie wordt door AI opnieuw geschreven.')?></small>
+                    </label>
+
+                    <label>
                         <span><?=t('webshop_admin_product_ai_seed_title', 'Titel of korte omschrijving')?></span>
                         <input
                             type="text"
@@ -81,7 +101,7 @@ $minimumDescriptionParagraphs = max(1, min(8, (int)($minimumDescriptionParagraph
 
                     <label class="webshop-admin-product-ai-create__checkbox">
                         <input type="checkbox" name="use_web_search" value="1" <?=$useWebSearch ? 'checked' : ''?>>
-                        <span><?=t('webshop_admin_product_ai_web_search', 'Online zoeken naar marktprijzen en fabrikant/merk')?></span>
+                        <span><?=t('webshop_admin_product_ai_web_search', 'Ook buiten de productlink zoeken naar marktprijzen en fabrikant/merk')?></span>
                     </label>
 
                     <label class="webshop-admin-product-ai-create__checkbox">
@@ -118,6 +138,14 @@ $minimumDescriptionParagraphs = max(1, min(8, (int)($minimumDescriptionParagraph
             </div>
             <div class="panel__body webshop-admin-product-ai-create__context">
                 <div>
+                    <strong><?=t('webshop_admin_product_ai_context_source_url', 'Importeren via productlink')?></strong>
+                    <span><?=t('webshop_admin_product_ai_context_source_url_text', 'De opgegeven productpagina wordt als feitelijke bron gebruikt. Omschrijvingen worden volledig opnieuw geschreven en afbeeldingen van de bron worden niet gedownload of opgeslagen.')?></span>
+                </div>
+                <div>
+                    <strong><?=t('webshop_admin_product_ai_context_source_html', 'Importeren via HTML')?></strong>
+                    <span><?=t('webshop_admin_product_ai_context_source_html_text', 'Je kunt ook product-HTML plakken. Alleen opgeschoonde tekst gaat naar AI; code en afbeeldingen worden niet opgeslagen.')?></span>
+                </div>
+                <div>
                     <strong><?=t('webshop_admin_product_ai_context_fields', 'Productvelden')?></strong>
                     <span>titel, SKU, productgroep, fabrikant/merk, prijs, inkoopprijs, teksten, kleur, maat, voorraad en BTW</span>
                 </div>
@@ -127,7 +155,7 @@ $minimumDescriptionParagraphs = max(1, min(8, (int)($minimumDescriptionParagraph
                 </div>
                 <div>
                     <strong><?=t('webshop_admin_product_ai_context_web_search', 'Online zoektocht')?></strong>
-                    <span><?=t('webshop_admin_product_ai_context_web_search_text', 'Standaard uit. Als je dit aanzet mag AI online zoeken naar vergelijkbare producten en, wanneer leeg gelaten, fabrikant/merk.')?></span>
+                    <span><?=t('webshop_admin_product_ai_context_web_search_text', 'Standaard uit. Een productlink wordt altijd zelf geraadpleegd; als je dit aanzet mag AI daarnaast zoeken naar vergelijkbare marktprijzen en fabrikant/merk.')?></span>
                 </div>
                 <div>
                     <strong><?=t('webshop_admin_product_ai_context_groups', 'Productgroepen')?></strong>

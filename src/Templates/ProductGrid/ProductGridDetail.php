@@ -32,7 +32,9 @@ $galleryImages = [];
 $relatedProducts = $relatedProducts ?? [];
 $favoriteService = new FavoriteService();
 $isFavorite = $favoriteService->hasProduct((int)$product->getId());
-$reviewSummary = (new ReviewRepository())->getProductSummary((int)$product->getId());
+
+//$reviewSummary = (new ReviewRepository())->getProductSummary((int)$product->getId());
+$reviewSummary = [];
 $reviewCount = (int)$reviewSummary['count'];
 $reviewRounded = max(0, min(5, (int)$reviewSummary['rounded']));
 $reviewStars = str_repeat('&#9733;', $reviewRounded) . str_repeat('&#9734;', 5 - $reviewRounded);
