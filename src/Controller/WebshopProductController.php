@@ -23,7 +23,7 @@ class WebshopProductController extends ModuleController
     protected $filterAjaxTargetController = null;
 
     /**
-     * @FG\Template [name=Product grid, icon=fas fa-th, html={<div data-type='plugin'><h5>Product grid</h5></div>},create_override=true]
+     * @FG\Template [name=Product grid, icon=fas fa-th, html={<div data-type='plugin'><h5>Product grid</h5></div>},create_override=true,override_family=ProductGrid]
      * @param int $pageId [name=Detail pagina,type=page]
      * @param string $template [name=template,type=Template]
      * @param string $card [name=kaart,type=Template,default=ProductCard]
@@ -34,6 +34,7 @@ class WebshopProductController extends ModuleController
      * @param string $color [name=Kleur,type=text]
      * @param string $size [name=Maat,type=text]
      */
+
     public function productGrid($pageId = 0, $template = 'ProductGrid', $card = 'ProductCard', $mainGroupId = 0, $groupId = 0, $limit = 12, $cardWidth = 4, $color = '', $size = '')
     {
         $repository = $this->getRepository();

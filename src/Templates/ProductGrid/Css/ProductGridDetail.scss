@@ -4,14 +4,14 @@
   --webshop-detail-muted:  var(--webshop-muted, var(--primary));
   --webshop-detail-line:  var(--webshop-line, rgba(24, 53, 44, 0.18));
   --webshop-detail-soft: var(--webshop-soft, var(--tertiary-light));
-
+ --myvar-new: var(--webshop-henkie, #000);
 }
 
 .webshop-product-detail {
 
 
   color: var(--webshop-detail-ink);
-
+  blau: var(--myvar-new);
   .webshop-product-detail__inner {
     max-width: 1320px;
     margin: 0 auto;

@@ -3,7 +3,7 @@
   grid-template-columns: minmax(380px, 36%) minmax(0, 64%);
   margin-bottom: 34px;
   background: var(--default-background);
-
+  test: var(--test-var, blue);
   .webshop-product-grid-intro__content {
     display: flex;
     min-height: 320px;

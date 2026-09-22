@@ -16,7 +16,7 @@ use Flexgrid\Response\TemplateResponse;
 class WebshopProductGroupController extends ModuleController
 {
     /**
-     * @FG\Template [name=Productgroep hero / intro, icon=fas fa-layer-group, html={<div data-type='plugin'><h5>Product groep hero</h5></div>}]
+     * @FG\Template [name=Productgroep hero / intro, icon=fas fa-layer-group, html={<div data-type='plugin'><h5>Product groep hero</h5></div>},create_override=true,override_family=GroupHero]
      */
     public function groupHero($groupId = 0)
     {
