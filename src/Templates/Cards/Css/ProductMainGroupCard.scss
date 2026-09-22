@@ -1,0 +1,50 @@
+.webshop-product-main-group-card {
+  height: 100%;
+  overflow: hidden;
+  border-color: var(--webshop-card-accent, var(--border-color));
+
+  .webshop-product-main-group-card__image-link {
+    display: block;
+  }
+
+  .card__image {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--default-background);
+
+    img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+  }
+
+  .card__content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .card__title a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .webshop-product-main-group-card__intro {
+    color: var(--webshop-card-accent, var(--primary));
+    font-size: 15px;
+    line-height: 1.35;
+  }
+
+  .button {
+    align-self: flex-start;
+  }
+
+  @media (max-width: 692px) {
+    .button {
+      align-self: stretch;
+      width: 100%;
+    }
+  }
+}

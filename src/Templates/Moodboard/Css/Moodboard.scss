@@ -1,0 +1,283 @@
+.webshop-moodboard {
+
+  .webshop-moodboard__header {
+    max-width: 900px;
+    margin: 0 0 30px;
+
+    h2 {
+      margin: 0;
+      color: #063b31;
+      font-size: 72px;
+      font-weight: 400;
+      line-height: 0.98;
+    }
+
+    p {
+      max-width: 620px;
+      margin: 16px 0 0;
+      color: #2d2a26;
+      font-size: 18px;
+      line-height: 1.5;
+    }
+  }
+
+  .webshop-moodboard__eyebrow {
+    margin-bottom: 18px;
+    color: #6f1830;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+
+  .webshop-moodboard__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(340px, 0.98fr);
+    gap: 28px;
+    align-items: stretch;
+  }
+
+  .webshop-moodboard__scene {
+    position: relative;
+    min-height: 420px;
+    overflow: hidden;
+    background: #eee8dd;
+
+    img {
+      width: 100%;
+      height: 100%;
+      min-height: 420px;
+      display: block;
+      object-fit: cover;
+    }
+  }
+
+  .webshop-moodboard__hotspot {
+    position: absolute;
+    left: var(--hotspot-x);
+    top: var(--hotspot-y);
+    z-index: 2;
+    display: inline-flex;
+    width: 54px;
+    height: 54px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.76);
+    border-radius: 50%;
+    background: rgba(255, 252, 247, 0.92);
+    box-shadow: 0 0 0 12px rgba(111, 24, 48, 0.18);
+    color: #6f1830;
+    cursor: pointer;
+    transform: translate(-50%, -50%);
+    transition: background 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+
+    &:hover,
+    &:focus,
+    &.is-active {
+      background: #6f1830;
+      box-shadow: 0 0 0 16px rgba(111, 24, 48, 0.22);
+      color: #fff8ec;
+      outline: 0;
+      transform: translate(-50%, -50%) scale(1.04);
+    }
+  }
+
+  .webshop-moodboard__hotspot-number {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 8px);
+    color: #fff8ec;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+    transform: translateX(-50%);
+  }
+
+  .webshop-moodboard__hotspot-plus {
+    font-size: 34px;
+    font-weight: 300;
+    line-height: 1;
+  }
+
+  .webshop-moodboard__products {
+    display: flex;
+    min-height: 0;
+    flex-direction: column;
+    padding: 28px;
+    border: 1px solid #d8ccb9;
+    background: rgba(255, 252, 247, 0.72);
+  }
+
+  .webshop-moodboard__products-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #d8ccb9;
+
+    h3 {
+      margin: 0;
+      color: #6f1830;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0;
+      line-height: 1.3;
+      text-transform: uppercase;
+    }
+
+    span {
+      color: #2d2a26;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+  }
+
+  .webshop-moodboard__product-list {
+    display: grid;
+    gap: 14px;
+    padding: 22px 0 18px;
+  }
+
+  .webshop-moodboard__product {
+    display: grid;
+    grid-template-columns: 142px minmax(0, 1fr) 24px;
+    gap: 22px;
+    align-items: center;
+    min-height: 132px;
+    padding: 12px;
+    border: 1px solid #e3d8c7;
+    background: rgba(255, 252, 247, 0.62);
+    color: inherit;
+    text-decoration: none;
+    transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+
+    &.is-active,
+    &:hover,
+    &:focus {
+      border-left: 4px solid #6f1830;
+      box-shadow: 0 14px 28px rgba(37, 27, 17, 0.08);
+      outline: 0;
+      transform: translateY(-1px);
+    }
+
+    i {
+      color: #6f1830;
+      font-size: 18px;
+    }
+  }
+
+  .webshop-moodboard__product-image {
+    display: block;
+    aspect-ratio: 1.15 / 1;
+    overflow: hidden;
+    background: #f4efe6;
+
+    img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: contain;
+    }
+  }
+
+  .webshop-moodboard__product-content {
+    display: grid;
+    min-width: 0;
+    gap: 5px;
+
+    strong {
+      color: #3f1020;
+      font-size: 21px;
+      font-weight: 400;
+      line-height: 1.15;
+    }
+
+    small {
+      color: rgba(45, 42, 38, 0.72);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+  }
+
+  .webshop-moodboard__product-number {
+    color: #6f1830;
+    font-size: 14px;
+  }
+
+  .webshop-moodboard__product-price {
+    margin-top: 8px;
+    color: #2d2a26;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .webshop-moodboard__all-link {
+    display: flex;
+    min-height: 54px;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: auto;
+    border: 1px solid #6f1830;
+    color: #6f1830;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 160ms ease, color 160ms ease;
+
+    &:hover,
+    &:focus {
+      background: #6f1830;
+      color: #fff8ec;
+      outline: 0;
+    }
+  }
+
+  @media (max-width: 1080px) {
+    .webshop-moodboard__layout {
+      grid-template-columns: 1fr;
+    }
+
+    .webshop-moodboard__header h2 {
+      font-size: 52px;
+    }
+
+    .webshop-moodboard__products {
+      padding: 22px;
+    }
+  }
+
+  @media (max-width: 692px) {
+    padding: 42px 14px;
+
+    .webshop-moodboard__header {
+      margin-bottom: 22px;
+
+      h2 {
+        font-size: 38px;
+      }
+
+      p {
+        font-size: 16px;
+      }
+    }
+
+    .webshop-moodboard__scene,
+    .webshop-moodboard__scene img {
+      min-height: 360px;
+    }
+
+    .webshop-moodboard__product {
+      grid-template-columns: 96px minmax(0, 1fr) 18px;
+      gap: 12px;
+      min-height: 104px;
+      padding: 10px;
+    }
+
+    .webshop-moodboard__product-content strong {
+      font-size: 17px;
+    }
+  }
+}

@@ -1,0 +1,228 @@
+.webshop-admin-moodboards,
+.webshop-admin-moodboard-edit {
+  padding: 24px;
+
+  .webshop-admin-moodboards__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+
+    h1 {
+      margin: 0;
+    }
+  }
+
+  .webshop-admin-moodboards__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .webshop-admin-moodboards__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    padding: 8px;
+    border-radius: 8px;
+    background: var(--fg-surface-muted, #f6f8fb);
+
+    input {
+      min-width: min(360px, 100%);
+    }
+  }
+
+  .webshop-admin-moodboards__table {
+    display: grid;
+    gap: 8px;
+    margin-top: 1rem;
+  }
+
+  .webshop-admin-moodboards__row {
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr) 120px auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid var(--fg-border-color-soft, #e5e8ef);
+    border-radius: 8px;
+    background: var(--fg-surface, #fff);
+
+    strong,
+    span {
+      display: block;
+    }
+
+    span {
+      color: var(--fg-text-muted, #6b7280);
+      font-size: 13px;
+    }
+  }
+
+  .webshop-admin-moodboards__thumb {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: 6px;
+    background: var(--fg-surface-muted, #f6f8fb);
+
+    img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+  }
+
+  .webshop-admin-moodboards__status {
+    display: inline-flex;
+    width: max-content;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: var(--fg-surface-muted, #f6f8fb);
+
+    &.is-active {
+      color: #047857;
+    }
+
+    &.is-inactive {
+      color: var(--fg-text-muted, #6b7280);
+    }
+  }
+
+  .webshop-admin-moodboard-edit__fields {
+    display: grid;
+    gap: 12px;
+
+    label {
+      display: grid;
+      gap: 6px;
+    }
+
+    label span {
+      color: var(--fg-text-muted, #6b7280);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+  }
+
+  .webshop-admin-moodboard-edit__checkbox,
+  .webshop-admin-moodboard-edit__delete {
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .webshop-admin-moodboard-edit__workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+    gap: 1rem;
+  }
+
+  .webshop-admin-moodboard-edit__preview {
+    position: sticky;
+    top: 90px;
+    min-height: 360px;
+    overflow: hidden;
+    border: 1px solid var(--fg-border-color-soft, #e5e8ef);
+    border-radius: 8px;
+    background: var(--fg-surface-muted, #f6f8fb);
+    cursor: crosshair;
+
+    img {
+      width: 100%;
+      height: 100%;
+      min-height: 360px;
+      display: block;
+      object-fit: cover;
+    }
+  }
+
+  .webshop-admin-moodboard-edit__pin {
+    position: absolute;
+    left: var(--pin-x);
+    top: var(--pin-y);
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: var(--fg-primary-active, #722fbe);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    transform: translate(-50%, -50%);
+
+    &.is-active {
+      box-shadow: 0 0 0 8px rgba(114, 47, 190, 0.2);
+    }
+  }
+
+  .webshop-admin-moodboard-edit__items {
+    display: grid;
+    gap: 10px;
+  }
+
+  .webshop-admin-moodboard-edit__item {
+    display: grid;
+    grid-template-columns: minmax(180px, 1fr) 82px 82px 90px auto;
+    gap: 8px;
+    align-items: end;
+    padding: 10px;
+    border: 1px solid var(--fg-border-color-soft, #e5e8ef);
+    border-radius: 8px;
+    background: var(--fg-surface, #fff);
+
+    &.is-active {
+      border-color: var(--fg-primary-active, #722fbe);
+      box-shadow: 0 0 0 2px rgba(114, 47, 190, 0.1);
+    }
+
+    label {
+      display: grid;
+      gap: 5px;
+      min-width: 0;
+    }
+
+    label span {
+      color: var(--fg-text-muted, #6b7280);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    select,
+    input {
+      min-width: 0;
+    }
+  }
+
+  @media (max-width: 1080px) {
+    .webshop-admin-moodboard-edit__workspace,
+    .webshop-admin-moodboard-edit__item,
+    .webshop-admin-moodboards__row {
+      grid-template-columns: 1fr;
+    }
+
+    .webshop-admin-moodboard-edit__preview {
+      position: relative;
+      top: auto;
+    }
+  }
+
+  @media (max-width: 692px) {
+    padding: 14px;
+
+    .webshop-admin-moodboards__header {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+}
