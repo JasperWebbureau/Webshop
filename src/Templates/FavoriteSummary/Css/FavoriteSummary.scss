@@ -2,19 +2,13 @@
   --webshop-header-summary-color: var(--secondary, var(--primary));
   --webshop-header-summary-count-color: var(--off-white, #fff);
   --webshop-header-summary-surface: var(--background, #fff);
+  --webshop-header-summary-popover-gap: 10px;
 
   position: relative;
   display: inline-block;
   font-weight: 700;
   outline: 0;
-  &:before{
-    position: absolute;
-    height: 30px;
-    bottom:100%;
-    left:0;
-    right:0;
-    content:"";
-  }
+
   .webshop-header-summary__trigger {
     display: inline-flex;
     align-items: center;
@@ -45,7 +39,7 @@
 
   .webshop-header-summary__popover {
     position: absolute;
-    top: calc(100% + 10px);
+    top: calc(100% + var(--webshop-header-summary-popover-gap));
     right: 0;
     z-index: 20;
     width: min(360px, calc(100vw - 28px));
@@ -58,6 +52,15 @@
     pointer-events: none;
     transform: translateY(-4px);
     transition: opacity 160ms ease, transform 160ms ease;
+
+    &::before {
+      position: absolute;
+      right: 0;
+      bottom: 100%;
+      width: 100%;
+      height: var(--webshop-header-summary-popover-gap);
+      content: "";
+    }
   }
 
   &:hover .webshop-header-summary__popover,

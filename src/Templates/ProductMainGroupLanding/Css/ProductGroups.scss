@@ -1,15 +1,12 @@
-.webshop-main-group-product-groups {
-  --webshop-main-green: #183d35;
-  --webshop-main-cream: #f7f2e8;
+:root {
+  --webshop-group-overview-surface: var(--webshop-main-cream, #f7f2e8);
+}
 
+.webshop-main-group-product-groups {
 //  padding: 28px clamp(18px, 5vw, 54px) 52px;
-  background: var(--webshop-main-cream);
+  background: var(--webshop-group-overview-surface);
 
   h2 {
   //  margin: 0 0 22px;
-
-
-    font-size: clamp(28px, 3vw, 42px);
-    font-weight: 400;
   }
 }

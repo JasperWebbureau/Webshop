@@ -1,10 +1,10 @@
 .webshop-main-group-highlight {
-  --webshop-main-green: #183d35;
-  --webshop-main-cream: var(--tertiary-light);
+  --webshop-main-group-highlight-link-color: var(--webshop-main-green, #183d35);
+  --webshop-main-group-highlight-surface: var(--webshop-surface, var(--tertiary-light));
 
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(320px, 42%);
-  background: var(--webshop-main-cream);
+  background: var(--webshop-main-group-highlight-surface);
 
   .webshop-main-group-highlight__image {
     min-height: 460px;
@@ -39,7 +39,7 @@
     a {
       width: fit-content;
       margin-top: 20px;
-      color: var(--webshop-main-green);
+      color: var(--webshop-main-group-highlight-link-color);
       text-decoration: underline;
       text-underline-offset: 6px;
     }

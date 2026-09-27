@@ -1,10 +1,7 @@
 <?php
 use Flexgrid\Event\AjaxEvent;
 use Flexgrid\Modules\Webshop\Controller\WebshopController;
-use Flexgrid\Response\PageResponse;
 use Flexgrid\Response\TemplateResponse;
-
-PageResponse::addAsset('Flexgrid/Modules/Webshop/src/Templates/CheckoutPage/Js/CheckoutPage.js');
 
 $checkoutData = is_array($checkoutData ?? null) ? $checkoutData : [];
 $checkoutEvent = new AjaxEvent(WebshopController::class, 'submitCheckout');

@@ -58,6 +58,47 @@ class WebshopProductMainGroupController extends ModuleController
     }
 
     /**
+     * @FG\Template [name=Product hoofdgroep dropdown, icon=fas fa-sitemap, html={<div data-type='plugin'><h5>Product hoofdgroep dropdown</h5></div>}]
+     * @param int $limit [name=Aantal hoofdgroepen,type=int]
+     * @param int $pageId [name=Product overzicht pagina,type=page]
+     * @param int $groupLimit [name=Aantal subgroepen,type=int]
+     */
+    public function productMainGroupDropdown($limit = 99, $pageId = 0, $groupLimit = 99)
+    {
+        $limit = (int)$limit;
+        $groupLimit = (int)$groupLimit;
+        $entities = array_slice(
+            (new WebshopProductMainGroupRepository())->getActive(),
+            0,
+            $limit > 0 ? $limit : 99
+        );
+        $productGroupRepository = new WebshopProductGroupRepository();
+        $productGroupsByMainGroupId = [];
+
+        foreach ($entities as $entity) {
+            if (!is_object($entity) || !method_exists($entity, 'getId')) {
+                continue;
+            }
+
+            $mainGroupId = (int)$entity->getId();
+            if ($mainGroupId <= 0) {
+                continue;
+            }
+
+            $productGroupsByMainGroupId[$mainGroupId] = $productGroupRepository->getByMainGroupId(
+                $mainGroupId,
+                $groupLimit > 0 ? $groupLimit : 99
+            );
+        }
+
+        return new TemplateResponse('Flexgrid/Modules/Webshop/src/Templates/ProductMainGroupDropdown/ProductMainGroupDropdown.php', [
+            'entities' => $entities,
+            'productGroupsByMainGroupId' => $productGroupsByMainGroupId,
+            'pageId' => (int)$pageId,
+        ]);
+    }
+
+    /**
      * @FG\Template [name=Product hoofdgroep banner, icon=fas fa-image, html={<div data-type='plugin'><h5>Product hoofdgroep banner</h5></div>}]
      * @param int $mainGroupId [name=Hoofdgroep,type=group]
      * @param string $buttonText [name=Knoptekst,type=text]
@@ -65,7 +106,10 @@ class WebshopProductMainGroupController extends ModuleController
      */
     public function banner($mainGroupId = 0, $buttonText = 'Ontdek de collectie', $productGroupPageId = 0)
     {
-        return new TemplateResponse('Flexgrid/Modules/Webshop/src/Templates/ProductMainGroupLanding/Banner.php', [
+        return new TemplateResponse($this->getModuleTemplate(
+            'ProductMainGroupLanding/Banner.php',
+            'Flexgrid/Modules/Webshop/src/Templates/ProductMainGroupLanding/Banner.php'
+        ), [
             'entity' => $this->getMainGroup((int)$mainGroupId),
             'buttonText' => $buttonText,
             'productGroupPageId' => (int)$productGroupPageId,
@@ -136,9 +180,7 @@ class WebshopProductMainGroupController extends ModuleController
         }
 
         $cardFile = (new WebshopProductController())->getTemplate('Cards', false, $card);
-        if (is_file('Flexgrid/Modules/Webshop/src/Templates/Cards/' . $card . '.php')) {
-            $cardFile = 'Flexgrid/Modules/Webshop/src/Templates/Cards/' . $card . '.php';
-        }
+        $cardFile = $this->getModuleTemplate('Cards/' . $card . '.php', $cardFile);
 
         return new TemplateResponse('Flexgrid/Modules/Webshop/src/Templates/ProductMainGroupLanding/Slider.php', [
             'entity' => $mainGroup,

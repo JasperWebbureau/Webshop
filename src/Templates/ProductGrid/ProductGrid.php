@@ -4,7 +4,10 @@ use Flexgrid\Response\PageResponse;
 
 $paginationHtml = '';
 if( isset($pagination) && ! empty($pagination) ){
-    $paginationHtml = (string)new \Flexgrid\Response\TemplateResponse('Flexgrid/Modules/Webshop/src/Templates/ProductGrid/Toolbar/Toolbar.php', ['pagination' => $pagination]);
+    $paginationHtml = (string)new \Flexgrid\Response\TemplateResponse(
+        $toolbarTemplate ?? 'Flexgrid/Modules/Webshop/src/Templates/ProductGrid/Toolbar/Toolbar.php',
+        ['pagination' => $pagination]
+    );
 }
 
 PageResponse::addReplace('-webshop-product-toolbar-', $paginationHtml);

@@ -1,3 +1,15 @@
+:root {
+  --webshop-checkout-surface: var(--webshop-order-surface, var(--off-white, #fffcf7));
+  --webshop-checkout-bright-surface: var(--webshop-order-bright-surface, #fff);
+  --webshop-checkout-card-surface: var(--webshop-order-card-surface, color-mix(in srgb, var(--webshop-checkout-surface) 78%, var(--webshop-checkout-bright-surface)));
+  --webshop-checkout-soft-surface: var(--webshop-order-soft-surface, var(--default-background));
+  --webshop-checkout-border: var(--webshop-order-border, color-mix(in srgb, var(--secondary) 18%, var(--border-color)));
+  --webshop-checkout-accent: var(--webshop-order-accent, var(--primary));
+  --webshop-checkout-muted: var(--webshop-order-muted, var(--muted, var(--secondary)));
+  --webshop-checkout-urgent: var(--webshop-order-urgent, var(--urgent, #bd0f28));
+  --webshop-checkout-shadow: var(--webshop-order-shadow, 0 10px 26px rgba(0, 0, 0, 0.06));
+}
+
 .webshop-checkout-page {
   .webshop-checkout-page__header {
     display: flex;
@@ -8,9 +20,7 @@
 
     p {
       margin: 0 0 6px;
-      color: var(--primary);
-      font-size: 12px;
-      font-weight: 800;
+      color: var(--webshop-checkout-accent);
       letter-spacing: 0;
       text-transform: uppercase;
     }
@@ -26,12 +36,10 @@
     gap: 8px;
     min-height: 38px;
     padding: 8px 12px;
-    border: 1px solid color-mix(in srgb, var(--primary) 22%, var(--border-color));
+    border: 1px solid color-mix(in srgb, var(--webshop-checkout-accent) 22%, var(--webshop-checkout-border));
     border-radius: 8px;
-    background: color-mix(in srgb, var(--primary) 8%, #fff);
-    color: var(--primary);
-    font-size: 13px;
-    font-weight: 800;
+    background: color-mix(in srgb, var(--webshop-checkout-accent) 8%, var(--webshop-checkout-card-surface));
+    color: var(--webshop-checkout-accent);
     white-space: nowrap;
   }
 
@@ -49,17 +57,15 @@
     gap: 8px;
     min-height: 44px;
     padding: 10px 12px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--webshop-checkout-border);
     border-radius: 8px;
-    background: #fff;
-    color: var(--muted);
-    font-size: 14px;
-    font-weight: 800;
+    background: var(--webshop-checkout-card-surface);
+    color: var(--webshop-checkout-muted);
   }
 
   .webshop-checkout-page__step--active {
-    border-color: color-mix(in srgb, var(--primary) 35%, var(--border-color));
-    color: var(--primary);
+    border-color: color-mix(in srgb, var(--webshop-checkout-accent) 35%, var(--webshop-checkout-border));
+    color: var(--webshop-checkout-accent);
   }
 
   .webshop-checkout-page__empty {
@@ -73,8 +79,7 @@
     text-align: center;
 
     i {
-      color: var(--primary);
-      font-size: 36px;
+      color: var(--webshop-checkout-accent);
     }
 
     h2,
@@ -83,7 +88,7 @@
     }
 
     p {
-      color: var(--muted);
+      color: var(--webshop-checkout-muted);
     }
   }
 
@@ -95,9 +100,9 @@
 
   .webshop-checkout-page__form-section {
     padding: clamp(16px, 3vw, 26px);
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--webshop-checkout-border);
     border-radius: 8px;
-    background: #fff;
+    background: var(--webshop-checkout-card-surface);
   }
 
   .webshop-checkout-page__checkout-form {
@@ -135,15 +140,11 @@
 
     h2 {
       margin: 0;
-      font-size: 20px;
     }
 
     p {
       margin: 4px 0 0;
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 400;
-      line-height: 1.45;
+      color: var(--webshop-checkout-muted);
     }
   }
 
@@ -155,9 +156,8 @@
     width: 34px;
     height: 34px;
     border-radius: 8px;
-    background: color-mix(in srgb, var(--primary) 10%, #fff);
-    color: var(--primary);
-    font-size: 14px;
+    background: color-mix(in srgb, var(--webshop-checkout-accent) 10%, var(--webshop-checkout-card-surface));
+    color: var(--webshop-checkout-accent);
   }
 
   .webshop-checkout-page__shipping {
@@ -176,11 +176,10 @@
     align-items: center;
     gap: 12px;
     padding: 14px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--webshop-checkout-border);
     border-radius: 8px;
-    background: color-mix(in srgb, var(--default-background) 28%, #fff);
+    background: color-mix(in srgb, var(--webshop-checkout-soft-surface) 28%, var(--webshop-checkout-card-surface));
     cursor: pointer;
-    font-weight: 400;
     transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
 
     input[type="radio"] {
@@ -195,19 +194,19 @@
     }
 
     &:hover {
-      border-color: color-mix(in srgb, var(--primary) 32%, var(--border-color));
-      background: #fff;
+      border-color: color-mix(in srgb, var(--webshop-checkout-accent) 32%, var(--webshop-checkout-border));
+      background: var(--webshop-checkout-card-surface);
     }
 
     &:has(input:checked) {
-      border-color: color-mix(in srgb, var(--primary) 56%, var(--border-color));
-      background: color-mix(in srgb, var(--primary) 7%, #fff);
-      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.06);
+      border-color: color-mix(in srgb, var(--webshop-checkout-accent) 56%, var(--webshop-checkout-border));
+      background: color-mix(in srgb, var(--webshop-checkout-accent) 7%, var(--webshop-checkout-card-surface));
+      box-shadow: var(--webshop-checkout-shadow);
     }
 
     small {
       display: block;
-      color: var(--muted);
+      color: var(--webshop-checkout-muted);
     }
   }
 
@@ -218,7 +217,7 @@
 
     i {
       margin-right: 8px;
-      color: var(--primary);
+      color: var(--webshop-checkout-accent);
     }
   }
 
@@ -228,9 +227,7 @@
 
   .webshop-checkout-page__form-save-feedback {
     min-height: 18px;
-    color: var(--muted);
-    font-size: 12px;
-    font-weight: 700;
+    color: var(--webshop-checkout-muted);
     text-align: right;
 
     span {
@@ -243,17 +240,16 @@
   .webshop-checkout-page__feedback .webshop-cart-feedback__message {
     padding: 10px 12px;
     border-radius: 6px;
-    font-weight: 700;
   }
 
   .webshop-checkout-page__feedback .webshop-cart-feedback__message--success {
-    background: color-mix(in srgb, var(--primary) 12%, transparent);
-    color: var(--primary);
+    background: color-mix(in srgb, var(--webshop-checkout-accent) 12%, transparent);
+    color: var(--webshop-checkout-accent);
   }
 
   .webshop-checkout-page__feedback .webshop-cart-feedback__message--error {
-    background: color-mix(in srgb, var(--urgent) 12%, transparent);
-    color: var(--urgent);
+    background: color-mix(in srgb, var(--webshop-checkout-urgent) 12%, transparent);
+    color: var(--webshop-checkout-urgent);
   }
 
   .webshop-checkout-page__summary {
@@ -261,7 +257,9 @@
       position: sticky;
       top: 20px;
       overflow: hidden;
+      border: 1px solid var(--webshop-checkout-border);
       border-radius: 8px;
+      background: var(--webshop-checkout-card-surface);
     }
   }
 
@@ -271,20 +269,17 @@
     align-items: center;
     gap: 12px;
     padding: 10px 0;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--webshop-checkout-border);
 
     span:not(.webshop-checkout-page__line-image) {
       display: flex;
       min-width: 0;
       flex-direction: column;
       gap: 3px;
-      font-weight: 700;
     }
 
     small {
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 400;
+      color: var(--webshop-checkout-muted);
     }
 
     strong {
@@ -296,7 +291,7 @@
     aspect-ratio: 1;
     overflow: hidden;
     border-radius: 7px;
-    background: var(--default-background);
+    background: var(--webshop-checkout-soft-surface);
 
     img {
       display: block;
@@ -311,12 +306,11 @@
     justify-content: space-between;
     gap: 12px;
     padding: 10px 0;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--webshop-checkout-border);
   }
 
   .webshop-checkout-page__total {
     border-bottom: 0;
-    font-size: 18px;
 
     span {
       display: flex;
@@ -325,27 +319,22 @@
     }
 
     small {
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 400;
+      color: var(--webshop-checkout-muted);
     }
   }
 
   .webshop-checkout-page__grand-total {
     margin-top: 6px;
     padding-top: 14px;
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid var(--webshop-checkout-border);
 
     strong {
-      color: var(--primary);
-      font-size: 22px;
+      color: var(--webshop-checkout-accent);
     }
   }
 
   .webshop-checkout-page__hint {
-    color: var(--muted);
-    font-size: 13px;
-    line-height: 1.4;
+    color: var(--webshop-checkout-muted);
     padding: 8px 0;
   }
 

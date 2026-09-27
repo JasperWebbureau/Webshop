@@ -1,18 +1,21 @@
-:root{
-  --webshop-cart-surface: var(--off-white, #fffcf7);
-  --webshop-cart-card-surface: color-mix(in srgb, var(--webshop-cart-surface) 78%, #fff);
-  --webshop-cart-border: color-mix(in srgb, var(--secondary) 18%, var(--border-color));
-  --webshop-cart-accent: var(--primary);
-  --webshop-cart-title: var(--secondary);
-  --webshop-cart-muted: var(--muted);
-
+:root {
+  --webshop-cart-surface: var(--webshop-order-surface, var(--off-white, #fffcf7));
+  --webshop-cart-bright-surface: var(--webshop-order-bright-surface, #fff);
+  --webshop-cart-card-surface: var(--webshop-order-card-surface, color-mix(in srgb, var(--webshop-cart-surface) 78%, var(--webshop-cart-bright-surface)));
+  --webshop-cart-soft-surface: var(--webshop-order-soft-surface, var(--default-background));
+  --webshop-cart-border: var(--webshop-order-border, color-mix(in srgb, var(--secondary) 18%, var(--border-color)));
+  --webshop-cart-accent: var(--webshop-order-accent, var(--primary));
+  --webshop-cart-title: var(--webshop-order-title, var(--secondary));
+  --webshop-cart-color: var(--webshop-order-color, var(--color));
+  --webshop-cart-muted: var(--webshop-order-muted, var(--muted, var(--secondary)));
+  --webshop-cart-urgent: var(--webshop-order-urgent, var(--urgent, #bd0f28));
+  --webshop-cart-focus-ring: color-mix(in srgb, var(--webshop-cart-accent) 12%, transparent);
+  --webshop-cart-divider: color-mix(in srgb, var(--webshop-cart-border) 70%, transparent);
+  --webshop-cart-error-border: color-mix(in srgb, var(--webshop-cart-urgent) 32%, var(--webshop-cart-border));
+  --webshop-cart-error-surface: color-mix(in srgb, var(--webshop-cart-urgent) 8%, var(--webshop-cart-bright-surface));
 }
 
 .webshop-cart-page {
-
-
-
-
   .webshop-cart-page__header {
     display: flex;
     align-items: flex-start;
@@ -28,8 +31,6 @@
       gap: 22px;
       margin: 0 0 22px;
       color: var(--webshop-cart-accent);
-      font-size: 14px;
-      font-weight: 800;
       letter-spacing: 0;
       text-transform: uppercase;
 
@@ -44,7 +45,6 @@
     h1 {
       margin: 0;
       color: var(--webshop-cart-title);
-      line-height: 0.95;
     }
   }
 
@@ -53,11 +53,10 @@
     --button-background: transparent;
     --button-hover-background: var(--webshop-cart-accent);
     --button-color: var(--webshop-cart-accent);
-    --button-hover-color: var(--off-white, #fff);
+    --button-hover-color: var(--webshop-cart-bright-surface);
     --button-border-color: var(--webshop-cart-accent);
     --button-hover-border-color: var(--webshop-cart-accent);
     --button-border-radius: 999px;
-    --button-font-size: 14px;
 
     flex: 0 0 auto;
     gap: 8px;
@@ -82,7 +81,6 @@
 
     i {
       color: var(--webshop-cart-accent);
-      font-size: 36px;
     }
 
     h2,
@@ -113,7 +111,7 @@
   .webshop-cart-page__image {
     aspect-ratio: 1.18;
     overflow: hidden;
-    background: var(--default-background);
+    background: var(--webshop-cart-soft-surface);
 
     img {
       width: 100%;
@@ -128,9 +126,6 @@
       max-width: 520px;
       margin: 0 0 18px;
       color: var(--webshop-cart-title);
-      font-size: clamp(24px, 2vw, 34px);
-      font-weight: 500;
-      line-height: 1.18;
 
       a {
         color: inherit;
@@ -140,8 +135,6 @@
 
     span {
       color: var(--webshop-cart-muted);
-      font-size: 14px;
-      font-weight: 500;
       text-transform: uppercase;
     }
   }
@@ -155,9 +148,7 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
-      color: var(--webshop-cart-color, var(--color));
-      font-size: 15px;
-      font-weight: 600;
+      color: var(--webshop-cart-color);
     }
 
     input {
@@ -168,13 +159,11 @@
       border-radius: 0;
       background: var(--webshop-cart-surface);
       color: var(--webshop-cart-title);
-      font: inherit;
-      font-size: 18px;
     }
 
     input:focus {
       border-color: var(--webshop-cart-accent);
-      box-shadow: 0 0 0 3px color-mix(in srgb, var(--webshop-cart-accent) 12%, transparent);
+      box-shadow: 0 0 0 3px var(--webshop-cart-focus-ring);
       outline: none;
     }
   }
@@ -184,15 +173,10 @@
     flex-direction: column;
     gap: 18px;
     color: var(--webshop-cart-title);
-    font-size: 22px;
-    font-weight: 800;
     text-align: right;
 
     small {
       color: var(--webshop-cart-muted);
-      font-size: 15px;
-      font-weight: 500;
-      line-height: 1.25;
     }
   }
 
@@ -201,8 +185,8 @@
       --button-height: 50px;
       --button-background: var(--webshop-cart-accent);
       --button-hover-background: var(--webshop-cart-title);
-      --button-color: var(--off-white, #fff);
-      --button-hover-color: var(--off-white, #fff);
+      --button-color: var(--webshop-cart-bright-surface);
+      --button-hover-color: var(--webshop-cart-bright-surface);
       --button-border-color: var(--webshop-cart-accent);
       --button-hover-border-color: var(--webshop-cart-title);
       --button-border-radius: 0;
@@ -225,14 +209,11 @@
     .panel__header {
       padding: clamp(24px, 2.5vw, 38px) clamp(22px, 2.5vw, 38px) 18px;
       border-top: 3px solid var(--webshop-cart-accent);
-      border-bottom: 1px solid color-mix(in srgb, var(--webshop-cart-border) 70%, transparent);
+      border-bottom: 1px solid var(--webshop-cart-divider);
 
       h3 {
         margin: 0;
         color: var(--webshop-cart-title);
-        font-size: clamp(28px, 2vw, 38px);
-        font-weight: 500;
-        line-height: 1;
       }
     }
 
@@ -243,9 +224,6 @@
     .button {
       --button-height: 70px;
       --button-border-radius: 0;
-      --button-font-size: 18px;
-      --button-font-weight: 800;
-      --button-letter-spacing: 0;
       --button-box-shadow: none;
       --button-hover-box-shadow: none;
       max-width: none;
@@ -262,7 +240,7 @@
       --button-background: transparent;
       --button-hover-background: var(--webshop-cart-accent);
       --button-color: var(--webshop-cart-accent);
-      --button-hover-color: var(--off-white, #fff);
+      --button-hover-color: var(--webshop-cart-bright-surface);
       --button-border-color: var(--webshop-cart-accent);
       --button-hover-border-color: var(--webshop-cart-accent);
     }
@@ -278,12 +256,10 @@
     justify-content: space-between;
     gap: 18px;
     margin-bottom: 22px;
-    color: var(--webshop-cart-color, var(--color));
-    font-size: 18px;
+    color: var(--webshop-cart-color);
 
     strong {
       color: var(--webshop-cart-title);
-      font-size: 20px;
       white-space: nowrap;
     }
   }
@@ -292,20 +268,15 @@
     max-width: 340px;
     margin: 6px 0 30px;
     color: var(--webshop-cart-muted);
-    font-size: 15px;
-    line-height: 1.7;
   }
 
   .webshop-cart-page__configuration-error {
     margin: 0 0 18px;
     padding: 10px 12px;
-    border: 1px solid color-mix(in srgb, var(--urgent) 32%, var(--border-color));
+    border: 1px solid var(--webshop-cart-error-border);
     border-radius: 6px;
-    background: color-mix(in srgb, var(--urgent) 8%, #fff);
-    color: var(--urgent);
-    font-size: 13px;
-    font-weight: 700;
-    line-height: 1.4;
+    background: var(--webshop-cart-error-surface);
+    color: var(--webshop-cart-urgent);
   }
 
   @media (max-width: 980px) {

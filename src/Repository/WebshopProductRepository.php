@@ -120,7 +120,7 @@ class WebshopProductRepository extends Repository
 
         $orderConfig = $this->getOrderConfig($order, 'title');
         $products = $this->select(true)
-            ->where('group_id IN (' . implode(',', array_fill(0, count($groupIds), '?')) . ') AND is_active = ? AND status = ?', array_merge($groupIds, [1, 'published']))
+            ->where('group_id IN (' . implode(',', array_fill(0, count($groupIds), '?')) . ') AND (is_hidden IS NULL OR is_hidden = ?) ', array_merge($groupIds, [0]))
             ->orderBy($orderConfig['field'], $orderConfig['direction'])
             ->limit(max((int)$limit * 3, (int)$limit))
             ->get();

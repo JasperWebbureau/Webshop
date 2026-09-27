@@ -11,7 +11,7 @@ $description = trim(strip_tags((string)$productGroup->getDescription()));
 <article class="card webshop-product-group-card clickable" style="--cw:<?=$cardWidth?>;--cw-sm:6;--cw-xs:12">
     <a class="card__image webshop-product-group-card__image-link" href="<?=$detailUrl?>" aria-label="<?=$title?>">
         <img
-            src="<?=$productGroup->getImage()->getResizeUrl(720, 460, 1)?>"
+            src="<?=$productGroup->getImage()->getResizeUrl(720, 460, 0)?>"
             alt="<?=$title?>"
             loading="lazy"
         >

@@ -1,11 +1,11 @@
 .webshop-main-group-banner {
 
-  --webshop-main-cream: var(--tertiary-light);
+  --webshop-main-group-banner-surface: var(--webshop-main-cream, var(--tertiary-light));
 
   display: grid;
   grid-template-columns: minmax(320px, 40%) minmax(0, 60%);
   min-height: 520px;
-  background: var(--webshop-main-cream);
+  background: var(--webshop-main-group-banner-surface);
 
   .webshop-main-group-banner__content {
     display: flex;
@@ -54,7 +54,7 @@
       bottom: 0;
       left: 0;
       height: 62px;
-      background: linear-gradient(to bottom, transparent, var(--webshop-main-cream));
+      background: linear-gradient(to bottom, transparent, var(--webshop-main-group-banner-surface));
       content: "";
       pointer-events: none;
     }

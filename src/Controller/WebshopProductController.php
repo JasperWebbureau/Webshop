@@ -110,6 +110,10 @@ class WebshopProductController extends ModuleController
         $response =  new TemplateResponse($templateFile, [
             'entities' => $entities,
             'card' => $cardFile,
+            'toolbarTemplate' => $this->getModuleTemplate(
+                'ProductGrid/Toolbar/Toolbar.php',
+                'Flexgrid/Modules/Webshop/src/Templates/ProductGrid/Toolbar/Toolbar.php'
+            ),
             'pageId' => (int)$pageId,
             'cardWidth' => (int)$cardWidth ?: 4,
             'parentWidth' => 12,
@@ -264,7 +268,12 @@ class WebshopProductController extends ModuleController
 
     protected function renderProductPagination(array $pagination, string $ajaxTargetController)
     {
-        return new TemplateResponse('Flexgrid/Modules/Webshop/src/Templates/ProductGrid/Pagination/Pagination.php', [
+        $templateFile = $this->getModuleTemplate(
+            'ProductGrid/Pagination/Pagination.php',
+            'Flexgrid/Modules/Webshop/src/Templates/ProductGrid/Pagination/Pagination.php'
+        );
+
+        return new TemplateResponse($templateFile, [
             'pagination' => $pagination,
             'target' => md5($ajaxTargetController),
         ]);
@@ -401,7 +410,12 @@ class WebshopProductController extends ModuleController
 
         $_SERVER['in_detail'] = true;
 
-        return new TemplateResponse('Flexgrid/Modules/Webshop/src/Templates/ProductGrid/ProductGridDetail.php', [
+        $templateFile = $this->getModuleTemplate(
+            'ProductGrid/ProductGridDetail.php',
+            'Flexgrid/Modules/Webshop/src/Templates/ProductGrid/ProductGridDetail.php'
+        );
+
+        return new TemplateResponse($templateFile, [
             'entity' => $product,
             'controller' => $this,
             'pageId' => $pageId,

@@ -1,9 +1,11 @@
 .webshop-product-grid-intro {
+  --webshop-group-hero-surface: var(--default-background);
+  --webshop-group-hero-toggle-color: var(--primary);
+
   display: grid;
   grid-template-columns: minmax(380px, 36%) minmax(0, 64%);
   margin-bottom: 34px;
-  background: var(--default-background);
-  test: var(--test-var, blue);
+  background: var(--webshop-group-hero-surface);
   .webshop-product-grid-intro__content {
     display: flex;
     min-height: 320px;
@@ -54,7 +56,7 @@
     padding: 0;
     border: 0;
     background: transparent;
-    color: var(--primary);
+    color: var(--webshop-group-hero-toggle-color);
     cursor: pointer;
     font: inherit;
     font-weight: 800;

@@ -1,9 +1,8 @@
 .webshop-main-group-slider {
-  --webshop-main-green: #183d35;
-  --webshop-main-cream: #f7f2e8;
+  --webshop-main-group-slider-surface: var(--webshop-main-cream, #f7f2e8);
 
   //padding: 28px clamp(18px, 5vw, 54px) 52px;
-  background: var(--webshop-main-cream);
+  background: var(--webshop-main-group-slider-surface);
 
   h2 {
     margin: 0 0 22px;

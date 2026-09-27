@@ -9,7 +9,7 @@ use Flexgrid\Response\TemplateResponse;
 class WebshopMoodboardController
 {
     /**
-     * @FG\Template [name=Inspiratie blok, icon=fas fa-map-marker-alt, html={<div data-type='plugin'><h5>Inspiratie blok</h5></div>},create_override=true]
+     * @FG\Template [name=Inspiratie blok, icon=fas fa-map-marker-alt, html={<div data-type='plugin'><h5>Inspiratie blok</h5></div>},create_override=true,override_family=Moodboard]
      * @param int $moodboardId [name=Moodboard,type=WebshopMoodboard]
      * @param int $productGridPageId [name=Product detail pagina,type=page]
      */
@@ -22,10 +22,6 @@ class WebshopMoodboardController
             return '';
         }
 
-
-        if (!$isActive) {
-          //  return '';
-        }
         $file = 'Flexgrid/Modules/Webshop/src/Templates/Moodboard/Moodboard.php';
         if(file_exists('App/Webshop/Templates/Moodboard/Moodboard.php')){
             $file = 'App/Webshop/Templates/Moodboard/Moodboard.php';

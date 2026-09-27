@@ -17,6 +17,7 @@ class WebshopProductGroupController extends ModuleController
 {
     /**
      * @FG\Template [name=Productgroep hero / intro, icon=fas fa-layer-group, html={<div data-type='plugin'><h5>Product groep hero</h5></div>},create_override=true,override_family=GroupHero]
+     * @param int $groupId [name=Productgroep,type=group]
      */
     public function groupHero($groupId = 0)
     {
@@ -31,7 +32,10 @@ class WebshopProductGroupController extends ModuleController
         if ((int)$groupId > 0) {
             $currentGroup = (new WebshopProductGroupRepository())->findById((int)$groupId);
         }
-
+        if(file_exists('App/Webshop/Templates/GroupHero/GroupHero.php')){
+            return new TemplateResponse('App/Webshop/Templates/GroupHero/GroupHero.php', [ 'currentGroup' => $currentGroup,
+                'productCount' => count([])]);
+        }
         return new TemplateResponse('Flexgrid/Modules/Webshop/src/Templates/GroupHero/GroupHero.php', [ 'currentGroup' => $currentGroup,
             'productCount' => count([])]);
     }

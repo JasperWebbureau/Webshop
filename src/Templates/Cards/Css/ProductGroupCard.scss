@@ -1,3 +1,7 @@
+:root {
+  --webshop-group-media-surface: var(--default-background);
+}
+
 .webshop-product-group-card {
   height: 100%;
   overflow: hidden;
@@ -9,7 +13,7 @@
   .card__image {
     aspect-ratio: 16 / 10;
     overflow: hidden;
-    background: var(--default-background);
+    background: var(--webshop-group-media-surface);
 
     img {
       width: 100%;

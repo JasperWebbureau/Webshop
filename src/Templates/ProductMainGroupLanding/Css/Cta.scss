@@ -1,11 +1,12 @@
 .webshop-main-group-cta {
-  --webshop-main-red: var(--primary);
+  --webshop-main-group-cta-color: #fff;
+  --webshop-main-group-cta-surface: var(--webshop-main-red, var(--primary));
+  --custom-color: var(--webshop-main-group-cta-color);
 
 //  display: grid;
 // grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
   padding: 50px 0;
-  background: var(--webshop-main-red);
-  --custom-color: #fff;
+  background: var(--webshop-main-group-cta-surface);
   .webshop-main-group-content {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
@@ -26,7 +27,7 @@
   }
 
   a {
-    color: #fff;
+    color: var(--webshop-main-group-cta-color);
     text-decoration: underline;
     text-underline-offset: 6px;
   }

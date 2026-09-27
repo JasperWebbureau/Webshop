@@ -68,7 +68,7 @@ class WebshopController extends ModuleController
     }
 
     /**
-     * @FG\Template [name=Inspiratie blok, icon=fas fa-map-marker-alt, html={<div data-type='plugin'><h5>Inspiratie blok</h5></div>},create_override=true]
+     * @FG\Template [name=Inspiratie blok, icon=fas fa-map-marker-alt, html={<div data-type='plugin'><h5>Inspiratie blok</h5></div>},create_override=true,override_family=Moodboard]
      * @param int $moodboardId [name=Moodboard,type=WebshopMoodboard]
      * @param int $productGridPageId [name=Product detail pagina,type=page]
      */
@@ -97,7 +97,7 @@ class WebshopController extends ModuleController
     {
         $cartService = new CartService();
 
-        return new TemplateResponse('Flexgrid/Modules/Webshop/src/Templates/CartPage/CartPage.php', [
+        return new TemplateResponse($this->getWebshopTemplate('CartPage/CartPage.php'), [
             'items' => $cartService->getItems(),
             'summary' => $cartService->getSummary(),
         ]);
@@ -147,12 +147,12 @@ class WebshopController extends ModuleController
      */
     public function checkoutPage()
     {
-        if((int)$_REQUEST['transaction_id'] > 0){
+        if((int)($_REQUEST['transaction_id'] ?? 0) > 0){
             return $this->paymentReturn();
         }
         $cartService = new CartService();
 
-        return new TemplateResponse('Flexgrid/Modules/Webshop/src/Templates/CheckoutPage/CheckoutPage.php', [
+        return new TemplateResponse($this->getWebshopTemplate('CheckoutPage/CheckoutPage.php'), [
             'items' => $cartService->getItems(),
             'summary' => $cartService->getSummary(),
             'shippingMethods' => (new ShippingService())->getAvailableMethods((float)$cartService->getSummary()['subtotal']),
@@ -310,7 +310,7 @@ class WebshopController extends ModuleController
 
         $response->setContainer(
             '.webshop-checkout-page',
-            (string)new TemplateResponse('Flexgrid/Modules/Webshop/src/Templates/CheckoutPage/Success.php', [
+            (string)new TemplateResponse($this->getWebshopTemplate('CheckoutPage/Success.php'), [
                 'order' => $result['order'],
             ]),
             true
@@ -384,6 +384,18 @@ class WebshopController extends ModuleController
         $response->setContainer('.js-webshop-cart-count', (string)($response->cart['quantity'] ?? 0));
 
         return $response;
+    }
+
+    protected function getWebshopTemplate(string $relativePath): string
+    {
+        $relativePath = ltrim($relativePath, '/');
+        $appPath = 'App/Webshop/Templates/' . $relativePath;
+
+        if (is_file($appPath)) {
+            return $appPath;
+        }
+
+        return 'Flexgrid/Modules/Webshop/src/Templates/' . $relativePath;
     }
 
     protected function renderCartFeedback(bool $success, string $message): string
