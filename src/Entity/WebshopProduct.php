@@ -498,6 +498,14 @@ class WebshopProduct extends ModuleEntity
      */
     public function setPrice($value)
     {
+        if(strpos($value, '.') !== false){
+
+            $value =str_replace(['.', ','], '', $value);
+            $value = $value /100;
+
+
+
+        }
         $this->price = $value;
         return $this;
     }
