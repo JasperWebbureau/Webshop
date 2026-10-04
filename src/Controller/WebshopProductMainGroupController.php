@@ -29,9 +29,30 @@ class WebshopProductMainGroupController extends ModuleController
         $cardFile = $this->getTemplate('Cards', false, $card);
         $cardFile = $this->getModuleTemplate('Cards/' . $card . '.php', $cardFile);
         $limit = (int)$limit;
+        $groupsByMainGroupId = [];
+        foreach ((new WebshopProductGroupRepository())->getWithProducts(0, 9999) as $group) {
+            $groupsByMainGroupId[(int)$group->getMainGroupId()][] = $group;
+        }
+
+        $entities = [];
+        $visibleSubgroupCounts = [];
+        foreach ((new WebshopProductMainGroupRepository())->getActive() as $mainGroup) {
+            $mainGroupId = (int)$mainGroup->getId();
+            if (empty($groupsByMainGroupId[$mainGroupId])) {
+                continue;
+            }
+
+            $entities[] = $mainGroup;
+            $visibleSubgroupCounts[$mainGroupId] = count($groupsByMainGroupId[$mainGroupId]);
+            if (count($entities) >= ($limit > 0 ? $limit : 99)) {
+                break;
+            }
+        }
 
         return new TemplateResponse('Flexgrid/Modules/Webshop/src/Templates/ProductMainGroupGrid/ProductMainGroupGrid.php', [
-            'entities' => array_slice((new WebshopProductMainGroupRepository())->getActive(), 0, $limit > 0 ? $limit : 99),
+            'entities' => $entities,
+            'fallbackImages' => [],
+            'visibleSubgroupCounts' => $visibleSubgroupCounts,
             'pageId' => (int)$pageId,
             'limit' => $limit,
             'cardWidth' => (int)$cardWidth ?: 4,

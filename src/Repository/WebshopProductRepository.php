@@ -128,6 +128,48 @@ class WebshopProductRepository extends Repository
         return array_slice($this->filterVariantClusters($products), 0, (int)$limit);
     }
 
+    /** @return int[] IDs of groups with products counted by the frontend cards. */
+    public function getGroupIdsWithProducts(array $groupIds): array
+    {
+        $groupIds = array_values(array_unique(array_filter(array_map('intval', $groupIds), static function ($id) {
+            return $id > 0;
+        })));
+        if (!$groupIds) {
+            return [];
+        }
+
+        $products = $this->select(true)
+            ->where('`group_id` IN (' . implode(',', array_fill(0, count($groupIds), '?')) . ')', $groupIds)
+            ->get();
+
+        $visibleIds = [];
+        foreach ($products as $product) {
+            if ((int)$product->getIsActive() === 1 && (string)$product->getStatus() === 'published') {
+                $visibleIds[(int)$product->getGroupId()] = true;
+            }
+        }
+
+        return array_keys($visibleIds);
+    }
+
+    public function getFirstWithImageByGroupIds(array $groupIds)
+    {
+        $groupIds = array_values(array_unique(array_filter(array_map('intval', $groupIds), static function ($id) {
+            return $id > 0;
+        })));
+        if (!$groupIds) {
+            return null;
+        }
+
+        $products = $this->select(true)
+            ->where('`group_id` IN (' . implode(',', array_fill(0, count($groupIds), '?')) . ') AND    `image` IS NOT NULL AND `image` != ?', array_merge($groupIds, [ '']))
+            ->orderBy('title', 'ASC')
+            ->limit(1)
+            ->get();
+
+        return $products[0] ?? null;
+    }
+
     public function filterVariantClusters(array $products): array
     {
         $result = [];

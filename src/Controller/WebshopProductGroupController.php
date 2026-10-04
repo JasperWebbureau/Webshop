@@ -61,7 +61,7 @@ class WebshopProductGroupController extends ModuleController
         $repository = new WebshopProductGroupRepository();
 
         return new TemplateResponse('Flexgrid/Modules/Webshop/src/Templates/ProductGroupGrid/ProductGroupGrid.php', [
-            'entities' => (int)$mainGroupId > 0 ? $repository->getByMainGroupId((int)$mainGroupId, (int)$limit) : $repository->getAll($limit),
+            'entities' => $repository->getWithProducts((int)$mainGroupId, (int)$limit),
             'pageId' => (int)$pageId,
             'limit' => (int)$limit,
             'cardWidth' => (int)$cardWidth ?: 4,

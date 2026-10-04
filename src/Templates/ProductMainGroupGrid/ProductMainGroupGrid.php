@@ -21,6 +21,8 @@
             'cardWidth' => $cardWidth,
             'parentWidth' => $parentWidth,
             'cardIndex' => $count - 1,
+            'fallbackImage' => $fallbackImages[(int)$entity->getId()] ?? null,
+            'visibleSubgroupCount' => $visibleSubgroupCounts[(int)$entity->getId()] ?? null,
         ])?>
     <?php } ?>
 </grid>

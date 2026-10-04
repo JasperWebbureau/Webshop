@@ -2,6 +2,7 @@
 
 namespace Flexgrid\Modules\Webshop\Entity;
 
+use Flexgrid\Modules\Webshop\Service\ProductGroupImageService;
 use Flexgrid\Utils\Files\ImageFile;
 use Repository\ModuleEntity;
 
@@ -111,6 +112,16 @@ class WebshopProductMainGroup extends ModuleEntity
 
     public function getImage()
     {
+     //   dump($this->image);
+        if (is_string($this->image) && (int)$this->getId() > 0) {
+            $mediaId = (new ProductGroupImageService())->cloneFirstProductImageForMainGroup((int)$this->getId(), static::class);
+            if ($mediaId > 0) {
+                $this->setImage($mediaId);
+                $this->save();
+            }
+        }
+
+
         return ImageFile::getImageFile($this->image);
     }
 
