@@ -18,27 +18,40 @@ if (!empty($items)) { ?>
                         <span><?=htmlspecialchars($title, ENT_QUOTES, 'UTF-8')?></span>
                         <i class="fas fa-chevron-right" aria-hidden="true"></i>
                     </a>
+                    <button
+                        type="button"
+                        class="webshop-product-main-group-dropdown__open-groups"
+                        data-open-product-groups
+                        aria-label="<?=htmlspecialchars(sprintf(t('webshop_main_group_dropdown_open', 'Toon productgroepen van %s'), $title), ENT_QUOTES, 'UTF-8')?>"
+                        aria-expanded="false"
+                    >
+                        <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                    </button>
 
                     <section class="webshop-product-main-group-dropdown__panel" aria-label="<?=htmlspecialchars(sprintf(t('webshop_main_group_dropdown_panel_label', 'Productgroepen binnen %s'), $title), ENT_QUOTES, 'UTF-8')?>">
+                        <button type="button" class="webshop-product-main-group-dropdown__back" data-back-to-main-groups>
+                            <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                            <span><?=htmlspecialchars(t('webshop_main_group_dropdown_back', 'Alle productcategorieën'), ENT_QUOTES, 'UTF-8')?></span>
+                        </button>
                         <div class="webshop-product-main-group-dropdown__panel-header">
                             <span class="webshop-product-main-group-dropdown__eyebrow"><?=htmlspecialchars(t('webshop_main_group_dropdown_groups_label', 'Productgroepen'), ENT_QUOTES, 'UTF-8')?></span>
                             <h3><?=htmlspecialchars($title, ENT_QUOTES, 'UTF-8')?></h3>
                         </div>
 
                         <?php if (!empty($children)) { ?>
-                            <ul class="webshop-product-main-group-dropdown__groups">
+                            <div class="webshop-product-main-group-dropdown__groups" role="list">
                                 <?php foreach ($children as $productGroup) {
                                     $childTitle = method_exists($productGroup, 'getTitle') ? trim((string)$productGroup->getTitle()) : '';
                                     $childHref = method_exists($productGroup, 'getDetailUrl') ? (string)$productGroup->getDetailUrl($pageId) : '#';
                                     ?>
-                                    <li>
+                                    <div class="webshop-product-main-group-dropdown__group-item" role="listitem">
                                         <a href="<?=htmlspecialchars($childHref, ENT_QUOTES, 'UTF-8')?>">
                                             <span><?=htmlspecialchars($childTitle, ENT_QUOTES, 'UTF-8')?></span>
                                             <i class="fas fa-arrow-right" aria-hidden="true"></i>
                                         </a>
-                                    </li>
+                                    </div>
                                 <?php } ?>
-                            </ul>
+                            </div>
                         <?php } else { ?>
                             <p class="webshop-product-main-group-dropdown__empty">
                                 <?=htmlspecialchars(t('webshop_main_group_dropdown_empty', 'Er zijn geen productgroepen beschikbaar.'), ENT_QUOTES, 'UTF-8')?>

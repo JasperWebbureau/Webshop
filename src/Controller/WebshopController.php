@@ -487,20 +487,48 @@ class WebshopController extends ModuleController
 
     static function getPaymentReturnUrl(int $transactionId = 0)
     {
-        new Settings();
-        $setting = Settings::get('page_webshop_paymentreturn_id', ['value'=>0, "label"=> "webshop payment return pagina"]);
-        $pageRepository = new PageRepository();
-        $url = '';
-        if ((int)($setting['value'] ?? 0) > 0) {
-            $url = (string)$pageRepository->findById($setting['value'])->getUrl();
-        }
-
-        $url = trim($url) !== '' ? __DOMAIN__ . '/' . ltrim($url, '/') : __DOMAIN__ . '/Flexgrid/Webshop/paymentReturn';
+        $url = self::getCheckoutReturnPageUrl();
+        $url = $url ?: rtrim(__DOMAIN__, '/') . '/Flexgrid/Webshop/paymentReturn';
         if ($transactionId <= 0) {
             return $url;
         }
 
         return $url . (strpos($url, '?') === false ? '?' : '&') . 'transaction_id=' . $transactionId;
+    }
+
+    public static function getCheckoutReturnPageUrl(): ?string
+    {
+        new Settings();
+        $setting = Settings::get('page_webshop_checkout_return_id', [
+            'value' => 0,
+            'label' => 'webshop checkout retourpagina',
+        ]);
+        $pageId = (int)($setting['value'] ?? 0);
+
+        // Keep installations using the original payment-return setting working.
+        if ($pageId <= 0) {
+            $legacySetting = Settings::get('page_webshop_paymentreturn_id', [
+                'value' => 0,
+                'label' => 'webshop payment return pagina',
+            ]);
+            $pageId = (int)($legacySetting['value'] ?? 0);
+        }
+
+        if ($pageId <= 0) {
+            return null;
+        }
+
+        $page = (new PageRepository())->findById($pageId);
+        $url = trim((string)($page ? $page->getUrl() : ''));
+        if ($url === '') {
+            return null;
+        }
+
+        if (preg_match('#^https?://#i', $url)) {
+            return $url;
+        }
+
+        return rtrim(__DOMAIN__, '/') . '/' . ltrim($url, '/');
     }
 
     static function getProductGridPageId(): int

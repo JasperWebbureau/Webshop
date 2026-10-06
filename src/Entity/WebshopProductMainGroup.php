@@ -113,7 +113,8 @@ class WebshopProductMainGroup extends ModuleEntity
     public function getImage()
     {
      //   dump($this->image);
-        if (is_string($this->image) && (int)$this->getId() > 0) {
+        if (is_string($this->image) && (int)$this->getId() > 0 &&
+             ! is_numeric($this->image)) {
             $mediaId = (new ProductGroupImageService())->cloneFirstProductImageForMainGroup((int)$this->getId(), static::class);
             if ($mediaId > 0) {
                 $this->setImage($mediaId);

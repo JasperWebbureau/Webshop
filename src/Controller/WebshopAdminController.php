@@ -717,7 +717,7 @@ class WebshopAdminController
                     'page_webshop_cart_id' => $this->settingField('page_webshop_cart_id', 'Winkelwagen pagina', 0, 'number'),
                     'page_webshop_checkout_id' => $this->settingField('page_webshop_checkout_id', 'Checkout pagina', 0, 'number'),
                     'page_webshop_favorites_id' => $this->settingField('page_webshop_favorites_id', 'Favorieten pagina', 0, 'number'),
-                    'page_webshop_paymentreturn_id' => $this->settingField('page_webshop_paymentreturn_id', 'Betaalreturn pagina', 0, 'number'),
+                    'page_webshop_checkout_return_id' => $this->settingField('page_webshop_checkout_return_id', 'Checkout retourpagina', 0, 'number'),
                 ],
             ],
             [
