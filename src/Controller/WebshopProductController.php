@@ -184,6 +184,90 @@ class WebshopProductController extends ModuleController
         return $this->productGrid($pageId, $template, $card, 0, 0, $limit, $cardWidth);
     }
 
+    /**
+     * @FG\Template [name=Producten zoeken, icon=fas fa-search, html={<div data-type='plugin'><h5>Producten zoeken</h5></div>}]
+     * @param int $pageId [name=Productdetailpagina,type=page]
+     * @param string $card [name=Resultaatkaart,type=Template,default=SearchResultCard]
+     * @param int $limit [name=Maximum resultaten,type=int]
+     */
+    public function searchBar($pageId = 0, $card = 'SearchResultCard', $limit = 5)
+    {
+        $card = $this->resolveSearchCardName((string)$card);
+
+        return new TemplateResponse($this->getModuleTemplate(
+            'SearchBar/SearchBar.php',
+            'Flexgrid/Modules/Webshop/src/Templates/SearchBar/SearchBar.php'
+        ), [
+            'pageId' => max(0, (int)$pageId),
+            'card' => $card,
+            'limit' => max(1, min(10, (int)$limit)),
+            'eventClass' => get_class($this),
+        ]);
+    }
+
+    public function searchSuggestions($pageId = 0, $card = 'SearchResultCard', $limit = 5)
+    {
+        $request = new Request();
+        $query = trim((string)$request->get('q', ''));
+        $instance = (string)$request->get('search_instance', '');
+        $response = new AjaxResponse();
+        $response->inludeAssets();
+        $response->query = $query;
+
+        if (!preg_match('/^[a-zA-Z0-9_-]{1,64}$/', $instance)) {
+            $response->success = false;
+            return $response;
+        }
+
+        $products = [];
+        if (mb_strlen($query, 'UTF-8') >= 3 && mb_strlen($query, 'UTF-8') <= 120) {
+            $limit = max(1, min(10, (int)$limit));
+            $repository = $this->getRepository();
+            $matches = array_filter($repository->search(['q' => $query], $limit * 3), static function ($product) {
+                return $product
+                    && (int)$product->getIsHidden() !== 1
+                    && (int)$product->getIsActive() === 1
+                    && (string)$product->getStatus() === 'published';
+            });
+            $products = array_slice($repository->filterVariantClusters(array_values($matches)), 0, $limit);
+        }
+
+        $card = $this->resolveSearchCardName((string)$card);
+        $cardFile = $this->getModuleTemplate(
+            'Cards/' . $card . '.php',
+            'Flexgrid/Modules/Webshop/src/Templates/Cards/SearchResultCard.php'
+        );
+        $results = new TemplateResponse($this->getModuleTemplate(
+            'SearchBar/SearchResults.php',
+            'Flexgrid/Modules/Webshop/src/Templates/SearchBar/SearchResults.php'
+        ), [
+            'entities' => $products,
+            'cardFile' => $cardFile,
+            'pageId' => max(0, (int)$pageId),
+        ]);
+
+        $response->setContainer(
+            '[data-webshop-search-results="' . $instance . '"]',
+            (string)$results
+        );
+
+        return $response;
+    }
+
+    protected function resolveSearchCardName(string $card): string
+    {
+        if (!preg_match('/^[A-Za-z][A-Za-z0-9]*$/', $card)) {
+            return 'SearchResultCard';
+        }
+
+        if (is_file('App/Webshop/Templates/Cards/' . $card . '.php')
+            || is_file('Flexgrid/Modules/Webshop/src/Templates/Cards/' . $card . '.php')) {
+            return $card;
+        }
+
+        return 'SearchResultCard';
+    }
+
     public function getRepository()
     {
         if($this->repository == null)

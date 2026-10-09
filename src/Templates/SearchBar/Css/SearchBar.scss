@@ -1,0 +1,93 @@
+.webshop-search {
+  --webshop-header-summary-color: var(--secondary, var(--primary));
+  --webshop-header-summary-surface: var(--background, #fff);
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+
+  .webshop-search__trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--webshop-header-summary-color);
+    cursor: pointer;
+    font: inherit;
+  }
+
+  .webshop-search__popover {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    z-index: 70;
+    width: min(420px, calc(100vw - 28px));
+    padding: 16px;
+    border: 1px solid var(--border-color, #ddd);
+    border-radius: 8px;
+    background: var(--webshop-header-summary-surface);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.16);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-4px);
+    transition: opacity 160ms ease, transform 160ms ease, visibility 160ms ease;
+    visibility: hidden;
+  }
+
+  &.webshop-header-summary:not(.is-open) .webshop-search__popover {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-4px);
+    visibility: hidden;
+  }
+
+  &.webshop-header-summary.is-open .webshop-search__popover {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+    visibility: visible;
+  }
+
+  .webshop-search__form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    label {
+      color: inherit;
+      font-weight: 700;
+    }
+
+    input[type="search"] {
+      width: 100%;
+      min-height: 44px;
+      padding: 8px 12px;
+      border: 1px solid var(--border-color, #ccc);
+      border-radius: 6px;
+      background: var(--webshop-header-summary-surface);
+      color: inherit;
+      font: inherit;
+    }
+  }
+
+  .webshop-search__results {
+    max-height: min(450px, 55vh);
+    overflow-y: auto;
+  }
+
+  .webshop-search__items {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 12px;
+  }
+
+  .webshop-search__message {
+    margin: 12px 0 0;
+    color: var(--muted, #65737e);
+  }
+}

@@ -6,6 +6,10 @@ $groupsByMainGroupId = is_array($productGroupsByMainGroupId ?? null) ? $productG
 
 if (!empty($items)) { ?>
     <div class="webshop-product-main-group-dropdown" role="group" aria-label="<?=htmlspecialchars(t('webshop_main_group_dropdown_label', 'Productcategorieën'), ENT_QUOTES, 'UTF-8')?>">
+        <button type="button" class="webshop-product-main-group-dropdown__back-menu" data-back-to-menu>
+            <i class="fas fa-arrow-left" aria-hidden="true"></i>
+            <span><?=htmlspecialchars(t('webshop_main_group_dropdown_menu_back', 'Terug naar menu'), ENT_QUOTES, 'UTF-8')?></span>
+        </button>
         <ul class="webshop-product-main-group-dropdown__main-groups">
             <?php foreach ($items as $mainGroup) {
                 $mainGroupId = method_exists($mainGroup, 'getId') ? (int)$mainGroup->getId() : 0;

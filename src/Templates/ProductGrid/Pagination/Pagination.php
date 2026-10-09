@@ -5,6 +5,7 @@ $pagination = is_array($pagination ?? null) ? $pagination : [];
 $totalPages = max(0, (int)($pagination['totalPagesAvailable'] ?? 0));
 $currentPage = max(0, (int)($pagination['currentPage'] ?? 0));
 $records = max(0, (int)($pagination['records'] ?? 0));
+$baseUrl = trim((string)($baseUrl ?? ''));
 $window = 2;
 $startPage = max(0, $currentPage - $window);
 $endPage = min($totalPages - 1, $currentPage + $window);
@@ -15,14 +16,14 @@ $endPage = min($totalPages - 1, $currentPage + $window);
      data-records="<?= $records ?>">
     <?php if ($totalPages > 1) { ?>
         <?php if ($startPage > 0) { ?>
-            <a href="#" data-page="0" class="webshop-product-pagination__link<?= $currentPage === 0 ? ' is-active' : '' ?>">1</a>
+            <a href="<?=htmlspecialchars($baseUrl !== '' ? $baseUrl . '?page=0' : '#', ENT_QUOTES, 'UTF-8')?>" data-page="0" class="webshop-product-pagination__link<?= $currentPage === 0 ? ' is-active' : '' ?>">1</a>
             <?php if ($startPage > 1) { ?>
                 <span class="webshop-product-pagination__gap">...</span>
             <?php } ?>
         <?php } ?>
 
         <?php for ($page = $startPage; $page <= $endPage; $page++) { ?>
-            <a href="#"
+            <a href="<?=htmlspecialchars($baseUrl !== '' ? $baseUrl . '?page=' . $page : '#', ENT_QUOTES, 'UTF-8')?>"
                data-page="<?= $page ?>"
                class="webshop-product-pagination__link<?= $page === $currentPage ? ' is-active' : '' ?>"
                <?= $page === $currentPage ? 'aria-current="page"' : '' ?>>
@@ -34,7 +35,7 @@ $endPage = min($totalPages - 1, $currentPage + $window);
             <?php if ($endPage < $totalPages - 2) { ?>
                 <span class="webshop-product-pagination__gap">...</span>
             <?php } ?>
-            <a href="#"
+            <a href="<?=htmlspecialchars($baseUrl !== '' ? $baseUrl . '?page=' . ($totalPages - 1) : '#', ENT_QUOTES, 'UTF-8')?>"
                data-page="<?= $totalPages - 1 ?>"
                class="webshop-product-pagination__link<?= $currentPage === $totalPages - 1 ? ' is-active' : '' ?>">
                 <?= $totalPages ?>
@@ -42,7 +43,7 @@ $endPage = min($totalPages - 1, $currentPage + $window);
         <?php } ?>
 
         <?php if ($currentPage < $totalPages - 1) { ?>
-            <a href="#"
+            <a href="<?=htmlspecialchars($baseUrl !== '' ? $baseUrl . '?page=' . ($currentPage + 1) : '#', ENT_QUOTES, 'UTF-8')?>"
                data-page="<?= $currentPage + 1 ?>"
                class="webshop-product-pagination__link webshop-product-pagination__next"
                aria-label="<?= htmlspecialchars(t('webshop_product_pagination_next', 'Volgende pagina'), ENT_QUOTES, 'UTF-8') ?>">

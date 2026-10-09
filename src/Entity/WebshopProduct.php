@@ -18,105 +18,104 @@ class WebshopProduct extends ModuleEntity
     protected $id;
 
     /**
-     * @FG\Column[type=varchar,fill=title,roles=share_title|title,search=true,sortoption={asc:A-z,desc:Z-a}]
+     * @FG\Column[type=varchar,fill=title,roles=share_title|title,search=true,sortoption={asc:A-z,desc:Z-a},width=8,order=10]
      * @FG\Filter::default[type=textsearch,html_title=Zoeken,fields={title,sku,shortDescription,color,size,manufacturer}]
      * @FG\listForm[width=3]
      */
     protected $title;
 
     /**
-     * @FG\Column[type=varchar,length=80,search=true,label=SKU]
+     * @FG\Column[type=varchar,length=80,search=true,label=SKU,width=4,order=20]
      * @FG\listForm[width=2]
      */
     protected $sku;
 
     /**
-     * @FG\Column[type=int,parent=Flexgrid\Modules\Webshop\Entity\WebshopProductGroup::id,role=group]
+     * @FG\Column[type=int,parent=Flexgrid\Modules\Webshop\Entity\WebshopProductGroup::id,role=group,group=Varianten,width=6,order=600]
      * @FG\Filter::default[type=checkboxMultipleSelect,html_title=Productgroep]
      * @FG\listForm[ignore=true]
      */
     protected $groupId;
 
     /**
-     * @FG\Sibling[target=Flexgrid\Modules\Webshop\Entity\WebshopProduct,useGroups=true]
-     * @FG\Flexgrid\Modules\Webshop\Entity\WebshopProduct_edit[width=12,group=Varianten,label=Gekoppelde producten]
+     * @FG\Sibling[target=Flexgrid\Modules\Webshop\Entity\WebshopProduct,useGroups=true,width=12,group=Varianten,label=Gekoppelde producten,order=610]
      */
     protected $linkedProducts;
 
     /**
-     * @FG\Column[type=image,roles=share_image|main_image]
+     * @FG\Column[type=image,roles=share_image|main_image,width=4,order=50]
      * @FG\listForm[ignore=true]
      */
     protected $image;
 
     /**
-     * @FG\Column[type=images]
+     * @FG\Column[type=images,group=Afbeeldingen,width=12,order=200]
      * @FG\listForm[ignore=true]
      */
     protected $images;
 
     /**
-     * @FG\Column[type=textarea,label=Korte omschrijving]
+     * @FG\Column[type=textarea,label=Korte omschrijving,group=Beschrijvingen,width=12,order=300]
      * @FG\listForm[ignore=true]
      */
     protected $shortDescription;
 
     /**
-     * @FG\Column[type=html,label=Omschrijving]
+     * @FG\Column[type=html,label=Omschrijving,group=Beschrijvingen,width=12,order=310]
      * @FG\listForm[ignore=true]
      */
     protected $description;
 
     /**
-     * @FG\Column[type=image,label=Highlight afbeelding]
+     * @FG\Column[type=image,label=Highlight afbeelding,group=Afbeeldingen,width=6,order=210]
      * @FG\listForm[ignore=true]
      */
     protected $highlightImage;
 
     /**
-     * @FG\Column[type=html,label=Highlight tekst]
+     * @FG\Column[type=html,label=Highlight tekst,group=Beschrijvingen,width=12,order=320]
      * @FG\listForm[ignore=true]
      */
     protected $highlightText;
 
     /**
-     * @FG\Column[type=monetary,label=Prijs]
+     * @FG\Column[type=monetary,label=Prijs,width=4,order=30]
      * @FG\listForm[width=2]
      */
     protected $price;
 
     /**
-     * @FG\Column[type=monetary,label=Inkoopprijs]
+     * @FG\Column[type=monetary,label=Inkoopprijs,group=Prijzen,width=6,order=410]
      * @FG\listForm[ignore=true]
      */
     protected $purchasePrice;
 
     /**
-     * @FG\Column[type=monetary,label=Actieprijs]
+     * @FG\Column[type=monetary,label=Actieprijs,group=Prijzen,width=6,order=400]
      * @FG\listForm[ignore=true]
      */
     protected $salePrice;
 
     /**
-     * @FG\Column[type=float,label=BTW percentage]
+     * @FG\Column[type=float,label=BTW percentage,group=Prijzen,width=6,order=430]
      * @FG\listForm[ignore=true]
      */
     protected $taxRate;
 
     /**
-     * @FG\Column[type=int,parent=Flexgrid\Modules\Webshop\Entity\WebshopTaxRate::id,label=BTW tarief]
+     * @FG\Column[type=int,parent=Flexgrid\Modules\Webshop\Entity\WebshopTaxRate::id,label=BTW tarief,group=Prijzen,width=6,order=420]
      * @FG\listForm[ignore=true]
      */
     protected $taxRateId;
 
     /**
-     * @FG\Column[type=int,label=Voorraad]
+     * @FG\Column[type=int,label=Voorraad,width=4,order=40]
      * @FG\listForm[width=1]
      */
     protected $stock;
 
     /**
-     * @FG\Column[type=tinyint,label=Voorraad bijhouden]
+     * @FG\Column[type=tinyint,label=Voorraad bijhouden,group=Voorraad,width=6,order=500]
      * @FG\listForm[ignore=true]
      */
     protected $trackStock;
@@ -124,21 +123,21 @@ class WebshopProduct extends ModuleEntity
 
 
     /**
-     * @FG\Column[type=varchar,label=Kleur,search=true]
+     * @FG\Column[type=varchar,label=Kleur,search=true,group=Productinformatie,width=6,order=130]
      * @FG\Filter::default[type=color,html_title=Kleur]
      * @FG\listForm[width=2]
      */
     protected $color;
 
     /**
-     * @FG\Column[type=varchar,label=Maat,search=true]
+     * @FG\Column[type=varchar,label=Maat,search=true,group=Productinformatie,width=6,order=140]
      * @FG\Filter::default[type=checkboxMultipleSelect,html_title=Maat]
      * @FG\listForm[width=2]
      */
     protected $size;
 
     /**
-     * @FG\Column[type=varchar,label=Fabrikant/merk,search=true]
+     * @FG\Column[type=varchar,label=Fabrikant/merk,search=true,group=Productinformatie,width=6,order=100]
      * @FG\listForm[width=2]
      */
     protected $manufacturer;

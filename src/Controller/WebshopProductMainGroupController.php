@@ -3,6 +3,8 @@
 namespace Flexgrid\Modules\Webshop\Controller;
 
 use Flexgrid\App\Routing\Routing;
+use Flexgrid\App\Routing\Path\PathContext;
+use Flexgrid\App\Routing\Url\UrlCreator;
 use Flexgrid\Autowire\Definition\TemplateDefinition;
 use Flexgrid\Autowire\Registry\TemplateRegistry;
 use Flexgrid\Controller\ModuleController;
@@ -11,6 +13,7 @@ use Flexgrid\Modules\Webshop\Repository\WebshopProductGroupRepository;
 use Flexgrid\Modules\Webshop\Repository\WebshopProductMainGroupRepository;
 use Flexgrid\Modules\Webshop\Repository\WebshopProductRepository;
 use Flexgrid\Response\TemplateResponse;
+use Flexgrid\Utils\Request\Request;
 
 /**
  * @FG\Controller [name=WebshopProductMainGroup,type=Webshop, icon=fas fa-sitemap]
@@ -148,6 +151,68 @@ class WebshopProductMainGroupController extends ModuleController
     public function productGroups($mainGroupId = 0, $pageId = 0, $limit = 99, $cardWidth = 3, $card = 'ProductGroupCard2')
     {
         $mainGroup = $this->getMainGroup((int)$mainGroupId);
+        $allProductsUrl = '';
+        $showAllProducts = false;
+        $productGrid = null;
+        $productPagination = null;
+
+        if ($mainGroup) {
+            $page = (int)$pageId > 0 ? (int)$pageId : Routing::currentPage();
+            if ($page) {
+                $route = (new UrlCreator())->create(
+                    (new PathContext($page, $mainGroup))->setRouteParameters(['view' => 'alles'])
+                );
+                if ((int)$route->getVisibleInMenu() !== 0) {
+                    $route->setVisibleInMenu(0);
+                    $route->save();
+                }
+                ;
+
+
+                $allProductsUrl = rtrim(__DOMAIN__, '/') . '/' . ltrim((string)$route->getUrl(), '/');
+
+                $currentUrl = Routing::currentUrl();
+                $parameters = $currentUrl ? json_decode((string)$currentUrl->getParameters(), true) : null;
+                $showAllProducts = is_array($parameters)
+                    && ($parameters['view'] ?? null) === 'alles'
+                    && (int)$currentUrl->getId() === (int)$route->getId();
+
+                if ($showAllProducts) {
+                    $products = (new WebshopProductRepository())->getByMainGroupId((int)$mainGroup->getId(), 9999);
+                    $pageSize = 12;
+                    $totalPages = max(1, (int)ceil(count($products) / $pageSize));
+                    $currentPage = min(max(0, (int)(new Request())->get('page', 0)), $totalPages - 1);
+                    $productCard = is_file('App/Webshop/Templates/Cards/MCProductCard.php')
+                        ? 'MCProductCard'
+                        : 'ProductCard';
+                    $productGrid = new TemplateResponse($this->getModuleTemplate(
+                        'ProductGrid/ProductGrid.php',
+                        'Flexgrid/Modules/Webshop/src/Templates/ProductGrid/ProductGrid.php'
+                    ), [
+                        'entities' => array_slice($products, $currentPage * $pageSize, $pageSize),
+                        'card' => $this->getModuleTemplate(
+                            'Cards/' . $productCard . '.php',
+                            'Flexgrid/Modules/Webshop/src/Templates/Cards/ProductCard.php'
+                        ),
+                        'pageId' => (int)$pageId,
+                        'cardWidth' => 4,
+                        'parentWidth' => 12,
+                    ]);
+                    $productPagination = new TemplateResponse($this->getModuleTemplate(
+                        'ProductGrid/Pagination/Pagination.php',
+                        'Flexgrid/Modules/Webshop/src/Templates/ProductGrid/Pagination/Pagination.php'
+                    ), [
+                        'pagination' => [
+                            'totalPagesAvailable' => $totalPages,
+                            'currentPage' => $currentPage,
+                            'records' => count($products),
+                        ],
+                        'target' => md5(WebshopProductController::class),
+                        'baseUrl' => $allProductsUrl,
+                    ]);
+                }
+            }
+        }
 
         return new TemplateResponse('Flexgrid/Modules/Webshop/src/Templates/ProductMainGroupLanding/ProductGroups.php', [
             'entity' => $mainGroup,
@@ -158,6 +223,10 @@ class WebshopProductMainGroupController extends ModuleController
                 (int)$cardWidth,
                 $card
             ),
+            'allProductsUrl' => $allProductsUrl,
+            'showAllProducts' => $showAllProducts,
+            'productGrid' => $productGrid,
+            'productPagination' => $productPagination,
         ]);
     }
 

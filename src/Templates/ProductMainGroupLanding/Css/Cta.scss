@@ -1,6 +1,6 @@
 .webshop-main-group-cta {
   --webshop-main-group-cta-color: #fff;
-  --webshop-main-group-cta-surface: var(--webshop-main-red, var(--primary));
+  --webshop-main-group-cta-surface: var(--webshop-surface, var(--primary));
   --custom-color: var(--webshop-main-group-cta-color);
 
 //  display: grid;
@@ -16,8 +16,7 @@
   }
   h2 {
     margin: 0;
-    font-family: Georgia, serif;
-    font-size: clamp(26px, 3vw, 40px);
+
     font-weight: 400;
   }
 

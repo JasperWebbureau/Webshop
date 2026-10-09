@@ -6,7 +6,13 @@
 //  padding: 28px clamp(18px, 5vw, 54px) 52px;
   background: var(--webshop-group-overview-surface);
 
-  h2 {
-  //  margin: 0 0 22px;
+  &__action {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+
+  &__all-products {
+    margin-top: 3rem;
   }
 }

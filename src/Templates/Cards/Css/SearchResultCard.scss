@@ -1,0 +1,49 @@
+.card.card-webshop-search-result {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-color, #ddd);
+  background: transparent;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  .card__media {
+    display: block;
+    width: 64px;
+    height: 64px;
+    overflow: hidden;
+    border-radius: 6px;
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+
+  .card__content {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 3px;
+    padding: 0;
+  }
+
+  .card__title {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .card__description {
+    color: var(--muted, #65737e);
+  }
+
+  .card__price {
+    color: var(--primary);
+  }
+}
