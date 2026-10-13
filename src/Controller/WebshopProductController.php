@@ -47,6 +47,11 @@ class WebshopProductController extends ModuleController
                 return $this->renderProductDetail((int)$url->getEntityId(), (int)$pageId);
 
             }
+            $mainGroup = RoutingService::getCurrentWebshopMainGroup();
+            if($mainGroup != false) {
+                $mainGroupId = $mainGroup->getId();
+            }
+
         }
 
         if ((int)$groupId === 0) {

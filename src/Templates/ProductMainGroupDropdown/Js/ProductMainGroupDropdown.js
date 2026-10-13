@@ -36,7 +36,7 @@
     }
 
     onPointerOut(event) {
-      return;
+
       if (!this.desktopDropdown || this.mobile.matches) return;
       if (!this.desktopOwner?.contains(event.target) && !this.desktopDropdown.contains(event.target)) return;
       const next = event.relatedTarget;

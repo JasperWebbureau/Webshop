@@ -21,7 +21,20 @@ class RoutingService{
 
     }
 
+    static function getCurrentWebshopMainGroup()
+    {
+        $current = Routing::currentEntity();
 
+        if( ! is_object($current)){
+            return false;
+        }
+        if(strpos(get_class($current), 'WebshopProductMainGroup') !== false){
+            return $current;
+        }
+
+        return false;
+
+    }
     static function getCurrentWebshopGroup()
     {
         $current = Routing::currentEntity();
