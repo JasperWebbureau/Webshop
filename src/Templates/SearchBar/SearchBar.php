@@ -34,10 +34,11 @@ $event->setMethodArguments((int)$limit);
         <span class="webshop-header-summary__icon"><i class="fas fa-search" aria-hidden="true"></i></span>
     </button>
 
-    <div class="webshop-header-summary__popover webshop-search__popover" id="<?=htmlspecialchars($popoverId, ENT_QUOTES, 'UTF-8')?>" aria-hidden="true">
+    <div class="webshop-search__popover" id="<?=htmlspecialchars($popoverId, ENT_QUOTES, 'UTF-8')?>" role="dialog" aria-labelledby="<?=htmlspecialchars($instance . '-label', ENT_QUOTES, 'UTF-8')?>" aria-hidden="true">
+        <button class="webshop-search__close" type="button" data-webshop-search-close aria-label="<?=htmlspecialchars(t('webshop_search_close', 'Sluit zoeken'), ENT_QUOTES, 'UTF-8')?>"><i class="fas fa-times" aria-hidden="true"></i></button>
         <form class="webshop-search__form" ajax="true" action="<?=htmlspecialchars($event->getName(), ENT_QUOTES, 'UTF-8')?>" role="search" data-webshop-search-form>
             <input type="hidden" name="search_instance" value="<?=htmlspecialchars($instance, ENT_QUOTES, 'UTF-8')?>">
-            <label for="<?=htmlspecialchars($instance, ENT_QUOTES, 'UTF-8')?>">
+            <label id="<?=htmlspecialchars($instance . '-label', ENT_QUOTES, 'UTF-8')?>" for="<?=htmlspecialchars($instance, ENT_QUOTES, 'UTF-8')?>">
                 <?=htmlspecialchars(t('webshop_search_label', 'Zoek een product'), ENT_QUOTES, 'UTF-8')?>
             </label>
             <input
@@ -45,6 +46,7 @@ $event->setMethodArguments((int)$limit);
                 type="search"
                 name="q"
                 autocomplete="off"
+                maxlength="120"
                 placeholder="<?=htmlspecialchars(t('webshop_search_placeholder', 'Zoek op product of artikelnummer'), ENT_QUOTES, 'UTF-8')?>"
                 data-webshop-search-input
             >

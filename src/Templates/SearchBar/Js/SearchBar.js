@@ -13,9 +13,22 @@ class WebshopSearchBar {
     this.form = root.querySelector('[data-webshop-search-form]');
     this.input = root.querySelector('[data-webshop-search-input]');
     this.results = root.querySelector('[data-webshop-search-results]');
+    this.backdrop = document.createElement('div');
+    this.backdrop.className = 'webshop-search__backdrop';
+    this.backdrop.setAttribute('aria-hidden', 'true');
     this.timer = null;
 
-    this.trigger.addEventListener('click', () => this.toggle());
+    this.backdrop.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      this.close();
+      this.trigger.focus();
+    });
+    this.trigger.addEventListener('click', () => this.open());
+    this.popover.querySelector('[data-webshop-search-close]').addEventListener('click', () => {
+      this.close();
+      this.trigger.focus();
+    });
     this.input.addEventListener('input', () => this.onInput());
     this.form.addEventListener('submit', (event) => {
       event.preventDefault();
@@ -23,37 +36,48 @@ class WebshopSearchBar {
       window.clearTimeout(this.timer);
       this.search();
     });
-    this.root.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') {
-        event.preventDefault();
-        this.close();
-        this.trigger.focus();
-      }
+    document.addEventListener('click', (event) => {
+      if (!this.contains(event.target)) this.close();
     });
-    document.addEventListener('pointerdown', (event) => {
-      if (!this.root.contains(event.target)) this.close();
-    });
+    window.addEventListener('scroll', () => this.position(), {passive: true});
+    window.addEventListener('resize', () => this.position());
   }
 
-  toggle() {
-    if (this.root.classList.contains('is-open')) {
-      this.close();
-    } else {
-      this.open();
-    }
+  contains(element) {
+    return this.root.contains(element) || this.popover.contains(element);
   }
 
   open() {
+    if (this.root.classList.contains('is-open')) {
+      this.input.focus();
+      return;
+    }
+    document.body.appendChild(this.backdrop);
+    document.body.appendChild(this.popover);
     this.root.classList.add('is-open');
+    this.popover.classList.add('is-open');
+    this.position();
     this.trigger.setAttribute('aria-expanded', 'true');
     this.popover.setAttribute('aria-hidden', 'false');
     this.input.focus();
+    if (Array.from(this.input.value.trim()).length >= 3) this.onInput();
   }
 
   close() {
+    window.clearTimeout(this.timer);
+    this.backdrop.remove();
     this.root.classList.remove('is-open');
+    this.popover.classList.remove('is-open');
+    this.popover.style.removeProperty('--webshop-search-top');
     this.trigger.setAttribute('aria-expanded', 'false');
     this.popover.setAttribute('aria-hidden', 'true');
+    if (this.popover.parentElement !== this.root) this.root.appendChild(this.popover);
+  }
+
+  position() {
+    if (!this.root.classList.contains('is-open')) return;
+    const bounds = this.trigger.getBoundingClientRect();
+    this.popover.style.setProperty('--webshop-search-top', Math.max(8, bounds.bottom + 8) + 'px');
   }
 
   onInput() {
@@ -77,7 +101,9 @@ class WebshopSearchBar {
     const ajax = new Ajax(this.form);
     ajax.setCallback((response) => {
       if ((response.query || '') !== this.input.value.trim()) {
-        this.showMessage(this.root.dataset.webshopSearchLoading);
+        this.showMessage(Array.from(this.input.value.trim()).length < 3
+          ? this.root.dataset.webshopSearchHint
+          : this.root.dataset.webshopSearchLoading);
       }
     });
     ajax.go();
