@@ -390,9 +390,16 @@ class WebshopProductController extends ModuleController
             }
         }
 
+        if ($groupId === 0 && $mainGroupId === 0) {
+            $current = RoutingService::getCurrentWebshopMainGroup();
+            if (is_object($current)) {
+                $mainGroupId = (int)$current->getId();
+            }
+        }
+
         $constraints = [
             [
-                'sql' => 'is_hidden = :is_hidden || is_hidden IS NULL',
+                'sql' => '(is_hidden = :is_hidden OR is_hidden IS NULL)',
                 'params' => [
                     ':is_hidden' => 0,
                 ],

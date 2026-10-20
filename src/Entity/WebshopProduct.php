@@ -32,7 +32,6 @@ class WebshopProduct extends ModuleEntity
 
     /**
      * @FG\Column[type=int,parent=Flexgrid\Modules\Webshop\Entity\WebshopProductGroup::id,role=group,group=Varianten,width=6,order=600]
-     * @FG\Filter::default[type=checkboxMultipleSelect,html_title=Productgroep]
      * @FG\listForm[ignore=true]
      */
     protected $groupId;
