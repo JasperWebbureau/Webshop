@@ -75,11 +75,14 @@
 
   .webshop-search__close {
     position: absolute;
-    top: 14px;
-    right: 14px;
+    // Forms inherit z-index: 2 from the shared grid mixin.
+    z-index: 3;
+    top: 10px;
+    right: 10px;
     display: grid;
-    width: 36px;
-    height: 36px;
+    width: 44px;
+    height: 44px;
+    padding: 0;
     place-items: center;
     border: 0;
     border-radius: 6px;
@@ -100,7 +103,7 @@
     padding: 0;
 
     label {
-      padding-right: 34px;
+      padding-right: 44px;
       color: var(--webshop-search-text);
       font-size: 20px;
       font-weight: 600;

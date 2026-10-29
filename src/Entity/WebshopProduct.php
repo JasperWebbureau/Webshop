@@ -123,14 +123,14 @@ class WebshopProduct extends ModuleEntity
 
     /**
      * @FG\Column[type=varchar,label=Kleur,search=true,group=Productinformatie,width=6,order=130]
-     * @FG\Filter::default[type=color,html_title=Kleur]
+
      * @FG\listForm[width=2]
      */
     protected $color;
 
     /**
      * @FG\Column[type=varchar,label=Maat,search=true,group=Productinformatie,width=6,order=140]
-     * @FG\Filter::default[type=checkboxMultipleSelect,html_title=Maat]
+
      * @FG\listForm[width=2]
      */
     protected $size;
