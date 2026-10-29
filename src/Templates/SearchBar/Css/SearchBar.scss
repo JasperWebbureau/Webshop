@@ -93,6 +93,8 @@
     display: flex;
     flex: 0 0 auto;
     flex-direction: column;
+    width: 100%;
+    max-width: none;
     gap: 14px;
     margin: 0;
     padding: 0;
@@ -124,6 +126,8 @@
     margin-top: 22px;
     overflow-y: auto;
     overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--webshop-search-border) transparent;
   }
 
   .webshop-search__items {
@@ -131,6 +135,7 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: stretch;
     gap: 14px;
+    padding: 2px;
   }
 
   .webshop-search__message {

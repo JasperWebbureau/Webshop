@@ -17,8 +17,8 @@ $title = $title !== '' ? $title : (string)$product->getTitle();
 $manufacturer = trim((string)$product->getManufacturer());
 $sku = trim((string)$product->getSku());
 ?>
-<article class="card card-webshop-search-result clickable">
-
+<article class="card card-webshop-search-result">
+    <a class="card__link" href="<?=htmlspecialchars($url, ENT_QUOTES, 'UTF-8')?>">
         <div class="card__media">
             <img
                 src="<?=htmlspecialchars((string)$product->getImage()->getResizeUrl(240, 200, 0), ENT_QUOTES, 'UTF-8')?>"
@@ -35,9 +35,7 @@ $sku = trim((string)$product->getSku());
                 <?php if ($hasSale) { ?><del class="card__price-old"><?=$priceService->format($price)?></del><?php } ?>
                 <strong class="card__price"><?=$priceService->format($activePrice)?></strong>
             </div>
-            <a class="card__link" href="<?=htmlspecialchars($url, ENT_QUOTES, 'UTF-8')?>">
-                <i class="fas fa-arrow-right card__arrow" aria-hidden="true"></i>
-            </a>
         </div>
-
+        <i class="fas fa-arrow-right card__arrow" aria-hidden="true"></i>
+    </a>
 </article>

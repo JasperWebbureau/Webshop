@@ -77,7 +77,8 @@ class WebshopSearchBar {
   position() {
     if (!this.root.classList.contains('is-open')) return;
     const bounds = this.trigger.getBoundingClientRect();
-    this.popover.style.setProperty('--webshop-search-top', Math.max(8, bounds.bottom + 8) + 'px');
+    const top = Math.max(8, Math.min(bounds.bottom + 8, window.innerHeight - 180));
+    this.popover.style.setProperty('--webshop-search-top', top + 'px');
   }
 
   onInput() {
