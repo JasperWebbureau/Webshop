@@ -25,7 +25,7 @@ class WebshopProductGroup extends ModuleEntity
     protected $title;
 
     /**
-     * @FG\Column[type=int,parent=Flexgrid\Modules\Webshop\Entity\WebshopProductMainGroup::id,label=Hoofdgroep]
+     * @FG\Column[type=int,parent=Flexgrid\Modules\Webshop\Entity\WebshopProductMainGroup::id,role=group,label=Hoofdgroep]
      * @FG\Filter::default[type=checkboxMultipleSelect,html_title=Hoofdgroep]
      * @FG\listForm[width=3]
      */

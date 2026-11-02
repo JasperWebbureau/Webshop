@@ -25,8 +25,8 @@ class WebshopProduct extends ModuleEntity
     protected $title;
 
     /**
-     * @FG\Column[type=varchar,length=80,search=true,label=SKU,width=4,order=20]
-     * @FG\listForm[width=2]
+     * @FG\Column[type=varchar,length=80,search=true,label=SKU,width=6,order=20]
+     * @FG\listForm[ignore=true]
      */
     protected $sku;
 
@@ -42,14 +42,14 @@ class WebshopProduct extends ModuleEntity
     protected $linkedProducts;
 
     /**
-     * @FG\Column[type=image,roles=share_image|main_image,width=4,order=50]
-     * @FG\listForm[ignore=true]
+     * @FG\Column[type=image,roles=share_image|main_image,width=6,height=3,order=10]
+     * @FG\listForm[width=1]
      */
     protected $image;
 
     /**
      * @FG\Column[type=images,group=Afbeeldingen,width=12,order=200]
-     * @FG\listForm[ignore=true]
+     * @FG\listForm[ignore=true,order=1]
      */
     protected $images;
 
@@ -109,7 +109,7 @@ class WebshopProduct extends ModuleEntity
 
     /**
      * @FG\Column[type=int,label=Voorraad,width=4,order=40]
-     * @FG\listForm[width=1]
+     * @FG\listForm[ignore=true]
      */
     protected $stock;
 
@@ -124,20 +124,20 @@ class WebshopProduct extends ModuleEntity
     /**
      * @FG\Column[type=varchar,label=Kleur,search=true,group=Productinformatie,width=6,order=130]
 
-     * @FG\listForm[width=2]
+     * @FG\listForm[ignore=true]
      */
     protected $color;
 
     /**
      * @FG\Column[type=varchar,label=Maat,search=true,group=Productinformatie,width=6,order=140]
 
-     * @FG\listForm[width=2]
+     * @FG\listForm[ignore=true]
      */
     protected $size;
 
     /**
      * @FG\Column[type=varchar,label=Fabrikant/merk,search=true,group=Productinformatie,width=6,order=100]
-     * @FG\listForm[width=2]
+     * @FG\listForm[ignore=true]
      */
     protected $manufacturer;
 
