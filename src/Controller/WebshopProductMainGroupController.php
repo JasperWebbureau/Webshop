@@ -13,6 +13,7 @@ use Flexgrid\Modules\Webshop\Repository\WebshopProductGroupRepository;
 use Flexgrid\Modules\Webshop\Repository\WebshopProductMainGroupRepository;
 use Flexgrid\Modules\Webshop\Repository\WebshopProductRepository;
 use Flexgrid\Response\TemplateResponse;
+use Flexgrid\Repository\PageRepository;
 use Flexgrid\Utils\Request\Request;
 
 /**
@@ -90,7 +91,12 @@ class WebshopProductMainGroupController extends ModuleController
     public function productMainGroupDropdown($limit = 99, $pageId = 0, $groupLimit = 99)
     {
         $limit = (int)$limit;
+        $pageId = (int)$pageId;
         $groupLimit = (int)$groupLimit;
+        $overviewPage = $pageId > 0 ? (new PageRepository())->findById($pageId) : null;
+        $overviewHref = $overviewPage && (int)$overviewPage->getId() === $pageId
+            ? (string)$overviewPage->getHref()
+            : '';
         $entities = array_slice(
             (new WebshopProductMainGroupRepository())->getActive(),
             0,
@@ -119,6 +125,7 @@ class WebshopProductMainGroupController extends ModuleController
             'entities' => $entities,
             'productGroupsByMainGroupId' => $productGroupsByMainGroupId,
             'pageId' => (int)$pageId,
+            'overviewHref' => $overviewHref,
         ]);
     }
 
@@ -254,7 +261,7 @@ class WebshopProductMainGroupController extends ModuleController
      * @param string $card [name=kaart,type=Template,default=ProductCard2]
      * @param int $cardWidth [name=Kaart breedte,type=int]
      */
-    public function slider($mainGroupId = 0, $pageId = 0, $mode = 'new', $limit = 4, $card = 'ProductCard2', $cardWidth = 3)
+    public function _slider($mainGroupId = 0, $pageId = 0, $mode = 'new', $limit = 4, $card = 'ProductCard2', $cardWidth = 3)
     {
         $mainGroup = $this->getMainGroup((int)$mainGroupId);
         $products = $mainGroup ? (new WebshopProductRepository())->getByMainGroupId((int)$mainGroup->getId(), 99) : [];

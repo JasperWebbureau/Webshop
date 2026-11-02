@@ -100,6 +100,12 @@
       const canvas = event.target.closest('.off-canvas-menu');
       if (!canvas) return;
 
+      // The generic offcanvas handler treats links inside a menu item as submenu triggers.
+      if (event.target.closest('.webshop-product-main-group-dropdown__overview')) {
+        event.stopImmediatePropagation();
+        return;
+      }
+
       if (event.target.closest('.main-menu-close')) {
         this.resetMobile(canvas);
         return;

@@ -10,6 +10,12 @@ if (!empty($items)) { ?>
             <i class="fas fa-arrow-left" aria-hidden="true"></i>
             <span><?=htmlspecialchars(t('webshop_main_group_dropdown_menu_back', 'Terug naar menu'), ENT_QUOTES, 'UTF-8')?></span>
         </button>
+        <?php if (!empty($overviewHref)) { ?>
+            <a class="webshop-product-main-group-dropdown__overview" href="<?=htmlspecialchars((string)$overviewHref, ENT_QUOTES, 'UTF-8')?>" aria-label="<?=htmlspecialchars(t('webshop_main_group_dropdown_overview_label', 'Ga naar webshopoverzicht'), ENT_QUOTES, 'UTF-8')?>">
+                <span><?=htmlspecialchars(t('webshop_main_group_dropdown_overview', 'Webshop'), ENT_QUOTES, 'UTF-8')?></span>
+                <i class="fas fa-arrow-right" aria-hidden="true"></i>
+            </a>
+        <?php } ?>
         <ul class="webshop-product-main-group-dropdown__main-groups">
             <?php foreach ($items as $mainGroup) {
                 $mainGroupId = method_exists($mainGroup, 'getId') ? (int)$mainGroup->getId() : 0;
