@@ -56,14 +56,14 @@ $paymentStatusEvent = new AjaxEvent(WebshopAdminController::class, 'updatePaymen
                             <div><?=htmlspecialchars((string)$order->getCustomerEmail(), ENT_QUOTES, 'UTF-8')?></div>
                             <div>&euro; <?=number_format((float)$order->getGrandTotal(), 2, ',', '.')?></div>
                             <div>
-                                <select ajax="onchange" action="<?=$statusEvent->getName()?>" order_id="<?=(int)$order->getId()?>" name="status">
+                                <select <?=!empty($lockedOrderIds[(int)$order->getId()]) ? 'disabled' : ''?> ajax="onchange" action="<?=$statusEvent->getName()?>" order_id="<?=(int)$order->getId()?>" name="status">
                                     <?php foreach ($statusOptions as $value => $label) { ?>
                                         <option value="<?=$value?>" <?=$order->getStatus() === $value ? 'selected' : ''?>><?=$label?></option>
                                     <?php } ?>
                                 </select>
                             </div>
                             <div>
-                                <select ajax="onchange" action="<?=$paymentStatusEvent->getName()?>" order_id="<?=(int)$order->getId()?>" name="payment_status">
+                                <select <?=!empty($lockedOrderIds[(int)$order->getId()]) ? 'disabled' : ''?> ajax="onchange" action="<?=$paymentStatusEvent->getName()?>" order_id="<?=(int)$order->getId()?>" name="payment_status">
                                     <?php foreach ($paymentStatusOptions as $value => $label) { ?>
                                         <option value="<?=$value?>" <?=$order->getPaymentStatus() === $value ? 'selected' : ''?>><?=$label?></option>
                                     <?php } ?>
