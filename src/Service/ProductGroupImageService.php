@@ -2,7 +2,8 @@
 
 namespace Flexgrid\Modules\Webshop\Service;
 
-use Flexgrid\Media\MediaRequestHandler;
+use Flexgrid\Media\MediaContext;
+use Flexgrid\Media\MediaManager;
 use Flexgrid\Modules\Webshop\Repository\WebshopProductGroupRepository;
 use Flexgrid\Modules\Webshop\Repository\WebshopProductRepository;
 
@@ -32,6 +33,7 @@ class ProductGroupImageService
             return 0;
         }
 
-        return (new MediaRequestHandler())->ingestReference($path, $entityClass, 'image');
+        $media = (new MediaManager())->cloneLocalImage($path, new MediaContext($entityClass, 'image', 'local-image-clone'));
+        return $media === null ? 0 : (int)$media->getId();
     }
 }
