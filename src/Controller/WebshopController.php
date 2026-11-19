@@ -22,6 +22,17 @@ use Flexgrid\Utils\Request\Request;
  */
 class WebshopController extends ModuleController
 {
+    /**
+     * @FG\Template [name=Webshop hoofdgroepen footer,icon=fas fa-list,html={<div data-type='plugin'><h5>Webshop hoofdgroepen footer</h5></div>}]
+     * @param int $pageId [name=Product overzicht pagina,type=page]
+     */
+    public function footerMainGroupMenu($pageId = 0)
+    {
+        return new TemplateResponse('Flexgrid/Modules/Webshop/src/Templates/FooterMainGroupMenu/FooterMainGroupMenu.php', [
+            'groups' => (new \Flexgrid\Modules\Webshop\Repository\WebshopProductMainGroupRepository())->getActive(),
+            'pageId' => (int)$pageId ?: self::getProductGridPageId(),
+        ]);
+    }
 
     public function productGrid($pageId = 0, $template = 'ProductGrid', $card = 'ProductCard', $mainGroupId = 0, $groupId = 0, $limit = 12, $cardWidth = 4, $color = '', $size = '')
     {
@@ -216,7 +227,7 @@ class WebshopController extends ModuleController
         $productId = (int)$request->get('product_id', 0);
         $product = (new WebshopProductController())->getRepository()->findById($productId);
 
-        if (!$product || (int)$product->getId() <= 0) {
+        if (!$product || (int)$product->getId() <= 0 || (int)$product->getIsHidden() !== 0 || (string)$product->getStatus() !== 'published') {
             $response = new AjaxResponse();
             $response->success = false;
             $response->error = 'Product niet gevonden.';
@@ -342,6 +353,11 @@ class WebshopController extends ModuleController
     {
         $request = new Request();
         $transaction = (new WebshopPaymentTransactionRepository())->findById((int)$request->get('transaction_id', 0));
+        $metadata = $transaction ? (json_decode($transaction->getMetadata(), true) ?: []) : [];
+        $returnToken = $request->get('return_token', '');
+        if (!is_string($returnToken) || empty($metadata['return_token']) || !hash_equals($metadata['return_token'], $returnToken)) {
+            $transaction = null;
+        }
 
         if ($transaction && (int)$transaction->getId() > 0 && trim((string)$transaction->getProviderReference()) !== '') {
             (new MolliePaymentService())->syncPayment((string)$transaction->getProviderReference());

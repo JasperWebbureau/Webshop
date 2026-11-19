@@ -1,50 +1,63 @@
-.webshop-product-main-group-card {
+.card.card-product-main-group.webshop-product-main-group-card {
+  --card-border: 0;
+  --custom-color: var(--webshop-ink, #1e293b);
+  --h3-color: var(--webshop-ink, #1e293b);
+
   height: 100%;
-  overflow: hidden;
-  border-color: var(--webshop-card-accent, var(--border-color));
+  min-width: 0;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background: var(--webshop-surface, #fff);
 
-  .webshop-product-main-group-card__image-link {
-    display: block;
-  }
-
-  .card__image {
+  .card__media {
+    display: grid;
+    place-items: center;
+    position: relative;
     aspect-ratio: 16 / 10;
     overflow: hidden;
-    background: var(--default-background);
+    background: var(--webshop-surface, #fff);
+    border-bottom: 1px solid var(--border-color);
 
     img {
+      position: absolute;
+      inset: 0;
       width: 100%;
       height: 100%;
-      display: block;
-      object-fit: cover;
+      padding: 20px;
+      object-fit: contain;
     }
+
+    > i { color: var(--muted); font-size: var(--h1-font-size); }
   }
 
   .card__content {
-    display: flex;
-    flex-direction: column;
+    min-width: 0;
+    justify-content: flex-start;
     gap: 12px;
+    padding: 20px;
   }
 
-  .card__title a {
-    color: inherit;
-    text-decoration: none;
+  .card__title {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .card__description {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    color: var(--muted);
+  }
+
+  .card__read-more {
+    margin-top: auto;
+    padding-top: 8px;
+    a { width: 100%; }
   }
 
   .webshop-product-main-group-card__intro {
-    color: var(--webshop-card-accent, var(--primary));
-    font-size: 15px;
-    line-height: 1.35;
-  }
-
-  .button {
-    align-self: flex-start;
-  }
-
-  @media (max-width: 692px) {
-    .button {
-      align-self: stretch;
-      width: 100%;
-    }
+    margin: 0;
+    color: var(--muted);
   }
 }

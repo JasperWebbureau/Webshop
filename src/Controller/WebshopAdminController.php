@@ -83,6 +83,15 @@ class WebshopAdminController
         ]);
     }
 
+    public function retryAdministration()
+    {
+        $orderId = (int)(new Request())->get('order_id', 0);
+        (new \Flexgrid\Modules\Webshop\Service\AdministrationService())->process($orderId);
+        $response = new AjaxResponse();
+        $response->setContainer('.webshop-admin-order-detail', (string)$this->orderDetail([$orderId]), true);
+        return $response;
+    }
+
     public function orderDetail($args = [])
     {
         PageResponse::addAsset('Flexgrid/Modules/Webshop/src/Templates/Admin/Orders/Css/Orders.scss');
@@ -148,7 +157,7 @@ class WebshopAdminController
             'mainGroupOptions' => $this->getProductMainGroupOptions(true),
             'groupOptions' => $this->getProductGroupOptions(true),
             'statusOptions' => $this->getProductStatusOptions(),
-            'activeOptions' => $this->getActiveOptions(),
+            'visibilityOptions' => $this->getVisibilityOptions(),
             'colorOptions' => $this->getProductPropertyOptions('color', t('webshop_admin_products_all_colors', 'Alle kleuren')),
             'sizeOptions' => $this->getProductPropertyOptions('size', t('webshop_admin_products_all_sizes', 'Alle maten')),
         ]);
@@ -236,7 +245,7 @@ class WebshopAdminController
             'groupOptions' => $this->getProductGroupOptions(false),
             'taxRateOptions' => $this->getTaxRateOptions(),
             'statusOptions' => $this->getProductStatusOptions(),
-            'activeOptions' => $this->getActiveOptions(),
+            'visibilityOptions' => $this->getVisibilityOptions(),
             'productGridPageId' => $this->getProductGridPageId(),
         ]);
     }
@@ -290,7 +299,7 @@ class WebshopAdminController
             ->setEyebrow(trim((string)$request->get('eyebrow', '')))
             ->setIntro(trim(strip_tags((string)$request->get('intro', ''))))
             ->setButtonText(trim((string)$request->get('button_text', '')))
-            ->setIsActive((int)$request->get('is_active', 0) === 1 ? 1 : 0);
+            ->setIsHidden((int)$request->get('is_hidden', 0) === 1 ? 1 : 0);
 
         $moodboard = $repository->add($moodboard);
         $this->saveMoodboardItems((int)$moodboard->getId());
@@ -467,7 +476,17 @@ class WebshopAdminController
             return $response;
         }
 
-        $result = (new OrderStatusService())->updatePaymentStatus($order, $status);
+        if ($status === 'paid') {
+            $result = ['success' => false, 'message' => 'Verifieer de online betaling of registreer een handmatige transactie.'];
+            foreach ((new WebshopPaymentTransactionRepository())->getByOrderId((int)$order->getId()) as $transaction) {
+                if ($transaction->getProvider() === 'manual') {
+                    $result = (new PaymentService())->updateTransactionStatus((int)$transaction->getId(), 'paid');
+                    break;
+                }
+            }
+        } else {
+            $result = (new OrderStatusService())->updatePaymentStatus($order, $status);
+        }
         $response->success = (bool)($result['success'] ?? false);
         if (empty($result['success'])) {
             $response->error = (string)($result['message'] ?? 'Betaalstatus kon niet worden opgeslagen.');
@@ -576,9 +595,9 @@ class WebshopAdminController
     {
         $request = new Request();
         $statusOptions = $this->getProductStatusOptions();
-        $activeOptions = $this->getActiveOptions();
+        $visibilityOptions = $this->getVisibilityOptions();
         $status = trim((string)$request->get('status', ''));
-        $active = trim((string)$request->get('active', ''));
+        $hidden = trim((string)$request->get('is_hidden', ''));
         $mainGroupId = max(0, (int)$request->get('main_group_id', 0));
         $color = trim((string)$request->get('color', ''));
         $size = trim((string)$request->get('size', ''));
@@ -588,7 +607,7 @@ class WebshopAdminController
             'main_group_id' => $mainGroupId,
             'group_id' => max(0, (int)$request->get('group_id', 0)),
             'status' => isset($statusOptions[$status]) ? $status : '',
-            'active' => isset($activeOptions[$active]) ? $active : '',
+            'is_hidden' => isset($visibilityOptions[$hidden]) ? $hidden : '',
             'color' => $color,
             'size' => $size,
         ];
@@ -663,12 +682,12 @@ class WebshopAdminController
         ];
     }
 
-    protected function getActiveOptions(): array
+    protected function getVisibilityOptions(): array
     {
         return [
-            '' => t('webshop_admin_products_all_active_states', 'Alle actief statussen'),
-            '1' => t('webshop_admin_active_yes', 'Actief'),
-            '0' => t('webshop_admin_active_no', 'Niet actief'),
+            '' => t('webshop_admin_all_visibility', 'Alle zichtbaarheid'),
+            '0' => t('webshop_admin_visible', 'Zichtbaar'),
+            '1' => t('webshop_admin_hidden', 'Verborgen'),
         ];
     }
 
@@ -732,6 +751,7 @@ class WebshopAdminController
                 'title' => t('webshop_admin_settings_payment', 'Betalen'),
                 'fields' => [
                     'webshop_mollie_enabled' => $this->settingField('webshop_mollie_enabled', 'Mollie inschakelen', 0, 'checkbox'),
+                    'webshop_mollie_mode' => $this->settingField('webshop_mollie_mode', 'Mollie-modus', 'test', 'select', ['test' => 'Test', 'live' => 'Live']),
                     'webshop_default_payment_provider' => $this->settingField('webshop_default_payment_provider', 'Standaard betaalmethode', 'manual', 'select', [
                         'manual' => 'Handmatig / achteraf',
                         'mollie' => 'Mollie',

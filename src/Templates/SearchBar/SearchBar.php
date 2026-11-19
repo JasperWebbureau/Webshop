@@ -23,16 +23,11 @@ $event->setMethodArguments((int)$limit);
     data-webshop-search-hint="<?=htmlspecialchars(t('webshop_search_hint', 'Typ minstens 3 tekens om te zoeken.'), ENT_QUOTES, 'UTF-8')?>"
     data-webshop-search-loading="<?=htmlspecialchars(t('webshop_search_loading', 'Zoeken...'), ENT_QUOTES, 'UTF-8')?>"
 >
-    <button
-        type="button"
-        class="webshop-header-summary__trigger webshop-search__trigger"
-        aria-label="<?=htmlspecialchars(t('webshop_search_open', 'Zoek producten'), ENT_QUOTES, 'UTF-8')?>"
-        aria-expanded="false"
-        aria-controls="<?=htmlspecialchars($popoverId, ENT_QUOTES, 'UTF-8')?>"
-        data-webshop-search-trigger
-    >
-        <span class="webshop-header-summary__icon"><i class="fas fa-search" aria-hidden="true"></i></span>
-    </button>
+    <?=new \Flexgrid\Response\TemplateResponse('Flexgrid/Modules/Webshop/src/Templates/HeaderSummary/HeaderSummaryTrigger.php', [
+        'searchId' => $instance,
+        'label' => t('webshop_search_open', 'Zoek producten'),
+        'icon' => 'fas fa-search',
+    ])?>
 
     <div class="webshop-search__popover" id="<?=htmlspecialchars($popoverId, ENT_QUOTES, 'UTF-8')?>" role="dialog" aria-labelledby="<?=htmlspecialchars($instance . '-label', ENT_QUOTES, 'UTF-8')?>" aria-hidden="true">
         <button class="webshop-search__close" type="button" data-webshop-search-close aria-label="<?=htmlspecialchars(t('webshop_search_close', 'Sluit zoeken'), ENT_QUOTES, 'UTF-8')?>"><i class="fas fa-times" aria-hidden="true"></i></button>

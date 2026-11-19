@@ -40,7 +40,7 @@
 
                 <div class="webshop-admin-moodboards__table">
                     <?php foreach ($moodboards as $moodboard) {
-                        $isActive = (string)$moodboard->getIsActive() !== '0';
+                        $isVisible = (int)$moodboard->getIsHidden() === 0;
                         ?>
                         <article class="webshop-admin-moodboards__row">
                             <div class="webshop-admin-moodboards__thumb">
@@ -54,8 +54,8 @@
                                 <span><?=count($moodboard->getWebshopMoodboardItemChildren())?> <?=t('webshop_admin_moodboard_items', 'producten')?></span>
                             </div>
                             <div>
-                                <span class="webshop-admin-moodboards__status <?=$isActive ? 'is-active' : 'is-inactive'?>">
-                                    <?=$isActive ? t('webshop_admin_active_yes', 'Actief') : t('webshop_admin_active_no', 'Niet actief')?>
+                                <span class="webshop-admin-moodboards__status <?=$isVisible ? 'is-active' : 'is-inactive'?>">
+                                    <?=$isVisible ? t('webshop_admin_visible', 'Zichtbaar') : t('webshop_admin_hidden', 'Verborgen')?>
                                 </span>
                             </div>
                             <a class="button button-small" href="<?=__DOMAIN__?>/Flexgrid/WebshopAdmin/moodboardDetail/<?=(int)$moodboard->getId()?>">

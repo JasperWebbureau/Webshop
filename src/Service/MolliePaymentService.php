@@ -12,6 +12,12 @@ use Flexgrid\Utils\Payments\Mollie\Mollie;
 
 class MolliePaymentService
 {
+    public function getMode(): string
+    {
+        $mode = Settings::get('webshop_mollie_mode', ['value' => 'test', 'label' => 'Mollie-modus']);
+        return ($mode['value'] ?? '') === 'live' ? 'live' : 'test';
+    }
+
     public function isEnabled(): bool
     {
         new Settings();
@@ -93,6 +99,23 @@ class MolliePaymentService
 
         try {
             $payment = $this->createMollieClient($order, $transaction)->getPaymentById($paymentId);
+            if ((string)$payment->id !== $paymentId
+                || (string)$payment->amount->currency !== (string)$transaction->getCurrency()
+                || (string)$payment->amount->value !== number_format((float)$transaction->getAmount(), 2, '.', '')
+                || number_format((float)$order->getGrandTotal(), 2, '.', '') !== (string)$payment->amount->value) {
+                throw new \DomainException('Mollie-betaling wijkt af van de opgeslagen order.');
+            }
+            $metadata = json_decode($transaction->getMetadata(), true) ?: [];
+            if (isset($payment->mode) && $payment->mode !== ($metadata['mode'] ?? '')) {
+                throw new \DomainException('Mollie-modus wijkt af van de opgeslagen betaling.');
+            }
+            if ($payment->status === 'paid' && (empty($payment->paidAt) || strtotime($payment->paidAt) === false)) {
+                throw new \DomainException('Mollie heeft geen geldige betaaldatum bevestigd.');
+            }
+            $metadata['verified_at'] = time();
+            $metadata['provider_paid_at'] = (string)($payment->paidAt ?? '');
+            $transaction->setMetadata($metadata);
+            (new WebshopPaymentTransactionRepository())->add($transaction);
             return (new PaymentService())->updateTransactionStatus(
                 (int)$transaction->getId(),
                 $this->mapMollieStatus((string)$payment->status),
@@ -121,12 +144,16 @@ class MolliePaymentService
 
     protected function createMollieClient(WebshopOrder $order, WebshopPaymentTransaction $transaction): Mollie
     {
-        return (new Mollie())
+        $metadata = json_decode($transaction->getMetadata(), true) ?: [];
+        if (!in_array($metadata['mode'] ?? '', ['test', 'live'], true)) {
+            throw new \DomainException('De opgeslagen Mollie-modus ontbreekt.');
+        }
+        return (new Mollie($metadata['mode']))
             ->setPrice(new _Price(number_format((float)$transaction->getAmount(), 2, '.', '')))
             ->withCurrency((string)$transaction->getCurrency())
             ->setDescription('Webshop order ' . $order->getOrderNumber())
-            ->setRedirectUrl(WebshopController::getPaymentReturnUrl((int)$transaction->getId()))
-            ->setWebhookUrl(__DOMAIN__ . '/Flexgrid/Webshop/paymentWebhook');
+            ->setRedirectUrl(WebshopController::getPaymentReturnUrl((int)$transaction->getId()) . '&return_token=' . rawurlencode((string)$metadata['return_token']))
+            ->setWebhookUrl(rtrim(__DOMAIN__, '/') . '/api/WebshopPayment/webhook');
     }
 
     protected function mapMollieStatus(string $status): string

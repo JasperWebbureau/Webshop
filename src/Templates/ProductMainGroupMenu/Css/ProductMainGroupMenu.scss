@@ -61,7 +61,7 @@
 
   i {
     color: var(--webshop-main-menu-accent);
-    font-size: 12px;
+
     transition: transform 160ms ease;
   }
 }
@@ -99,8 +99,8 @@
 .webshop-product-main-group-menu__eyebrow {
   margin: 0 0 16px;
   color: var(--webshop-main-menu-accent);
-  font-size: 13px;
-  font-weight: 800;
+
+
   letter-spacing: 0;
   text-transform: uppercase;
 }
@@ -109,9 +109,9 @@
   display: block;
   margin-bottom: 18px;
   color: var(--webshop-main-menu-title);
-  font-size: 20px;
-  font-weight: 500;
-  line-height: 1.25;
+
+
+
 }
 
 .webshop-product-main-group-menu__children {
@@ -137,8 +137,8 @@
     gap: 18px;
     min-height: 40px;
     color: var(--webshop-main-menu-title);
-    font-size: 16px;
-    font-weight: 500;
+
+
     text-decoration: none;
     transition: color 160ms ease, padding 160ms ease;
 
@@ -151,7 +151,7 @@
 
   i {
     color: color-mix(in srgb, var(--webshop-main-menu-accent) 58%, var(--webshop-main-menu-muted));
-    font-size: 13px;
+
   }
 }
 
@@ -161,12 +161,12 @@
   gap: 12px;
   margin-top: auto;
   color: var(--webshop-main-menu-accent);
-  font-size: 16px;
-  font-weight: 700;
+
+
   text-decoration: none;
 
   i {
-    font-size: 14px;
+
     transition: transform 160ms ease;
   }
 
@@ -207,9 +207,9 @@
     left: 28px;
     z-index: 1;
     color: #fff;
-    font-size: 18px;
-    font-weight: 500;
-    line-height: 1.25;
+
+
+
     text-shadow: 0 2px 14px rgba(0, 0, 0, 0.36);
   }
 

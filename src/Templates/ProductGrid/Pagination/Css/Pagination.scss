@@ -19,9 +19,9 @@
   gap: var(--webshop-pagination-gap);
   margin: var(--webshop-pagination-margin);
   color: var(--webshop-pagination-color);
-  font-family: var(--webshop-pagination-font-family);
-  font-size: var(--webshop-pagination-font-size);
-  font-weight: var(--webshop-pagination-font-weight);
+
+
+
 
   &.is-empty {
     display: none;
@@ -65,7 +65,7 @@
   }
 
   .webshop-product-pagination__next {
-    font-size: 1.15em;
+
   }
 
   .webshop-product-pagination__gap {

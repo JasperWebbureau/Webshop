@@ -39,12 +39,19 @@ class PaymentService
             return ['success' => false, 'message' => 'Transactie niet gevonden.'];
         }
 
+        $previous = (string)$transaction->getStatus();
+        if (($previous === 'paid' && in_array($status, ['pending', 'failed', 'cancelled'], true))
+            || ($previous === 'refunded' && $status !== 'refunded')) {
+            return ['success' => true, 'transaction' => $transaction, 'message' => 'De definitieve betaalstatus blijft behouden.'];
+        }
+
         $transaction->setStatus($status);
         if ($providerReference !== '') {
             $transaction->setProviderReference($providerReference);
         }
         if ($status === 'paid' && (int)$transaction->getPaidAt() <= 0) {
-            $transaction->setPaidAt(time());
+            $metadata = json_decode($transaction->getMetadata(), true) ?: [];
+            $transaction->setPaidAt(!empty($metadata['provider_paid_at']) ? strtotime($metadata['provider_paid_at']) : time());
         }
 
         $transaction = $transactionRepository->add($transaction);

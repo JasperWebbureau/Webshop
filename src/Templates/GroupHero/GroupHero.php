@@ -3,8 +3,6 @@
 $currentGroup = $currentGroup ?? null;
 
 if ($currentGroup && method_exists($currentGroup, 'getTitle')) {
-    $breadcrumbController = new \App\Block\Controller\NavController();
-    $breadcrumbs = $breadcrumbController->BreadCrumbs();
     $groupTitle = (string)$currentGroup->getTitle();
     $groupDescription = trim((string)$currentGroup->getDescription());
     $groupDescription = str_replace(['<p>', '</p>'], ['', PHP_EOL], $groupDescription);
@@ -27,7 +25,7 @@ if ($currentGroup && method_exists($currentGroup, 'getTitle')) {
     ?>
     <section class="webshop-product-grid-intro">
         <div class="webshop-product-grid-intro__content">
-            <?=$breadcrumbs?>
+
             <h1><?=htmlspecialchars($groupTitle, ENT_QUOTES, 'UTF-8')?></h1>
             <?php if ($groupDescription !== '') { ?>
                 <div

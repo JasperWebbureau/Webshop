@@ -47,6 +47,7 @@ class OrderStatusService
 
         $previousPaymentStatus = (string)$order->getPaymentStatus();
         if ($previousPaymentStatus === $paymentStatus) {
+            if ($paymentStatus === 'paid') { (new AdministrationService())->process((int)$order->getId()); }
             return ['success' => true, 'order' => $order];
         }
 
@@ -65,6 +66,7 @@ class OrderStatusService
         $order = (new WebshopOrderRepository())->add($order);
 
         if ($paymentStatus === 'paid') {
+            (new AdministrationService())->process((int)$order->getId());
             if ($isOnlinePaymentOrder) {
                 $this->handleOnlinePaymentPaid($order);
             } else {
@@ -107,7 +109,7 @@ class OrderStatusService
     protected function handleOnlinePaymentPaid(WebshopOrder $order): void
     {
         (new DiscountService())->markUsed($order->getWebshopDiscountCodeParent());
-        (new InvoiceService())->createForOrder((int)$order->getId());
+        // AdminInvoice is the sole invoice source for standard webshop orders.
         (new OrderMailService())->sendOrderCreatedMails($order);
     }
 

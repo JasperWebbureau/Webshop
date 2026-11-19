@@ -18,13 +18,14 @@ $items = $items ?? [];
 $previewItems = array_slice($items, 0, 3);
 ?>
 
-<div class="webshop-header-summary webshop-header-summary--cart webshop-cart-summary" tabindex="0">
-    <a class="webshop-header-summary__trigger" href="<?=$cartPage !== '' ? $cartPage : '#'?>" aria-label="<?=t('webshop_cart_summary_open', 'Open winkelwagen')?>">
-        <span class="webshop-header-summary__icon">
-            <i class="fas fa-shopping-cart" aria-hidden="true"></i>
-        </span>
-        <span class="webshop-header-summary__count js-webshop-cart-count"><?=(int)($summary['quantity'] ?? 0)?></span>
-    </a>
+<div class="webshop-header-summary webshop-header-summary--cart webshop-cart-summary">
+    <?=new \Flexgrid\Response\TemplateResponse('Flexgrid/Modules/Webshop/src/Templates/HeaderSummary/HeaderSummaryTrigger.php', [
+        'url' => $cartPage,
+        'label' => t('webshop_cart_summary_open', 'Open winkelwagen'),
+        'icon' => 'fas fa-shopping-cart',
+        'quantity' => (int)($summary['quantity'] ?? 0),
+        'countClass' => 'js-webshop-cart-count',
+    ])?>
 
     <div class="webshop-header-summary__popover">
         <div class="webshop-header-summary__popover-header">
@@ -62,7 +63,7 @@ $previewItems = array_slice($items, 0, 3);
 
         <div class="webshop-header-summary__actions">
             <?php if ($cartPage !== '') { ?>
-                <a class="button button-outline button-small" href="<?=$cartPage?>">
+                <a class="button button-outline button-primary button-small" href="<?=$cartPage?>">
                     <?=t('webshop_cart_summary_cart', 'Winkelwagen')?>
                 </a>
             <?php } ?>

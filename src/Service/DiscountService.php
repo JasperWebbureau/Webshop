@@ -51,7 +51,7 @@ class DiscountService
             return false;
         }
 
-        if ((int)$discount->getIsActive() !== 1) {
+        if ((int)$discount->getIsHidden() !== 0) {
             return false;
         }
 

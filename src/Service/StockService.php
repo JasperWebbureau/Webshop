@@ -24,8 +24,15 @@ class StockService
 
     public function validateItems(array $items): array
     {
-        foreach ($items as $item) {
-            $product = $this->productRepository->findById((int)$item['product_id']);
+        usort($items, static function ($left, $right) { return (int)$left['product_id'] <=> (int)$right['product_id']; });
+        foreach ($items as &$item) {
+            $product = $this->productRepository->findForStockUpdate((int)$item['product_id']);
+            if (!$product || (string)$product->getStatus() !== 'published' || (int)$product->getIsHidden() !== 0) {
+                return ['success' => false, 'message' => 'Een product is niet meer beschikbaar.'];
+            }
+            $item['product'] = $product;
+            $item['unit_price'] = (new PriceService())->getUnitPrice($product);
+            $item['line_total'] = round($item['unit_price'] * (int)$item['quantity'], 2);
 
             if (!$this->tracksStock($product)) {
                 continue;
@@ -39,13 +46,14 @@ class StockService
             }
         }
 
-        return ['success' => true];
+        unset($item);
+        return ['success' => true, 'items' => $items];
     }
 
     public function applyOrder(WebshopOrder $order, array $items): void
     {
         foreach ($items as $item) {
-            $product = $this->productRepository->findById((int)$item['product_id']);
+            $product = $this->productRepository->findForStockUpdate((int)$item['product_id']);
 
             if (!$this->tracksStock($product)) {
                 continue;

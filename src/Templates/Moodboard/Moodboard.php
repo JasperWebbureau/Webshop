@@ -27,7 +27,7 @@ foreach ($items as $item) {
         continue;
     }
 
-    if (method_exists($product, 'getIsActive') && (int)$product->getIsActive() !== 1) {
+    if ((int)$product->getIsHidden() !== 0) {
         continue;
     }
 

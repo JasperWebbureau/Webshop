@@ -41,6 +41,26 @@ class CheckoutService
 
     public function createOrder(array $data): array
     {
+        $db = \Flexgrid\Database\Connection::getConnections();
+        $db->beginTransaction();
+        try {
+            $result = $this->createValidatedOrder($data);
+            if (empty($result['success'])) { $db->rollBack(); return $result; }
+            (new AdministrationService())->prepare($result['order']);
+            $db->commit();
+        } catch (\Throwable $exception) {
+            if ($db->inTransaction()) { $db->rollBack(); }
+            return ['success' => false, 'message' => $exception instanceof \DomainException ? $exception->getMessage() : 'Bestelling kon niet worden opgeslagen. Controleer de webshopinstellingen.'];
+        }
+        if ($result['paymentProvider'] === 'manual') {
+            (new OrderMailService())->sendOrderCreatedMails($result['order']);
+            $this->cartService->clear();
+        }
+        return $result;
+    }
+
+    protected function createValidatedOrder(array $data): array
+    {
         $items = $this->cartService->getItems();
         if (empty($items)) {
             return ['success' => false, 'message' => 'Je winkelwagen is leeg.'];
@@ -56,7 +76,8 @@ class CheckoutService
             return $stockValidation;
         }
 
-        $summary = $this->cartService->getSummary();
+        $items = $stockValidation['items'];
+        $summary = ['subtotal' => round(array_sum(array_column($items, 'line_total')), 2)];
         $discount = $this->discountService->resolveDiscount((string)($data['discount_code'] ?? ''), (float)$summary['subtotal']);
         if (!$discount['success']) {
             return $discount;
@@ -101,12 +122,12 @@ class CheckoutService
         $paymentProvider = $this->resolvePaymentProvider((string)($data['payment_provider'] ?? 'manual'));
         $paymentTransaction = (new PaymentService())->createPendingTransaction($order, $paymentProvider, [
             'source' => 'checkout',
+            'mode' => $paymentProvider === 'mollie' ? (new MolliePaymentService())->getMode() : 'manual',
+            'return_token' => bin2hex(random_bytes(24)),
         ]);
 
         if ($paymentProvider === 'manual') {
             $this->discountService->markUsed($discount['discount']);
-            (new OrderMailService())->sendOrderCreatedMails($order);
-            $this->cartService->clear();
         }
 
         return [

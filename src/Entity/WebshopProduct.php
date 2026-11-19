@@ -11,6 +11,12 @@ use Repository\ModuleEntity;
  */
 class WebshopProduct extends ModuleEntity
 {
+
+    /**
+     * @FG\Column[type=varchar,input_type=select,options={draft::Concept,published::Gepubliceerd,archived::Archief},label=Publicatiestatus,group=Publicatie,width=6,order=910,default=published]
+     * @FG\listForm[ignore=true]
+     */
+    protected $status = 'published';
     /**
      * @FG\Column[type=primary]
      * @FG\listForm[0=]
@@ -324,21 +330,10 @@ class WebshopProduct extends ModuleEntity
         return $this;
     }
 
-    public function getIsActive()
-    {
-        return 1;
-        return $this->isActive;
-    }
 
-    public function setIsActive($value)
-    {
-        $this->isActive = $value;
-        return $this;
-    }
 
     public function getStatus()
     {
-        return  'published';
         return $this->status;
     }
 
@@ -670,7 +665,7 @@ class WebshopProduct extends ModuleEntity
             }
 
             if ($onlyAvailable && (
-                (int)$product->getIsActive() !== 1 ||
+                (int)$product->getIsHidden() !== 0 ||
                 (string)$product->getStatus() !== 'published'
             )) {
                 continue;
@@ -680,7 +675,7 @@ class WebshopProduct extends ModuleEntity
         }
 
         if ($onlyAvailable && (
-            (int)$this->getIsActive() !== 1 ||
+            (int)$this->getIsHidden() !== 0 ||
             (string)$this->getStatus() !== 'published'
         )) {
             unset($products[(int)$this->getId()]);
@@ -748,6 +743,70 @@ class WebshopProduct extends ModuleEntity
     public function getWebshopMoodboardItemChildren()
     {
         return (new \Flexgrid\Modules\Webshop\Repository\WebshopMoodboardItemRepository)->select()->where('`product_id` = ?',[ $this->getId()])->get();;
+    }
+
+
+
+    // --- Auto-generated getters and setters ---
+
+    /**
+     * Get the parent entity for translationGroupId.
+     */
+    public function getTranslationGroupParent()
+    {
+        $id = $this->getTranslationGroupId();
+        if (empty($id)) {
+            return null;
+        }
+
+        if (!isset($this->__autowireParentCache['translationGroupIdParent']) ||
+            $this->__autowireParentCache['translationGroupIdParent']['id'] != $id) {
+            $parent = (new \Flexgrid\App\Language\Repository\TranslationGroupRepository())->select()->where('id = ?', [$id])->get()[0] ?? null;
+            $this->__autowireParentCache['translationGroupIdParent'] = [
+                'id' => $id,
+                'value' => $parent,
+            ];
+        }
+
+        return $this->__autowireParentCache['translationGroupIdParent']['value'];
+    }
+
+    /**
+     * Get a display value for the parent entity of translationGroupId.
+     */
+    public function getTranslationGroupValue($getter = null)
+    {
+        $parent = $this->getTranslationGroupParent();
+        if ($parent === null) {
+            return null;
+        }
+
+        if (!empty($getter) && method_exists($parent, $getter)) {
+            return $parent->{$getter}();
+        }
+
+        if (method_exists($parent, 'getTitle')) {
+            return $parent->getTitle();
+        }
+
+        if (method_exists($parent, 'getName')) {
+            return $parent->getName();
+        }
+
+        return $parent;
+    }
+
+
+
+    // --- Auto-generated getters and setters ---
+
+    /**
+     * Get the children of WebshopOrderLine
+     */
+    public function getFlexgridModulesWebshopEntityWebshopOrderLineChildren()
+    {
+
+        return (new \Flexgrid\Modules\Webshop\Repository\WebshopOrderLineRepository)->select()->where('`product_id` = ?',[ $this->getId()])->get();;
     }
 
 }

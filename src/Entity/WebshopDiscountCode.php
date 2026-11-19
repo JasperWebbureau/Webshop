@@ -37,8 +37,6 @@ class WebshopDiscountCode extends ModuleEntity
     /** @FG\Column[type=monetary,label=Minimaal subtotaal] */
     protected $minimumSubtotal;
 
-    /** @FG\Column[type=int,label=Actief] */
-    protected $isActive;
 
     /** @FG\Column[type=int,label=Geldig vanaf] */
     protected $startsAt;
@@ -64,8 +62,6 @@ class WebshopDiscountCode extends ModuleEntity
     public function setValue($value) { $this->value = (float)$value; return $this; }
     public function getMinimumSubtotal() { return (float)$this->minimumSubtotal; }
     public function setMinimumSubtotal($value) { $this->minimumSubtotal = (float)$value; return $this; }
-    public function getIsActive() { return (int)$this->isActive; }
-    public function setIsActive($value) { $this->isActive = (int)$value; return $this; }
     public function getStartsAt() { return (int)$this->startsAt; }
     public function setStartsAt($value) { $this->startsAt = (int)$value; return $this; }
     public function getExpiresAt() { return (int)$this->expiresAt; }
@@ -155,6 +151,70 @@ class WebshopDiscountCode extends ModuleEntity
      */
     public function getWebshopOrderChildren()
     {
+        return (new \Flexgrid\Modules\Webshop\Repository\WebshopOrderRepository)->select()->where('`discount_code_id` = ?',[ $this->getId()])->get();;
+    }
+
+
+
+    // --- Auto-generated getters and setters ---
+
+    /**
+     * Get the parent entity for translationGroupId.
+     */
+    public function getTranslationGroupParent()
+    {
+        $id = $this->getTranslationGroupId();
+        if (empty($id)) {
+            return null;
+        }
+
+        if (!isset($this->__autowireParentCache['translationGroupIdParent']) ||
+            $this->__autowireParentCache['translationGroupIdParent']['id'] != $id) {
+            $parent = (new \Flexgrid\App\Language\Repository\TranslationGroupRepository())->select()->where('id = ?', [$id])->get()[0] ?? null;
+            $this->__autowireParentCache['translationGroupIdParent'] = [
+                'id' => $id,
+                'value' => $parent,
+            ];
+        }
+
+        return $this->__autowireParentCache['translationGroupIdParent']['value'];
+    }
+
+    /**
+     * Get a display value for the parent entity of translationGroupId.
+     */
+    public function getTranslationGroupValue($getter = null)
+    {
+        $parent = $this->getTranslationGroupParent();
+        if ($parent === null) {
+            return null;
+        }
+
+        if (!empty($getter) && method_exists($parent, $getter)) {
+            return $parent->{$getter}();
+        }
+
+        if (method_exists($parent, 'getTitle')) {
+            return $parent->getTitle();
+        }
+
+        if (method_exists($parent, 'getName')) {
+            return $parent->getName();
+        }
+
+        return $parent;
+    }
+
+
+
+    // --- Auto-generated getters and setters ---
+
+    /**
+     * Get the children of WebshopOrder
+     */
+    public function getFlexgridModulesWebshopEntityWebshopOrderChildren()
+    {
+
         return (new \Flexgrid\Modules\Webshop\Repository\WebshopOrderRepository)->select()->where('`discount_code_id` = ?',[ $this->getId()])->get();;
     }
 

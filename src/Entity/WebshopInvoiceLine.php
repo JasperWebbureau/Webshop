@@ -173,4 +173,55 @@ class WebshopInvoiceLine extends ModuleEntity
         return $this;
     }
 
+
+
+    // --- Auto-generated getters and setters ---
+
+    /**
+     * Get the parent entity for translationGroupId.
+     */
+    public function getTranslationGroupParent()
+    {
+        $id = $this->getTranslationGroupId();
+        if (empty($id)) {
+            return null;
+        }
+
+        if (!isset($this->__autowireParentCache['translationGroupIdParent']) ||
+            $this->__autowireParentCache['translationGroupIdParent']['id'] != $id) {
+            $parent = (new \Flexgrid\App\Language\Repository\TranslationGroupRepository())->select()->where('id = ?', [$id])->get()[0] ?? null;
+            $this->__autowireParentCache['translationGroupIdParent'] = [
+                'id' => $id,
+                'value' => $parent,
+            ];
+        }
+
+        return $this->__autowireParentCache['translationGroupIdParent']['value'];
+    }
+
+    /**
+     * Get a display value for the parent entity of translationGroupId.
+     */
+    public function getTranslationGroupValue($getter = null)
+    {
+        $parent = $this->getTranslationGroupParent();
+        if ($parent === null) {
+            return null;
+        }
+
+        if (!empty($getter) && method_exists($parent, $getter)) {
+            return $parent->{$getter}();
+        }
+
+        if (method_exists($parent, 'getTitle')) {
+            return $parent->getTitle();
+        }
+
+        if (method_exists($parent, 'getName')) {
+            return $parent->getName();
+        }
+
+        return $parent;
+    }
+
 }

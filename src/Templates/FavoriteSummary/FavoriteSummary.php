@@ -20,13 +20,14 @@ try {
 
 ?>
 
-<div class="webshop-header-summary webshop-header-summary--favorite webshop-favorite-summary" tabindex="0">
-    <a class="webshop-header-summary__trigger" href="<?=$favoritePage !== '' ? $favoritePage : '#'?>" aria-label="<?=t('webshop_favorite_summary_open', 'Open favorieten')?>">
-        <span class="webshop-header-summary__icon">
-            <i class="fas fa-heart" aria-hidden="true"></i>
-        </span>
-        <span class="webshop-header-summary__count js-webshop-favorite-count"><?=(int)($summary['quantity'] ?? 0)?></span>
-    </a>
+<div class="webshop-header-summary webshop-header-summary--favorite webshop-favorite-summary">
+    <?=new \Flexgrid\Response\TemplateResponse('Flexgrid/Modules/Webshop/src/Templates/HeaderSummary/HeaderSummaryTrigger.php', [
+        'url' => $favoritePage,
+        'label' => t('webshop_favorite_summary_open', 'Open favorieten'),
+        'icon' => 'fas fa-heart',
+        'quantity' => (int)($summary['quantity'] ?? 0),
+        'countClass' => 'js-webshop-favorite-count',
+    ])?>
 
     <div class="webshop-header-summary__popover">
         <div class="webshop-header-summary__popover-header">
@@ -69,7 +70,7 @@ try {
 
         <div class="webshop-header-summary__actions">
             <?php if ($favoritePage !== '') { ?>
-                <a class="button button-outline button-small" href="<?=$favoritePage?>">
+                <a class="button button-outline button-primary button-small" href="<?=$favoritePage?>">
                     <?=t('webshop_favorite_summary_button', 'Alle favorieten')?>
                 </a>
             <?php } ?>

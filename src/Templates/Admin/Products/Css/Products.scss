@@ -48,7 +48,7 @@
     span {
       display: block;
       color: var(--muted);
-      font-size: 13px;
+
     }
   }
 
@@ -90,8 +90,8 @@
 
     label span {
       color: var(--muted);
-      font-size: 13px;
-      font-weight: 700;
+
+
     }
 
     input[type="text"],
@@ -110,7 +110,7 @@
 
     small {
       color: var(--muted);
-      line-height: 1.4;
+
     }
 
     .webshop-admin-product-ai-create__checkbox {
@@ -133,7 +133,7 @@
     margin-bottom: 14px;
     padding: 10px 12px;
     border-radius: 6px;
-    font-size: 14px;
+
   }
 
   .webshop-admin-product-ai-create__message.is-error {
@@ -164,7 +164,7 @@
     span {
       margin-top: 4px;
       color: var(--muted);
-      line-height: 1.45;
+
     }
   }
 

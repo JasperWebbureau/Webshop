@@ -31,11 +31,6 @@ class WebshopShippingMethod extends ModuleEntity
     /** @FG\Column[type=int,parent=Flexgrid\Modules\Webshop\Entity\WebshopTaxRate::id,label=BTW tarief] */
     protected $taxRateId;
 
-    /**
-     * @FG\Column[type=int,label=Actief]
-     * @FG\listForm[width=1]
-     */
-    protected $isActive;
 
     /** @FG\Column[type=int,label=Gratis vanaf] */
     protected $freeFrom;
@@ -50,8 +45,6 @@ class WebshopShippingMethod extends ModuleEntity
     public function setPrice($value) { $this->price = (float)$value; return $this; }
     public function getTaxRateId() { return (int)$this->taxRateId; }
     public function setTaxRateId($value) { $this->taxRateId = (int)$value; return $this; }
-    public function getIsActive() { return (int)$this->isActive; }
-    public function setIsActive($value) { $this->isActive = (int)$value; return $this; }
     public function getFreeFrom() { return (float)$this->freeFrom; }
     public function setFreeFrom($value) { $this->freeFrom = (float)$value; return $this; }
 
@@ -187,6 +180,70 @@ class WebshopShippingMethod extends ModuleEntity
         }
 
         return $parent;
+    }
+
+
+
+    // --- Auto-generated getters and setters ---
+
+    /**
+     * Get the parent entity for translationGroupId.
+     */
+    public function getTranslationGroupParent()
+    {
+        $id = $this->getTranslationGroupId();
+        if (empty($id)) {
+            return null;
+        }
+
+        if (!isset($this->__autowireParentCache['translationGroupIdParent']) ||
+            $this->__autowireParentCache['translationGroupIdParent']['id'] != $id) {
+            $parent = (new \Flexgrid\App\Language\Repository\TranslationGroupRepository())->select()->where('id = ?', [$id])->get()[0] ?? null;
+            $this->__autowireParentCache['translationGroupIdParent'] = [
+                'id' => $id,
+                'value' => $parent,
+            ];
+        }
+
+        return $this->__autowireParentCache['translationGroupIdParent']['value'];
+    }
+
+    /**
+     * Get a display value for the parent entity of translationGroupId.
+     */
+    public function getTranslationGroupValue($getter = null)
+    {
+        $parent = $this->getTranslationGroupParent();
+        if ($parent === null) {
+            return null;
+        }
+
+        if (!empty($getter) && method_exists($parent, $getter)) {
+            return $parent->{$getter}();
+        }
+
+        if (method_exists($parent, 'getTitle')) {
+            return $parent->getTitle();
+        }
+
+        if (method_exists($parent, 'getName')) {
+            return $parent->getName();
+        }
+
+        return $parent;
+    }
+
+
+
+    // --- Auto-generated getters and setters ---
+
+    /**
+     * Get the children of WebshopOrder
+     */
+    public function getFlexgridModulesWebshopEntityWebshopOrderChildren()
+    {
+
+        return (new \Flexgrid\Modules\Webshop\Repository\WebshopOrderRepository)->select()->where('`shipping_method_id` = ?',[ $this->getId()])->get();;
     }
 
 }

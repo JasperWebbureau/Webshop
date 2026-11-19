@@ -1,22 +1,5 @@
 .webshop-search {
-  --webshop-header-summary-color: var(--secondary, var(--primary));
   position: relative;
-  display: inline-flex;
-  align-items: center;
-
-  .webshop-search__trigger {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 36px;
-    min-height: 44px;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    color: var(--webshop-header-summary-color);
-    cursor: pointer;
-    font: inherit;
-  }
 }
 
 // Separate from the transformed, overflow-clipped popover so it covers the viewport.
@@ -59,7 +42,7 @@
   background: var(--webshop-search-surface);
   box-shadow: 0 28px 64px rgba(3, 10, 21, .34);
   color: var(--webshop-search-text);
-  font-family: var(--font-family, 'Poppins', sans-serif);
+
   opacity: 0;
   pointer-events: none;
   transform: translate(-50%, 10px);
@@ -105,8 +88,8 @@
     label {
       padding-right: 44px;
       color: var(--webshop-search-text);
-      font-size: 20px;
-      font-weight: 600;
+
+
     }
 
     input[type="search"] {

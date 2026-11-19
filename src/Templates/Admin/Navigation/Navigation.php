@@ -15,7 +15,7 @@ $pages = [
     ],
     [
         'title' => 'Facturen',
-        'href' => __DOMAIN__ . '/Flexgrid/WebshopAdmin/invoices',
+        'href' => __DOMAIN__ . '/Flexgrid/AdminInvoice/invoices',
         'methods' => ['invoices', 'invoiceDetail'],
         'icon' => 'fas fa-file-invoice',
     ],
@@ -58,12 +58,12 @@ $pages = [
     </a>
 
     <?php foreach ($pages as $page) {
-        $isActive = in_array($currentMethod, $page['methods'], true);
-        if ($isActive) {
+        $isCurrent = in_array($currentMethod, $page['methods'], true);
+        if ($isCurrent) {
             appendIconAndTitleToHeader($page['icon'], $page['title'], 'webshop');
         }
         ?>
-        <a href="<?=$page['href']?>" <?=$isActive ? 'class="is-active"' : ''?>>
+        <a href="<?=$page['href']?>" <?=$isCurrent ? 'class="is-active"' : ''?>>
             <i class="<?=$page['icon']?>"></i>
             <?=$page['title']?>
         </a>

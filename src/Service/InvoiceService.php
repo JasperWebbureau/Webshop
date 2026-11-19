@@ -21,6 +21,11 @@ class InvoiceService
             return ['success' => false, 'message' => 'Order niet gevonden.'];
         }
 
+        $snapshot = json_decode($order->getCustomerSnapshot(), true) ?: [];
+        if (isset($snapshot['administration'])) {
+            return ['success' => false, 'message' => 'Deze order wordt gefactureerd via AdminInvoice.'];
+        }
+
         if ($this->hasOnlinePayment($order) && (string)$order->getPaymentStatus() !== 'paid') {
             return ['success' => false, 'message' => 'Voor online betalingen kan pas na een succesvolle betaling een factuur worden aangemaakt.'];
         }

@@ -32,6 +32,9 @@ class WebshopProductGroupController extends ModuleController
         if ((int)$groupId > 0) {
             $currentGroup = (new WebshopProductGroupRepository())->findById((int)$groupId);
         }
+        if ($currentGroup && (int)$currentGroup->getIsHidden() !== 0) {
+            return '';
+        }
         if(file_exists('App/Webshop/Templates/GroupHero/GroupHero.php')){
             return new TemplateResponse('App/Webshop/Templates/GroupHero/GroupHero.php', [ 'currentGroup' => $currentGroup,
                 'productCount' => count([])]);

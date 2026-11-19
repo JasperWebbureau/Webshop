@@ -1,0 +1,7 @@
+.webshop-product-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  > a:first-child { grid-column: 1 / -1; }
+  img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: contain; }
+}

@@ -60,7 +60,7 @@ if ((int)$productGridPageId > 0) {
                 <?=$field('color', 'Kleur')?>
                 <?=$field('size', 'Maat')?>
                 <?=$field('status', 'Status', null, $statusOptions)?>
-                <?=$field('isActive', 'Actief', null, ['0' => 'Nee', '1' => 'Ja'])?>
+                <?=$field('isHidden', 'Zichtbaarheid', null, ['0' => 'Zichtbaar', '1' => 'Verborgen'])?>
             </div>
         </div>
 

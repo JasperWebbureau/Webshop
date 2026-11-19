@@ -15,7 +15,7 @@ class WebshopMoodboardRepository extends Repository
     public function getActive($limit = 99): array
     {
         return $this->select(true)
-            ->where('(`is_active` = ? OR `is_active` IS NULL)', [1])
+            ->where('(`is_hidden` = ? OR `is_hidden` IS NULL)', [0])
             ->orderBy('order', 'ASC')
             ->limit((int)$limit)
             ->get();

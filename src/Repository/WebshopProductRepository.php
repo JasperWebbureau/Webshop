@@ -7,6 +7,33 @@ use Repository\Repository;
 
 class WebshopProductRepository extends Repository
 {
+    public function findForStockUpdate(int $id)
+    {
+        $db = \Flexgrid\Database\Connection::getConnections();
+        $statement = $db->prepare('SELECT * FROM webshopproduct WHERE id = ?' . ($db->inTransaction() ? ' FOR UPDATE' : ''));
+        $statement->execute([$id]);
+        $row = $statement->fetch(\PDO::FETCH_ASSOC);
+        if (!$row) { return null; }
+        $product = $this->getEntity();
+        $product->populate($row);
+        return $product;
+    }
+
+    public function getCatalogPage(int $limit, string $filterQuery, string $order, int $page): array
+    {
+        $limit = max(1, min(100, $limit));
+        // Cluster before slicing: a fixed multiplier can skip products between pages.
+        $products = $this->filterVariantClusters($this->setPagination(false)->getAll(0, null, $filterQuery, false, $order));
+        $records = count($products);
+        $pages = (int)ceil($records / $limit);
+        $page = min(max(0, $page), max(0, $pages - 1));
+        return ['entities' => array_slice($products, $page * $limit, $limit), 'pagination' => [
+            'records' => $records, 'currentPage' => $page, 'offset' => $page * $limit,
+            'totalPagesAvailable' => $pages, 'sortOptions' => $this->getSortOptions(),
+            'entityName' => getClassName($this->getNew()), 'order' => $order, 'limit' => $limit,
+        ]];
+    }
+
     public function getEntity()
     {
         if (class_exists(\App\Webshop\Entity\WebshopProduct::class) && $this->hasAppEntityDefinition(\App\Webshop\Entity\WebshopProduct::class)) {
@@ -30,7 +57,7 @@ class WebshopProductRepository extends Repository
     {
         $orderConfig = $this->getOrderConfig($order, 'title');
         $products = $this->select(true)
-            ->where('is_active = ? AND status = ?', [1, 'published'])
+            ->where('status = ? AND (is_hidden = ? OR is_hidden IS NULL)', ['published', 0])
             ->orderBy($orderConfig['field'], $orderConfig['direction'])
             ->limit(max((int)$limit * 3, (int)$limit))
             ->get();
@@ -46,16 +73,12 @@ class WebshopProductRepository extends Repository
         $groupId = (int)($filters['group_id'] ?? 0);
         $mainGroupId = (int)($filters['main_group_id'] ?? 0);
         $status = trim((string)($filters['status'] ?? ''));
-        $active = trim((string)($filters['active'] ?? ''));
+        $hidden = trim((string)($filters['is_hidden'] ?? ''));
         $color = trim((string)($filters['color'] ?? ''));
         $size = trim((string)($filters['size'] ?? ''));
-        $hasLabel = $this->hasAppEntityDefinition(\App\Webshop\Entity\WebshopProduct::class);
 
         if ($search !== '') {
             $searchFields = ['title', 'sku', 'short_description', 'color', 'size', 'manufacturer'];
-            if ($hasLabel) {
-                $searchFields[] = 'label';
-            }
 
             $query->where(
                 '(' . implode(' OR ', array_map(static function ($field) {
@@ -80,8 +103,8 @@ class WebshopProductRepository extends Repository
             $query->where('`status` = ?', [$status]);
         }
 
-        if ($active !== '') {
-            $query->where('`is_active` = ?', [(int)$active]);
+        if (in_array($hidden, ['0', '1'], true)) {
+            $query->where('COALESCE(`is_hidden`, 0) = ?', [(int)$hidden]);
         }
 
         if ($color !== '') {
@@ -103,7 +126,7 @@ class WebshopProductRepository extends Repository
         $orderConfig = $this->getOrderConfig($order, 'title');
 
         $products = $this->select(true)
-            ->where('group_id = ?', [(int)$groupId])
+            ->where('group_id = ? AND status = ? AND (is_hidden = ? OR is_hidden IS NULL)', [(int)$groupId, 'published', 0])
             ->orderBy($orderConfig['field'], $orderConfig['direction'])
             ->limit(max((int)$limit * 3, (int)$limit))
             ->get();
@@ -120,7 +143,7 @@ class WebshopProductRepository extends Repository
 
         $orderConfig = $this->getOrderConfig($order, 'title');
         $products = $this->select(true)
-            ->where('group_id IN (' . implode(',', array_fill(0, count($groupIds), '?')) . ') AND (is_hidden IS NULL OR is_hidden = ?) ', array_merge($groupIds, [0]))
+            ->where('group_id IN (' . implode(',', array_fill(0, count($groupIds), '?')) . ') AND (is_hidden IS NULL OR is_hidden = ?) AND status = ?', array_merge($groupIds, [0, 'published']))
             ->orderBy($orderConfig['field'], $orderConfig['direction'])
             ->limit(max((int)$limit * 3, (int)$limit))
             ->get();
@@ -144,7 +167,7 @@ class WebshopProductRepository extends Repository
 
         $visibleIds = [];
         foreach ($products as $product) {
-            if ((int)$product->getIsActive() === 1 && (string)$product->getStatus() === 'published') {
+            if ((string)$product->getStatus() === 'published' && (int)$product->getIsHidden() === 0) {
                 $visibleIds[(int)$product->getGroupId()] = true;
             }
         }
@@ -162,7 +185,7 @@ class WebshopProductRepository extends Repository
         }
 
         $products = $this->select(true)
-            ->where('`group_id` IN (' . implode(',', array_fill(0, count($groupIds), '?')) . ') AND    `image` IS NOT NULL AND `image` != ?', array_merge($groupIds, [ '']))
+            ->where('`group_id` IN (' . implode(',', array_fill(0, count($groupIds), '?')) . ') AND `image` IS NOT NULL AND `image` != ? AND status = ? AND (is_hidden = ? OR is_hidden IS NULL)', array_merge($groupIds, ['', 'published', 0]))
             ->orderBy('title', 'ASC')
             ->limit(1)
             ->get();

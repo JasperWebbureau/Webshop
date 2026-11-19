@@ -28,7 +28,7 @@
     span {
       display: block;
       color: var(--muted);
-      font-size: 13px;
+
     }
   }
 
@@ -44,7 +44,7 @@
     span {
       display: block;
       color: var(--muted);
-      font-size: 13px;
+
     }
   }
 
@@ -85,7 +85,7 @@
     span {
       display: block;
       color: var(--muted);
-      font-size: 13px;
+
     }
   }
 
@@ -110,7 +110,7 @@
   .webshop-admin-order-detail__message {
     margin-top: 8px;
     color: var(--success, #15803d);
-    font-size: 13px;
+
   }
 
   .webshop-admin-order-detail__stock-row {
@@ -124,7 +124,7 @@
 
   .webshop-admin-order-detail__total {
     border-bottom: 0;
-    font-size: 18px;
+
   }
 
   @media (max-width: 900px) {

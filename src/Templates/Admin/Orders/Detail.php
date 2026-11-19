@@ -14,6 +14,20 @@ if (!is_array($snapshot)) {
 ?>
 <section class="webshop-admin-order-detail">
     <grid>
+        <?php $administration = $snapshot['administration'] ?? null; if ($administration) { ?>
+        <div class="panel" style="--cw:12">
+            <div class="panel__header"><h3><?=t('webshop_administration', 'Administratie')?></h3></div>
+            <div class="panel__body">
+                <p><?=htmlspecialchars(['awaiting_payment' => t('webshop_admin_waiting_payment', 'Wacht op betaling'), 'failed' => t('webshop_admin_processing_failed', 'Verwerking mislukt'), 'completed' => t('webshop_admin_processing_completed', 'Verwerkt')][$administration['status']] ?? $administration['status'], ENT_QUOTES, 'UTF-8')?></p>
+                <?php if (!empty($administration['error'])) { ?><p><?=htmlspecialchars($administration['error'], ENT_QUOTES, 'UTF-8')?></p><?php } ?>
+                <?php if (!empty($administration['invoice_public_id'])) { ?>
+                    <a class="button" href="<?=__DOMAIN__?>/Flexgrid/AdminInvoice/detail/<?=rawurlencode($administration['invoice_public_id'])?>"><?=htmlspecialchars((string)$administration['invoice_number'], ENT_QUOTES, 'UTF-8')?></a>
+                <?php } elseif ($order->getPaymentStatus() === 'paid') { $retry = new AjaxEvent(WebshopAdminController::class, 'retryAdministration'); ?>
+                    <button class="button" type="button" ajax="true" action="<?=$retry->getName()?>" order_id="<?=(int)$order->getId()?>"><?=t('webshop_administration_retry', 'Administratie opnieuw verwerken')?></button>
+                <?php } ?>
+            </div>
+        </div>
+        <?php } ?>
         <div style="--cw:12;--cw-sm:12;--cw-xs:12">
             <div class="webshop-admin-orders__header">
                 <h1><?=htmlspecialchars((string)$order->getOrderNumber(), ENT_QUOTES, 'UTF-8')?></h1>
@@ -127,7 +141,7 @@ if (!is_array($snapshot)) {
                     <a class="button button-primary button-small" href="<?=__DOMAIN__?>/Flexgrid/WebshopAdmin/invoiceDetail/<?=(int)$invoice->getId()?>">
                         <?=t('webshop_admin_order_invoice_open', 'Open factuur')?>
                     </a>
-                <?php } else {
+                <?php } elseif (!$administration) {
                     $invoiceButton = new AjaxButton(t('webshop_admin_order_invoice_create', 'Factuur maken'));
                     $invoiceButton->setEvent(WebshopAdminController::class . '::createInvoice');
                     $invoiceButton->addClass('button button-primary button-small');

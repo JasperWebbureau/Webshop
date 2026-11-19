@@ -6,6 +6,22 @@ use Flexgrid\Modules\Webshop\Entity\WebshopProduct;
 
 class PriceService
 {
+    public function getCardPricing(WebshopProduct $product): array
+    {
+        $variants = $product->getVariantClusterProducts(true);
+        $variants = $variants ?: [$product];
+        $prices = array_map([$this, 'getUnitPrice'], $variants);
+        $minimum = min($prices);
+        $maximum = max($prices);
+
+        return [
+            'price' => $minimum,
+            'original' => count($variants) === 1 ? (float)$product->getPrice() : $minimum,
+            'from' => $minimum !== $maximum,
+            'sale' => count($variants) === 1 && $minimum < (float)$product->getPrice(),
+        ];
+    }
+
     public function getUnitPrice(WebshopProduct $product): float
     {
         $price = (float)$product->getPrice();

@@ -18,7 +18,7 @@ class WebshopProductGroupRepository extends Repository
     public function getActive(): array
     {
         return $this->select(true)
-           // ->where(, [1])
+            ->where('is_hidden IS NULL OR is_hidden = ?', [0])
             ->orderBy('title:ASC')
             ->get();
     }
@@ -30,7 +30,7 @@ class WebshopProductGroupRepository extends Repository
         }
 
         return $this->select(true)
-            ->where('`main_group_id` = ?', [(int)$mainGroupId])
+            ->where('`main_group_id` = ? AND (is_hidden IS NULL OR is_hidden = ?)', [(int)$mainGroupId, 0])
             ->orderBy('title:ASC')
             ->limit($limit)
             ->get();

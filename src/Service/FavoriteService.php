@@ -81,7 +81,7 @@ class FavoriteService
             if (
                 !$product ||
                 (int)$product->getId() <= 0 ||
-                (int)$product->getIsActive() !== 1 ||
+                (int)$product->getIsHidden() !== 0 ||
                 (string)$product->getStatus() !== 'published'
             ) {
                 continue;

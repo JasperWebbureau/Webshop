@@ -1,0 +1,201 @@
+// Shared by cart, favourites and search. Public tokens are consumed with fallbacks,
+// rather than declared locally, so a root or header override can always win.
+.webshop-header-summary {
+  position: relative;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  vertical-align: middle;
+  box-sizing: border-box;
+
+  &::after {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 100%;
+    height: var(--webshop-header-summary-popover-gap, 10px);
+    content: '';
+  }
+
+  .webshop-header-summary__trigger {
+    position: relative;
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: var(--webshop-header-summary-trigger-size, 44px);
+    min-width: var(--webshop-header-summary-trigger-size, 44px);
+    height: var(--webshop-header-summary-trigger-size, 44px);
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--webshop-header-summary-trigger-border, transparent);
+    border-radius: var(--webshop-header-summary-trigger-radius, var(--border-radius, 8px));
+    background: var(--webshop-header-summary-trigger-background, transparent);
+    color: var(--custom-color, var(--webshop-header-summary-color, var(--header-action-color, var(--color, currentColor))));
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 160ms ease, background-color 160ms ease;
+
+    &:hover,
+    &[aria-expanded="true"] {
+      background: var(--webshop-header-summary-hover-background, var(--header-action-hover-background, var(--primary-light, #eff6ff)));
+      color: var(--custom-color, var(--webshop-header-summary-hover-color, var(--header-action-hover-color, var(--primary, #2563eb))));
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--primary, currentColor);
+      outline-offset: 3px;
+    }
+  }
+
+  .webshop-header-summary__icon {
+    --font-size: var(--webshop-header-summary-icon-size, var(--h3-font-size, 1.25rem));
+    display: inline-grid;
+    place-items: center;
+    margin: 0;
+    color: inherit;
+    > i { color: inherit; }
+  }
+
+  .webshop-header-summary__count {
+    --custom-color: initial;
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    display: inline-grid;
+    place-items: center;
+    box-sizing: border-box;
+    min-width: var(--webshop-header-summary-count-size, 22px);
+    height: var(--webshop-header-summary-count-size, 22px);
+    padding: 0 5px;
+    border: 1px solid var(--webshop-header-summary-count-border, transparent);
+    border-radius: 999px;
+    background: var(--webshop-header-summary-count-background, var(--primary, #2563eb));
+    color: var(--webshop-header-summary-count-color, #fff);
+    font-variant-numeric: tabular-nums;
+    pointer-events: none;
+  }
+
+  .webshop-header-summary__popover {
+    // A separate surface: inherited header colour overrides stop at this boundary.
+    --custom-color: initial;
+    --color: var(--webshop-header-summary-popover-color, var(--webshop-ink, #1e293b));
+    --link-color: var(--webshop-header-summary-link-color, var(--webshop-header-summary-popover-color, var(--webshop-ink, #1e293b)));
+    --link-hover-color: var(--webshop-header-summary-link-hover-color, var(--primary, #2563eb));
+
+    position: absolute;
+    top: calc(100% + var(--webshop-header-summary-popover-gap, 10px));
+    right: 0;
+    z-index: 100;
+    box-sizing: border-box;
+    width: min(var(--webshop-header-summary-popover-width, 360px), calc(100vw - 28px));
+    max-height: calc(100dvh - 120px);
+    overflow-y: auto;
+    padding: 20px;
+    border: 1px solid var(--webshop-header-summary-border, var(--border-color, #e2e8f0));
+    border-radius: var(--border-radius, 8px);
+    background: var(--webshop-header-summary-surface, #fff);
+    color: var(--color);
+    box-shadow: var(--webshop-header-summary-shadow, var(--box-shadow, 0 8px 24px rgba(0, 0, 0, .12)));
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-4px);
+    transition: opacity 160ms ease, transform 160ms ease, visibility 160ms ease;
+
+  }
+
+  &:hover .webshop-header-summary__popover,
+  &:focus-within .webshop-header-summary__popover {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .webshop-header-summary__popover-header,
+  .webshop-header-summary__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .webshop-header-summary__popover-header {
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--webshop-header-summary-border, var(--border-color, #e2e8f0));
+    span { color: var(--webshop-header-summary-muted, var(--muted, #64748b)); }
+  }
+
+  .webshop-header-summary__items {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px 0;
+  }
+
+  .webshop-header-summary__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    color: var(--color);
+    text-decoration: none;
+  }
+
+  .webshop-header-summary__item-image {
+    flex: 0 0 52px;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: var(--border-radius, 8px);
+    background: var(--default-background, #f8fafc);
+    img { display: block; width: 100%; height: 100%; object-fit: contain; }
+  }
+
+  .webshop-header-summary__item-content {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+    gap: 3px;
+    overflow-wrap: anywhere;
+    small { color: var(--webshop-header-summary-muted, var(--muted, #64748b)); }
+  }
+
+  .webshop-header-summary__empty,
+  .webshop-header-summary__more {
+    margin: 16px 0;
+    color: var(--webshop-header-summary-muted, var(--muted, #64748b));
+  }
+
+  .webshop-header-summary__configuration-error {
+    margin: 16px 0;
+    padding: 10px 12px;
+    border: 1px solid var(--urgent, #b91c1c);
+    border-radius: var(--border-radius, 8px);
+    background: var(--webshop-header-summary-error-background, #fef2f2);
+    color: var(--urgent, #b91c1c);
+    overflow-wrap: anywhere;
+  }
+
+  .webshop-header-summary__actions {
+    padding-top: 12px;
+    border-top: 1px solid var(--webshop-header-summary-border, var(--border-color, #e2e8f0));
+  }
+
+  @media (max-width: 692px) {
+    .webshop-header-summary__popover {
+      position: fixed;
+      top: var(--webshop-header-summary-mobile-top, 100px);
+      right: 14px;
+      left: 14px;
+      width: auto;
+    }
+    .webshop-header-summary__actions {
+      align-items: stretch;
+      flex-direction: column;
+    }
+  }
+}

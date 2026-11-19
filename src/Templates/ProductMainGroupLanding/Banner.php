@@ -5,8 +5,6 @@
 if (!$entity) {
     return;
 }
-$breadcrumbController = new \App\Block\Controller\NavController();
-$breadcrumbs = $breadcrumbController->BreadCrumbs();
 
 $title = htmlspecialchars((string)$entity->getTitle(), ENT_QUOTES, 'UTF-8');
 $intro = trim((string)$entity->getIntroSentence());
@@ -19,7 +17,7 @@ $buttonUrl = $entity->getDetailUrl($productGroupPageId);
 ?>
 <section class="webshop-main-group-banner">
     <div class="webshop-main-group-banner__content">
-        <?=$breadcrumbs?>
+
         <?php if ($intro !== '') { ?>
             <p class="webshop-main-group-banner__intro"><?=htmlspecialchars($intro, ENT_QUOTES, 'UTF-8')?></p>
         <?php } ?>

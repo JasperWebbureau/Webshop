@@ -18,7 +18,7 @@ class WebshopMoodboardController
         $repository = new WebshopMoodboardRepository();
         $moodboard = (int)$moodboardId > 0 ? $repository->findById((int)$moodboardId) : ($repository->getActive(1)[0] ?? null);
 
-        if (!$moodboard || (int)$moodboard->getId() <= 0) {
+        if (!$moodboard || (int)$moodboard->getId() <= 0 || (int)$moodboard->getIsHidden() !== 0) {
             return '';
         }
 

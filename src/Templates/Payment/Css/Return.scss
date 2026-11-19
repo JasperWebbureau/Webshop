@@ -17,7 +17,7 @@
     p {
       max-width: 640px;
       color: var(--muted);
-      line-height: 1.55;
+
     }
   }
 
@@ -30,7 +30,7 @@
     border-radius: 999px;
     background: color-mix(in srgb, var(--primary) 14%, transparent);
     color: var(--primary);
-    font-size: 24px;
+
   }
 
   &.webshop-payment-return--failed,
@@ -70,12 +70,12 @@
 
     dt {
       color: var(--muted);
-      font-size: 14px;
+
     }
 
     dd {
       margin: 0;
-      font-weight: 700;
+
       text-align: right;
     }
   }
@@ -88,7 +88,7 @@
     p {
       margin-top: 0;
       color: var(--muted);
-      line-height: 1.45;
+
     }
   }
 

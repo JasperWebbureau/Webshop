@@ -189,9 +189,7 @@ class WebshopProductMainGroupController extends ModuleController
                     $pageSize = 12;
                     $totalPages = max(1, (int)ceil(count($products) / $pageSize));
                     $currentPage = min(max(0, (int)(new Request())->get('page', 0)), $totalPages - 1);
-                    $productCard = is_file('App/Webshop/Templates/Cards/MCProductCard.php')
-                        ? 'MCProductCard'
-                        : 'ProductCard';
+                    $productCard = 'ProductCard';
                     $productGrid = new TemplateResponse($this->getModuleTemplate(
                         'ProductGrid/ProductGrid.php',
                         'Flexgrid/Modules/Webshop/src/Templates/ProductGrid/ProductGrid.php'
@@ -308,11 +306,12 @@ class WebshopProductMainGroupController extends ModuleController
     protected function getMainGroup(int $mainGroupId = 0)
     {
         if ($mainGroupId > 0) {
-            return (new WebshopProductMainGroupRepository())->findById($mainGroupId);
+            $group = (new WebshopProductMainGroupRepository())->findById($mainGroupId);
+            return $group && (int)$group->getIsHidden() === 0 ? $group : null;
         }
 
         $current = Routing::currentEntity();
-        if ($current instanceof WebshopProductMainGroup) {
+        if ($current instanceof WebshopProductMainGroup && (int)$current->getIsHidden() === 0) {
             return $current;
         }
 

@@ -15,7 +15,7 @@ class WebshopShippingMethodRepository extends Repository
     public function getActive(): array
     {
         return $this->select(true)
-            ->where('(is_active = ? OR ISNULL(is_active))', [1])
+            ->where('(is_hidden = ? OR is_hidden IS NULL)', [0])
             ->orderBy('order:ASC')
             ->get();
     }

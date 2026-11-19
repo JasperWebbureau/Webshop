@@ -15,7 +15,7 @@ class WebshopTaxRateRepository extends Repository
     public function getActive(): array
     {
         return $this->select(true)
-            ->where('(is_active = ? OR ISNULL(is_active))', [1])
+            ->where('(is_hidden = ? OR is_hidden IS NULL)', [0])
             ->orderBy('rate:DESC')
             ->get();
     }
@@ -23,7 +23,7 @@ class WebshopTaxRateRepository extends Repository
     public function getDefault()
     {
         $items = $this->select(true)
-            ->where('(is_active = ? OR ISNULL(is_active)) AND is_default = ?', [1, 1])
+            ->where('(is_hidden = ? OR is_hidden IS NULL) AND is_default = ?', [0, 1])
             ->limit(1)
             ->get();
 

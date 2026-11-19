@@ -3,9 +3,6 @@
  * @var $entity \Flexgrid\Modules\Webshop\Entity\WebshopProduct
  */
 
-use App\Image\Controller\ImageController;
-use App\Review\Repository\ReviewRepository;
-use App\Usp\Controller\UspController;
 use Flexgrid\Modules\Webshop\Service\FavoriteService;
 use Flexgrid\Response\TemplateResponse;
 use Flexgrid\Modules\Webshop\Controller\WebshopController;
@@ -18,7 +15,7 @@ $activePrice = $salePrice > 0 && $salePrice < $price ? $salePrice : $price;
 $groupTitle = '';
 $mainGroupTitle = '';
 $manufacturer = trim((string)$product->getManufacturer());
-$isPublished = (int)$product->getIsActive() === 1 && (string)$product->getStatus() === 'published';
+$isPublished = (int)$product->getIsHidden() === 0 && (string)$product->getStatus() === 'published';
 $isInStock = (int)$product->getTrackStock() !== 1 || (int)$product->getStock() > 0;
 $isAvailable = $isPublished && $isInStock;
 $productGridUrl = '';
@@ -33,24 +30,13 @@ $relatedProducts = $relatedProducts ?? [];
 $favoriteService = new FavoriteService();
 $isFavorite = $favoriteService->hasProduct((int)$product->getId());
 
-//$reviewSummary = (new ReviewRepository())->getProductSummary((int)$product->getId());
-$reviewSummary = [];
-$reviewCount = (int)$reviewSummary['count'];
-$reviewRounded = max(0, min(5, (int)$reviewSummary['rounded']));
-$reviewStars = str_repeat('&#9733;', $reviewRounded) . str_repeat('&#9734;', 5 - $reviewRounded);
-$reviewLabel = $reviewCount === 1
-    ? t('webshop_product_detail_review_single', '1 review')
-    : sprintf(t('webshop_product_detail_review_count', '%s reviews'), $reviewCount);
-if ($reviewCount === 0) {
-    $reviewLabel = t('webshop_product_detail_no_reviews', 'Nog geen reviews');
-}
-
-if ((int)$image->getMediaId() > 0 || trim((string)$image) !== '') {
+if ($image->exists()) {
     $galleryImages[] = $image;
 }
 
 foreach (array_filter(array_map('trim', explode(',', (string)$product->getImages()))) as $imageId) {
-    $galleryImages[] = $imageId;
+    $galleryImage = \Flexgrid\Utils\Files\ImageFile::getImageFile($imageId);
+    if ($galleryImage->exists()) { $galleryImages[] = $galleryImage; }
 }
 
 $variantProducts = method_exists($product, 'getVariantClusterProducts') ? $product->getVariantClusterProducts(true) : [$product];
@@ -126,25 +112,16 @@ if ((float)$product->getTaxRate() > 0) {
     $specs[t('webshop_product_detail_tax', 'BTW')] = number_format((float)$product->getTaxRate(), 2, ',', '.') . '%';
 }
 
-$breadcrumbController = new \App\Block\Controller\NavController();
-$breadcrumbs = $breadcrumbController->BreadCrumbs();
-/*
-$breadcrumbs = array_filter([
-    t('webshop_product_detail_home', 'Home'),
-    $mainGroupTitle,
-    $groupTitle,
-]);
-*/
 ?>
 <section class="webshop-product-detail">
 
     <div class="webshop-product-detail__inner">
-        <?=$breadcrumbs?>
+
 
         <div class="webshop-product-detail__hero">
             <div class="webshop-product-detail__gallery">
                 <?php if (!empty($galleryImages)) { ?>
-                    <?=(new ImageController())->DetailGallery($galleryImages, (string)$product->getTitle(), 'webshop-product-' . (int)$product->getId())?>
+                    <?=new TemplateResponse('Flexgrid/Modules/Webshop/src/Templates/ProductGrid/Gallery.php', ['images' => $galleryImages, 'title' => (string)$product->getTitle()])?>
                 <?php } else { ?>
                     <div class="webshop-product-detail__image-fallback">
                         <i class="fas fa-box-open"></i>
@@ -158,11 +135,6 @@ $breadcrumbs = array_filter([
                 </div>
 
                 <h1><?=htmlspecialchars((string)$product->getTitle(), ENT_QUOTES, 'UTF-8')?></h1>
-
-                <div class="webshop-product-detail__rating" aria-label="<?=t('webshop_product_detail_rating', 'Beoordeling')?>">
-                    <span aria-hidden="true"><?=$reviewStars?></span>
-                    <small><?=$reviewLabel?></small>
-                </div>
 
                 <div class="webshop-product-detail__price">
                     <?php if ($salePrice > 0 && $salePrice < $price) { ?>
@@ -221,14 +193,14 @@ $breadcrumbs = array_filter([
                     'isFavorite' => $isFavorite,
                 ])?>
 
-                <?=(new UspController())->productDetail(3)?>
+
             </aside>
         </div>
 
-        <?php if ($highlightText !== '' || ($highlightImage && ((int)$highlightImage->getMediaId() > 0 || trim((string)$highlightImage) !== ''))) { ?>
+        <?php if ($highlightText !== '' || ($highlightImage && $highlightImage->exists())) { ?>
             <div class="webshop-product-detail__highlight">
                 <div class="webshop-product-detail__highlight-image">
-                    <?php if ($highlightImage && ((int)$highlightImage->getMediaId() > 0 || trim((string)$highlightImage) !== '')) { ?>
+                    <?php if ($highlightImage && $highlightImage->exists()) { ?>
                         <img src="<?=$highlightImage->getResizeUrl(980, 760, 1)?>" alt="<?=htmlspecialchars((string)$product->getTitle(), ENT_QUOTES, 'UTF-8')?>" loading="lazy">
                     <?php } ?>
                 </div>
@@ -265,7 +237,7 @@ $breadcrumbs = array_filter([
             <details>
                 <summary><?=t('webshop_product_detail_shipping_returns', 'Verzending & retourneren')?></summary>
                 <div class="webshop-product-detail__description text-block">
-                    <p><?=t('webshop_product_detail_shipping_returns_text', 'Bestellingen worden zorgvuldig verpakt en zo snel mogelijk verzonden. Retourneren kan binnen 30 dagen.')?></p>
+                    <p><?=t('webshop_product_detail_shipping_returns_text', 'Bestellingen worden zorgvuldig verpakt en zo snel mogelijk verzonden. Bekijk de verzend- en retourvoorwaarden van deze webshop.')?></p>
                 </div>
             </details>
         </div>
@@ -281,7 +253,7 @@ $breadcrumbs = array_filter([
                             : (float)$relatedProduct->getPrice();
                         ?>
                         <a class="webshop-product-detail__related-card" href="<?=$relatedProduct->getDetailUrl((int)$pageId)?>">
-                            <?php if ((int)$relatedImage->getMediaId() > 0 || trim((string)$relatedImage) !== '') { ?>
+                            <?php if ($relatedImage->exists()) { ?>
                                 <img src="<?=$relatedImage->getResizeUrl(520, 420, 1)?>" alt="<?=htmlspecialchars((string)$relatedProduct->getTitle(), ENT_QUOTES, 'UTF-8')?>" loading="lazy">
                             <?php } else { ?>
                                 <span class="webshop-product-detail__related-fallback"><i class="fas fa-box-open"></i></span>

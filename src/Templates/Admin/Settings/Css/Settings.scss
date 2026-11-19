@@ -15,7 +15,7 @@
   .webshop-admin-settings__section {
     h2 {
       margin: 0 0 14px;
-      font-size: 20px;
+
     }
   }
 
@@ -29,7 +29,7 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
-    font-weight: 700;
+
 
     input,
     select {
@@ -59,7 +59,7 @@
 
   .webshop-admin-settings__message {
     color: var(--primary);
-    font-weight: 700;
+
   }
 
   @media (max-width: 760px) {

@@ -25,11 +25,6 @@ class WebshopTaxRate extends ModuleEntity
      */
     protected $rate;
 
-    /**
-     * @FG\Column[type=tinyint,label=Actief]
-     * @FG\listForm[width=1]
-     */
-    protected $isActive;
 
     /**
      * @FG\Column[type=tinyint,label=Standaard]
@@ -43,8 +38,6 @@ class WebshopTaxRate extends ModuleEntity
     public function setTitle($value) { $this->title = (string)$value; return $this; }
     public function getRate() { return (float)$this->rate; }
     public function setRate($value) { $this->rate = (float)$value; return $this; }
-    public function getIsActive() { return (int)$this->isActive; }
-    public function setIsActive($value) { $this->isActive = (int)$value; return $this; }
     public function getIsDefault() { return (int)$this->isDefault; }
     public function setIsDefault($value) { $this->isDefault = (int)$value; return $this; }
 
@@ -141,6 +134,70 @@ class WebshopTaxRate extends ModuleEntity
     public function getWebshopShippingMethodChildren()
     {
         return (new \Flexgrid\Modules\Webshop\Repository\WebshopShippingMethodRepository)->select()->where('`tax_rate_id` = ?',[ $this->getId()])->get();;
+    }
+
+
+
+    // --- Auto-generated getters and setters ---
+
+    /**
+     * Get the parent entity for translationGroupId.
+     */
+    public function getTranslationGroupParent()
+    {
+        $id = $this->getTranslationGroupId();
+        if (empty($id)) {
+            return null;
+        }
+
+        if (!isset($this->__autowireParentCache['translationGroupIdParent']) ||
+            $this->__autowireParentCache['translationGroupIdParent']['id'] != $id) {
+            $parent = (new \Flexgrid\App\Language\Repository\TranslationGroupRepository())->select()->where('id = ?', [$id])->get()[0] ?? null;
+            $this->__autowireParentCache['translationGroupIdParent'] = [
+                'id' => $id,
+                'value' => $parent,
+            ];
+        }
+
+        return $this->__autowireParentCache['translationGroupIdParent']['value'];
+    }
+
+    /**
+     * Get a display value for the parent entity of translationGroupId.
+     */
+    public function getTranslationGroupValue($getter = null)
+    {
+        $parent = $this->getTranslationGroupParent();
+        if ($parent === null) {
+            return null;
+        }
+
+        if (!empty($getter) && method_exists($parent, $getter)) {
+            return $parent->{$getter}();
+        }
+
+        if (method_exists($parent, 'getTitle')) {
+            return $parent->getTitle();
+        }
+
+        if (method_exists($parent, 'getName')) {
+            return $parent->getName();
+        }
+
+        return $parent;
+    }
+
+
+
+    // --- Auto-generated getters and setters ---
+
+    /**
+     * Get the children of WebshopProduct
+     */
+    public function getFlexgridModulesWebshopEntityWebshopProductChildren()
+    {
+
+        return (new \Flexgrid\Modules\Webshop\Repository\WebshopProductRepository)->select()->where('`tax_rate_id` = ?',[ $this->getId()])->get();;
     }
 
 }

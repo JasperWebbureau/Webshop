@@ -21,6 +21,7 @@ use Flexgrid\Utils\Request\Request;
 class WebshopProductController extends ModuleController
 {
     protected $filterAjaxTargetController = null;
+    protected $catalogPageEntities = [];
 
     /**
      * @FG\Template [name=Product grid, icon=fas fa-th, html={<div data-type='plugin'><h5>Product grid</h5></div>},create_override=true,override_family=ProductGrid]
@@ -84,33 +85,7 @@ class WebshopProductController extends ModuleController
         $pagination = $this->getProductGridPagination((int)$limit, $filterQuery, $order);
 
 
-        if ($filterQuery !== '') {
-
-            $products = $repository->getAll(
-                max((int)$limit * 3, (int)$limit), // waarom is dit?!
-                null,
-                $filterQuery,
-                false,
-                $order
-            );
-            $entities = array_slice($repository->filterVariantClusters($products), 0, (int)$limit);
-        } elseif ($color !== '' || $size !== '') {
-            $filters = [
-                'group_id' => (int)$groupId,
-                'main_group_id' => (int)$mainGroupId,
-                'status' => 'published',
-                'active' => '1',
-                'color' => $color,
-                'size' => $size,
-            ];
-            $entities = array_slice($repository->filterVariantClusters($repository->search($filters, max((int)$limit * 3, (int)$limit), $order)), 0, (int)$limit);
-        } elseif ((int)$groupId > 0) {
-            $entities = $repository->getByGroupId((int)$groupId, (int)$limit, $order);
-        } elseif ((int)$mainGroupId > 0) {
-            $entities = $repository->getByMainGroupId((int)$mainGroupId, (int)$limit, $order);
-        } else {
-            $entities = $repository->getActive((int)$limit, $order);
-        }
+        $entities = $this->catalogPageEntities;
 
         $response =  new TemplateResponse($templateFile, [
             'entities' => $entities,
@@ -228,10 +203,9 @@ class WebshopProductController extends ModuleController
         if (mb_strlen($query, 'UTF-8') >= 3 && mb_strlen($query, 'UTF-8') <= 120) {
             $limit = max(1, min(10, (int)$limit));
             $repository = $this->getRepository();
-            $matches = array_filter($repository->search(['q' => $query], $limit * 3), static function ($product) {
+            $matches = array_filter($repository->search(['q' => $query, 'is_hidden' => '0', 'status' => 'published'], $limit * 3), static function ($product) {
                 return $product
-                    && (int)$product->getIsHidden() !== 1
-                    && (int)$product->getIsActive() === 1
+                    && (int)$product->getIsHidden() === 0
                     && (string)$product->getStatus() === 'published';
             });
             $products = array_slice($repository->filterVariantClusters(array_values($matches)), 0, $limit);
@@ -313,18 +287,9 @@ class WebshopProductController extends ModuleController
 
     protected function getProductGridPagination(int $limit, string $filterQuery, string $order): array
     {
-        $pagination = $this->getRepository()
-            ->setPagination(true)
-            ->getPagination($limit, $filterQuery);
-
-        if (!is_array($pagination)) {
-            return [];
-        }
-
-        $pagination['order'] = $order;
-        $pagination['limit'] = $limit;
-
-        return $pagination;
+        $result = $this->getRepository()->getCatalogPage($limit, $filterQuery, $order, (int)($_REQUEST['page'] ?? 0));
+        $this->catalogPageEntities = $result['entities'];
+        return $result['pagination'];
     }
 
     protected function getProductGridFilterQuery(array $filterData, array $baseConstraints): string
@@ -398,6 +363,8 @@ class WebshopProductController extends ModuleController
         }
 
         $constraints = [
+            ['sql' => 'status = :product_status',
+             'params' => [':product_status' => 'published']],
             [
                 'sql' => '(is_hidden = :is_hidden OR is_hidden IS NULL)',
                 'params' => [
@@ -489,7 +456,8 @@ class WebshopProductController extends ModuleController
     protected function renderProductDetail(int $productId, int $pageId = 0)
     {
         $product = $this->getRepository()->findById($productId);
-        if (!$product || (int)$product->getId() <= 0) {
+        if (!$product || (int)$product->getId() <= 0 || (int)$product->getIsHidden() !== 0
+            || (string)$product->getStatus() !== 'published') {
             return '';
         }
 

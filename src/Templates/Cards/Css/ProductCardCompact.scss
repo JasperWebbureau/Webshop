@@ -1,0 +1,25 @@
+.card.card-product.card-product--compact {
+  flex-direction: row;
+
+  .card__media {
+    flex: 0 0 36%;
+    aspect-ratio: auto;
+    min-height: 200px;
+    border-bottom: 0;
+    border-right: 1px solid var(--border-color);
+  }
+
+  .card__media img { padding: 16px; }
+  .card__tag { top: auto; bottom: 12px; max-width: calc(100% - 24px); }
+
+  @media (max-width: 576px) {
+    flex-direction: column;
+    .card__media {
+      flex-basis: auto;
+      aspect-ratio: 4 / 3;
+      min-height: 0;
+      border-right: 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+  }
+}

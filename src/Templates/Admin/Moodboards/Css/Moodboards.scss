@@ -57,7 +57,7 @@
 
     span {
       color: var(--fg-text-muted, #6b7280);
-      font-size: 13px;
+
     }
   }
 
@@ -102,8 +102,8 @@
 
     label span {
       color: var(--fg-text-muted, #6b7280);
-      font-size: 13px;
-      font-weight: 600;
+
+
     }
 
     textarea {
@@ -156,9 +156,9 @@
     border-radius: 50%;
     background: var(--fg-primary-active, #722fbe);
     color: #fff;
-    font-size: 12px;
-    font-weight: 700;
-    line-height: 1;
+
+
+
     transform: translate(-50%, -50%);
 
     &.is-active {
@@ -194,8 +194,8 @@
 
     label span {
       color: var(--fg-text-muted, #6b7280);
-      font-size: 12px;
-      font-weight: 600;
+
+
     }
 
     select,

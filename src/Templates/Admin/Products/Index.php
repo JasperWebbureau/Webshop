@@ -51,15 +51,15 @@
                             <option value="<?=htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8')?>" <?=($filters['size'] ?? '') === (string)$value ? 'selected' : ''?>><?=htmlspecialchars((string)$label, ENT_QUOTES, 'UTF-8')?></option>
                         <?php } ?>
                     </select>
-                    <select name="active">
-                        <?php foreach ($activeOptions as $value => $label) { ?>
-                            <option value="<?=$value?>" <?=($filters['active'] ?? '') === (string)$value ? 'selected' : ''?>><?=$label?></option>
+                    <select name="is_hidden">
+                        <?php foreach ($visibilityOptions as $value => $label) { ?>
+                            <option value="<?=$value?>" <?=($filters['is_hidden'] ?? '') === (string)$value ? 'selected' : ''?>><?=$label?></option>
                         <?php } ?>
                     </select>
                     <button class="button button-primary button-small" type="submit">
                         <?=t('webshop_admin_filter_apply', 'Filteren')?>
                     </button>
-                    <?php if (trim((string)($filters['q'] ?? '')) !== '' || (int)($filters['main_group_id'] ?? 0) > 0 || (int)($filters['group_id'] ?? 0) > 0 || trim((string)($filters['status'] ?? '')) !== '' || trim((string)($filters['active'] ?? '')) !== '' || trim((string)($filters['color'] ?? '')) !== '' || trim((string)($filters['size'] ?? '')) !== '') { ?>
+                    <?php if (trim((string)($filters['q'] ?? '')) !== '' || (int)($filters['main_group_id'] ?? 0) > 0 || (int)($filters['group_id'] ?? 0) > 0 || trim((string)($filters['status'] ?? '')) !== '' || trim((string)($filters['is_hidden'] ?? '')) !== '' || trim((string)($filters['color'] ?? '')) !== '' || trim((string)($filters['size'] ?? '')) !== '') { ?>
                         <a class="button button-outline button-small" href="<?=__DOMAIN__?>/Flexgrid/WebshopAdmin/products">
                             <?=t('webshop_admin_filter_reset', 'Reset')?>
                         </a>
@@ -88,7 +88,7 @@
                                 <span class="webshop-admin-products__status webshop-admin-products__status--<?=htmlspecialchars((string)$product->getStatus(), ENT_QUOTES, 'UTF-8')?>">
                                     <?=htmlspecialchars((string)($statusOptions[$product->getStatus()] ?? $product->getStatus()), ENT_QUOTES, 'UTF-8')?>
                                 </span>
-                                <span><?=((int)$product->getIsActive() === 1) ? t('webshop_admin_active_yes', 'Actief') : t('webshop_admin_active_no', 'Niet actief')?></span>
+                                <span><?=((int)$product->getIsHidden() === 0) ? t('webshop_admin_visible', 'Zichtbaar') : t('webshop_admin_hidden', 'Verborgen')?></span>
                             </div>
                             <a class="button button-small" href="<?=__DOMAIN__?>/Flexgrid/WebshopAdmin/productDetail/<?=(int)$product->getId()?>">
                                 <?=t('webshop_admin_product_open', 'Open')?>

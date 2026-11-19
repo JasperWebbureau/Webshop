@@ -78,8 +78,8 @@ foreach ($items as $item) {
                         <input type="text" name="button_text" value="<?=htmlspecialchars((string)$moodboard->getButtonText(), ENT_QUOTES, 'UTF-8')?>">
                     </label>
                     <label class="webshop-admin-moodboard-edit__checkbox">
-                        <input type="checkbox" name="is_active" value="1" <?=((int)$moodboard->getIsActive() !== 0) ? 'checked' : ''?>>
-                        <span><?=t('webshop_admin_moodboard_active', 'Actief')?></span>
+                        <input type="checkbox" name="is_hidden" value="1" <?=((int)$moodboard->getIsHidden() === 1) ? 'checked' : ''?>>
+                        <span><?=t('webshop_admin_hidden', 'Verborgen')?></span>
                     </label>
 
                     <?php if ((int)$moodboard->getId() > 0) { ?>

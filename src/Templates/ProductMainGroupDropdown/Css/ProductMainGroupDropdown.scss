@@ -1,4 +1,8 @@
 .webshop-product-main-group-dropdown {
+  // This panel owns a separate colour surface, including inside the sticky header.
+  --custom-color: initial;
+  --color: var(--webshop-product-main-group-dropdown-text, #fff);
+  --link-color: var(--webshop-product-main-group-dropdown-text, #fff);
   --webshop-product-main-group-dropdown-navigation-width: clamp(270px, 28.5%, 317px);
   --webshop-product-main-group-dropdown-surface: #1a2436;
   --webshop-product-main-group-dropdown-active-surface: #273753;
@@ -27,7 +31,7 @@
   background: var(--webshop-product-main-group-dropdown-surface);
   box-shadow: 0 28px 64px rgba(3, 10, 21, 0.34);
   color: var(--webshop-product-main-group-dropdown-text);
-  font-family: var(--font-family, 'Poppins', sans-serif);
+
   opacity: 0;
   pointer-events: none;
   transform: translate(-50%, 10px);
@@ -87,9 +91,9 @@ li:focus-within > .webshop-product-main-group-dropdown {
   border-left: 4px solid transparent;
   background-color: transparent;
   color: var(--webshop-product-main-group-dropdown-text);
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 1.25;
+
+
+
   text-decoration: none;
   transition: background-color 150ms ease, border-color 150ms ease, font-weight 150ms ease;
 
@@ -105,7 +109,7 @@ li:focus-within > .webshop-product-main-group-dropdown {
 
   i {
     color: var(--webshop-product-main-group-dropdown-text);
-    font-size: 17px;
+
   }
 }
 
@@ -124,7 +128,7 @@ li:focus-within > .webshop-product-main-group-dropdown {
 .webshop-product-main-group-dropdown__item:focus-within > .webshop-product-main-group-dropdown__main-link {
   border-left-color: var(--webshop-product-main-group-dropdown-accent-strong);
   background-color: var(--webshop-product-main-group-dropdown-active-surface);
-  font-weight: 700;
+
 }
 
 .webshop-product-main-group-dropdown .webshop-product-main-group-dropdown__panel {
@@ -173,10 +177,10 @@ li:focus-within > .webshop-product-main-group-dropdown .webshop-product-main-gro
 
 .webshop-product-main-group-dropdown__eyebrow {
   color: var(--webshop-product-main-group-dropdown-eyebrow);
-  font-size: 14px;
-  font-weight: 800;
+
+
   letter-spacing: 0.18em;
-  line-height: 1;
+
   text-transform: uppercase;
 }
 
@@ -205,9 +209,9 @@ li:focus-within > .webshop-product-main-group-dropdown .webshop-product-main-gro
     padding: 10px 0;
     border-bottom: 1px solid var(--webshop-product-main-group-dropdown-link-divider);
     color: var(--webshop-product-main-group-dropdown-accent);
-    font-size: 20px;
-    font-weight: 500;
-    line-height: 1.25;
+
+
+
     text-decoration: none;
     transition: color 150ms ease;
 
@@ -220,14 +224,14 @@ li:focus-within > .webshop-product-main-group-dropdown .webshop-product-main-gro
   i {
     flex: 0 0 auto;
     color: currentColor;
-    font-size: 19px;
+
   }
 }
 
 .webshop-product-main-group-dropdown__empty {
   margin: 8px 0 30px;
   color: var(--webshop-product-main-group-dropdown-muted);
-  font-size: 18px;
+
 }
 
 .webshop-product-main-group-dropdown .webshop-product-main-group-dropdown__all-link {
@@ -237,15 +241,15 @@ li:focus-within > .webshop-product-main-group-dropdown .webshop-product-main-gro
   gap: 18px;
   margin-top: auto;
   color: var(--webshop-product-main-group-dropdown-accent);
-  font-size: 20px;
-  font-weight: 500;
-  line-height: 1.25;
+
+
+
   text-decoration: none;
   transition: color 150ms ease;
 
   i {
     color: currentColor;
-    font-size: 19px;
+
   }
 
   &:hover,
@@ -259,7 +263,7 @@ li:focus-within > .webshop-product-main-group-dropdown .webshop-product-main-gro
   .webshop-product-main-group-dropdown:has(.webshop-product-main-group-dropdown__item:not(:first-child):focus-within) .webshop-product-main-group-dropdown__item:first-child > .webshop-product-main-group-dropdown__main-link {
     border-left-color: transparent;
     background-color: transparent;
-    font-weight: 400;
+
   }
 
   .webshop-product-main-group-dropdown:has(.webshop-product-main-group-dropdown__item:not(:first-child):hover) .webshop-product-main-group-dropdown__item:first-child > .webshop-product-main-group-dropdown__panel,
@@ -306,7 +310,7 @@ li:focus-within > .webshop-product-main-group-dropdown .webshop-product-main-gro
   .webshop-product-main-group-dropdown .webshop-product-main-group-dropdown__main-link {
     min-height: 54px;
     padding: 0 16px;
-    font-size: 17px;
+
     border-left: 0;
 
     > i {
@@ -327,7 +331,7 @@ li:focus-within > .webshop-product-main-group-dropdown .webshop-product-main-gro
     background: transparent;
     color: var(--webshop-product-main-group-dropdown-text);
     cursor: pointer;
-    font-size: 17px;
+
   }
 
   .webshop-product-main-group-dropdown .webshop-product-main-group-dropdown__panel {
@@ -386,7 +390,7 @@ li:focus-within > .webshop-product-main-group-dropdown .webshop-product-main-gro
 
     h3 {
       margin-top: 10px;
-      font-size: 28px;
+
     }
   }
 
@@ -397,13 +401,13 @@ li:focus-within > .webshop-product-main-group-dropdown .webshop-product-main-gro
 
     a {
       min-height: 58px;
-      font-size: 17px;
+
     }
   }
 
   .webshop-product-main-group-dropdown .webshop-product-main-group-dropdown__all-link {
     margin-top: 0;
-    font-size: 17px;
+
   }
 
   .off-canvas-menu .webshop-product-main-group-dropdown {
@@ -448,8 +452,8 @@ li:focus-within > .webshop-product-main-group-dropdown .webshop-product-main-gro
     border-radius: 6px;
     background: var(--webshop-product-main-group-dropdown-active-surface);
     color: var(--webshop-product-main-group-dropdown-text);
-    font-size: 16px;
-    font-weight: 700;
+
+
     text-decoration: none;
 
     &:hover,

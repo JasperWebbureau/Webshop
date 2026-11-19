@@ -48,7 +48,7 @@ class TaxService
     protected function getRateById(int $taxRateId, float $fallback): float
     {
         $taxRate = $this->taxRateRepository->findById($taxRateId);
-        if (!$taxRate instanceof WebshopTaxRate || (int)$taxRate->getId() <= 0 || (int)$taxRate->getIsActive() !== 1) {
+        if (!$taxRate instanceof WebshopTaxRate || (int)$taxRate->getId() <= 0 || (int)$taxRate->getIsHidden() !== 0) {
             return $fallback;
         }
 
