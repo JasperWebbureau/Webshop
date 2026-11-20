@@ -19,6 +19,8 @@ Voer de normale bevoegde `force_aw=true` scan uit. Gebruik geen `clean=true` voo
 
 ## Catalogus en templates
 
+`WebshopProductController::productSlider()` is de algemene productvariant van `ModuleController::slider()`, met hetzelfde presentatiecontract voor template, kaart, desktop-/tabletaantallen, pagina, limiet, overzichtsknop, groep, parentbreedte, controls, autoplay, extra selectie en optionele cache. De standaardtemplate `ProductSlider/ProductSlider.php` geeft deze gegevens door aan dezelfde gedeelde `App/Slider/Slider.php`; er is geen eigen webshop-carousel of tweede initialisatie. De module controleert productpublicatie en zichtbaarheid van product, groep en hoofdgroep, clustert varianten vóór de limiet en retourneert niets bij een lege selectie. Ondersteunde kaarten: `ProductCard`, `ProductCard2`, `ProductCardCompact`. De extra selectie is een vertrouwde CMS-/controller-WHERE-expressie; sortering is op titel. Dienstselecties horen in een App-subclass.
+
 | Onderdeel | Contract |
 | --- | --- |
 | Hoofdgroep | `WebshopProductMainGroup`, bundelt productgroepen |

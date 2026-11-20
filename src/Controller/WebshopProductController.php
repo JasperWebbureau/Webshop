@@ -24,6 +24,51 @@ class WebshopProductController extends ModuleController
     protected $catalogPageEntities = [];
 
     /**
+     * @FG\Template[name=Productslider,icon=fas fa-arrows-alt-h,html={<div data-type="module"><h5>Productslider</h5></div>}]
+     * @param string $template [name=Template,type=Template,default=ProductSlider]
+     * @param string $card [name=Kaart,type=Template,default=ProductCard2]
+     * @param int $cardWidthDesktop [name=Producten op desktop,type=int]
+     * @param int $cardWidthTablet [name=Producten op tablet,type=int]
+     * @param int $pageId [name=Productdetailpagina,type=page]
+     * @param int $limit [name=Maximum aantal producten,type=int]
+     * @param string $pageButton [name=Tekst overzichtsknop,type=string]
+     * @param int $groupId [name=Productgroep,type=group]
+     * @param int $parentWidth [name=Breedte omringende grid,type=int]
+     * @param bool $useControls [name=Navigatieknoppen,type=bool]
+     * @param bool $autoPlay [name=Automatisch afspelen,type=bool]
+     * @param string $where [name=Extra selectie,type=string]
+     * @param int $cachable [name=Blok cachen,type=tinyint]
+     */
+    public function productSlider($template = 'ProductSlider', $card = 'ProductCard2', $cardWidthDesktop = 4, $cardWidthTablet = 2, $pageId = null, $limit = 12, $pageButton = null, $groupId = null, $parentWidth = 12, $useControls = true, $autoPlay = false, $where = null, $cachable = 0)
+    {
+        // Same presentation contract as ModuleController::slider; product rules stay here.
+        $constraints = $this->getProductGridFilterConstraints(0, (int)$groupId);
+        $constraints[] = ['sql' => 'EXISTS (SELECT 1 FROM webshopproductgroup product_group
+            INNER JOIN webshopproductmaingroup main_group ON main_group.id = product_group.main_group_id
+            WHERE product_group.id = webshopproduct.group_id
+            AND (product_group.is_hidden = 0 OR product_group.is_hidden IS NULL)
+            AND (main_group.is_hidden = 0 OR main_group.is_hidden IS NULL))'];
+        if (trim((string)$where) !== '') { $constraints[] = ['sql' => '(' . $where . ')']; }
+        $repository = $this->getRepository();
+        $products = $repository->setPagination(false)->getAll(0, null, $this->buildConstraintQuery($constraints), false, 'title:ASC');
+        $entities = array_slice($repository->filterVariantClusters($products), 0, max(1, min(100, (int)$limit ?: 12)));
+        if (!$entities) { return ''; }
+        $card = in_array($card, ['ProductCard', 'ProductCard2', 'ProductCardCompact'], true) ? $card : 'ProductCard2';
+        $cardFile = $this->getModuleTemplate('Cards/' . $card . '.php', $this->getTemplate('Cards', false, $card));
+        $template = preg_match('/^[A-Za-z][A-Za-z0-9_-]*$/', (string)$template) ? (string)$template : 'ProductSlider';
+        $templateFile = $this->getModuleTemplate($template . '/' . $template . '.php', 'Flexgrid/Modules/Webshop/src/Templates/ProductSlider/ProductSlider.php');
+        $response = new TemplateResponse($templateFile, [
+            'entities' => $entities, 'card' => $cardFile,
+            'pageId' => (int)$pageId > 0 ? (int)$pageId : WebshopController::getProductGridPageId(),
+            'cardWidthDesktop' => max(1, min(6, (int)$cardWidthDesktop)),
+            'cardWidthTablet' => max(1, min(6, (int)$cardWidthTablet)),
+            'pageButton' => $pageButton, 'parentWidth' => max(1, min(12, (int)$parentWidth)),
+            'useControls' => (bool)$useControls, 'autoPlay' => (bool)$autoPlay,
+        ]);
+        return (int)$cachable === 1 ? $response->cache() : $response;
+    }
+
+    /**
      * @FG\Template [name=Product grid, icon=fas fa-th, html={<div data-type='plugin'><h5>Product grid</h5></div>},create_override=true,override_family=ProductGrid]
      * @param int $pageId [name=Detail pagina,type=page]
      * @param string $template [name=template,type=Template]
