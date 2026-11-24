@@ -7,16 +7,11 @@ use Flexgrid\Utils\Files\ImageFile;
 use Repository\ModuleEntity;
 
 /**
- * @FG\Entity[name=WebshopProduct,repository=Flexgrid\Modules\Webshop\Repository\WebshopProductRepository,type=Webshop,in_menu=true,defaultOrder=title:ASC]
+ * @FG\Entity[name=WebshopProduct,label=Product,repository=Flexgrid\Modules\Webshop\Repository\WebshopProductRepository,type=Webshop,in_menu=true,defaultOrder=title:ASC]
  */
 class WebshopProduct extends ModuleEntity
 {
 
-    /**
-     * @FG\Column[type=varchar,input_type=select,options={draft::Concept,published::Gepubliceerd,archived::Archief},label=Publicatiestatus,group=Publicatie,width=6,order=910,default=published]
-     * @FG\listForm[ignore=true]
-     */
-    protected $status = 'published';
     /**
      * @FG\Column[type=primary]
      * @FG\listForm[0=]
@@ -331,17 +326,6 @@ class WebshopProduct extends ModuleEntity
     }
 
 
-
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    public function setStatus($value)
-    {
-        $this->status = $value;
-        return $this;
-    }
 
     public function getColor()
     {
@@ -664,20 +648,14 @@ class WebshopProduct extends ModuleEntity
                 continue;
             }
 
-            if ($onlyAvailable && (
-                (int)$product->getIsHidden() !== 0 ||
-                (string)$product->getStatus() !== 'published'
-            )) {
+            if ($onlyAvailable && (int)$product->getIsHidden() !== 0) {
                 continue;
             }
 
             $products[(int)$product->getId()] = $product;
         }
 
-        if ($onlyAvailable && (
-            (int)$this->getIsHidden() !== 0 ||
-            (string)$this->getStatus() !== 'published'
-        )) {
+        if ($onlyAvailable && (int)$this->getIsHidden() !== 0) {
             unset($products[(int)$this->getId()]);
         }
 

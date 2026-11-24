@@ -17,9 +17,16 @@ final class WebshopVisibilityMigration
     public function inspect(): array
     {
         $tables = [];
+        $productStatus = null;
         foreach (self::TABLES as $table) {
             $exists = $this->db->query("SHOW TABLES LIKE '" . $table . "'")->fetchColumn();
             if (!$exists) { continue; }
+            if ($table === 'webshopproduct' && $this->db->query("SHOW COLUMNS FROM webshopproduct WHERE Field = 'status'")->fetchColumn()) {
+                $productStatus = [
+                    'schema' => $this->db->query('SHOW CREATE TABLE webshopproduct')->fetch(PDO::FETCH_NUM)[1],
+                    'rows' => $this->db->query('SELECT id, is_hidden, status FROM webshopproduct ORDER BY id')->fetchAll(PDO::FETCH_ASSOC),
+                ];
+            }
             $column = $this->db->query('SHOW COLUMNS FROM `' . $table . '` LIKE \'is_active\'')->fetch(PDO::FETCH_ASSOC);
             if ($column) {
                 $tables[$table] = [
@@ -28,8 +35,7 @@ final class WebshopVisibilityMigration
                 ];
             }
         }
-        $emptyStatuses = $this->db->query("SELECT id, status FROM webshopproduct WHERE status IS NULL OR TRIM(status) = '' ORDER BY id")->fetchAll(PDO::FETCH_ASSOC);
-        return ['legacy_columns' => $tables, 'empty_product_statuses' => $emptyStatuses];
+        return ['legacy_columns' => $tables, 'product_status' => $productStatus];
     }
 
     public function apply(string $backupPath): array
@@ -43,16 +49,31 @@ final class WebshopVisibilityMigration
         if (file_put_contents($backupPath, $json, LOCK_EX) !== strlen($json)) {
             throw new RuntimeException('Backup kon niet volledig worden opgeslagen. Er is niets gemigreerd.');
         }
-        $this->db->beginTransaction();
-        try {
-            $updated = $this->db->exec("UPDATE webshopproduct SET status = 'published' WHERE status IS NULL OR TRIM(status) = ''");
-            $this->db->commit();
-        } catch (Throwable $error) { $this->db->rollBack(); throw $error; }
+        $hiddenProducts = 0;
+        if ($snapshot['product_status'] !== null) {
+            $this->db->beginTransaction();
+            try {
+                $hiddenProducts = $this->db->exec("UPDATE webshopproduct SET is_hidden = 1
+                    WHERE (is_hidden IS NULL OR is_hidden = 0)
+                      AND status IS NOT NULL AND TRIM(status) <> '' AND status <> 'published'");
+                $this->db->commit();
+            } catch (Throwable $error) {
+                $this->db->rollBack();
+                throw $error;
+            }
+        }
         // MySQL DDL commits implicitly. The backup is durable before the first DROP.
         foreach (array_keys($snapshot['legacy_columns']) as $table) {
             $this->db->exec('ALTER TABLE `' . $table . '` DROP COLUMN `is_active`');
         }
-        return ['removed_columns' => array_keys($snapshot['legacy_columns']), 'published_products' => $updated];
+        if ($snapshot['product_status'] !== null) {
+            $this->db->exec('ALTER TABLE webshopproduct DROP COLUMN status');
+        }
+        return [
+            'removed_columns' => array_keys($snapshot['legacy_columns']),
+            'removed_product_status' => $snapshot['product_status'] !== null,
+            'hidden_products' => $hiddenProducts,
+        ];
     }
 }
 
@@ -64,6 +85,6 @@ if (realpath($_SERVER['SCRIPT_FILENAME'] ?? '') === __FILE__) {
         echo json_encode($migration->apply((string)($options['backup'] ?? '')), JSON_PRETTY_PRINT) . PHP_EOL;
     } else {
         $plan = $migration->inspect();
-        echo json_encode(['legacy_columns' => array_keys($plan['legacy_columns']), 'empty_product_statuses' => count($plan['empty_product_statuses'])], JSON_PRETTY_PRINT) . PHP_EOL;
+        echo json_encode(['legacy_columns' => array_keys($plan['legacy_columns']), 'has_product_status' => $plan['product_status'] !== null], JSON_PRETTY_PRINT) . PHP_EOL;
     }
 }

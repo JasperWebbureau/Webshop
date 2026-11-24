@@ -59,7 +59,6 @@ if ((int)$productGridPageId > 0) {
                 <?=$field('manufacturer', 'Fabrikant/merk')?>
                 <?=$field('color', 'Kleur')?>
                 <?=$field('size', 'Maat')?>
-                <?=$field('status', 'Status', null, $statusOptions)?>
                 <?=$field('isHidden', 'Zichtbaarheid', null, ['0' => 'Zichtbaar', '1' => 'Verborgen'])?>
             </div>
         </div>

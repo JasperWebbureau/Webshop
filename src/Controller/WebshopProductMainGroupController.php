@@ -33,24 +33,11 @@ class WebshopProductMainGroupController extends ModuleController
         $cardFile = $this->getTemplate('Cards', false, $card);
         $cardFile = $this->getModuleTemplate('Cards/' . $card . '.php', $cardFile);
         $limit = (int)$limit;
-        $groupsByMainGroupId = [];
-        foreach ((new WebshopProductGroupRepository())->getWithProducts(0, 9999) as $group) {
-            $groupsByMainGroupId[(int)$group->getMainGroupId()][] = $group;
-        }
-
         $entities = [];
         $visibleSubgroupCounts = [];
-        foreach ((new WebshopProductMainGroupRepository())->getActive() as $mainGroup) {
-            $mainGroupId = (int)$mainGroup->getId();
-            if (empty($groupsByMainGroupId[$mainGroupId])) {
-                continue;
-            }
-
-            $entities[] = $mainGroup;
-            $visibleSubgroupCounts[$mainGroupId] = count($groupsByMainGroupId[$mainGroupId]);
-            if (count($entities) >= ($limit > 0 ? $limit : 99)) {
-                break;
-            }
+        foreach ($this->getCatalogMainGroups($limit) as $item) {
+            $entities[] = $item['entity'];
+            $visibleSubgroupCounts[(int)$item['entity']->getId()] = count($item['groups']);
         }
 
         return new TemplateResponse('Flexgrid/Modules/Webshop/src/Templates/ProductMainGroupGrid/ProductMainGroupGrid.php', [
@@ -62,6 +49,39 @@ class WebshopProductMainGroupController extends ModuleController
             'cardWidth' => (int)$cardWidth ?: 4,
             'card' => $cardFile,
             'parentWidth' => 12,
+        ]);
+    }
+
+    /**
+     * @FG\Template [name=Productcategoriebalk, icon=fas fa-sitemap, html={<div data-type='plugin'><h5>Productcategoriebalk</h5></div>}]
+     * @param int $pageId [name=Product overzicht pagina,type=page]
+     * @param int $limit [name=Aantal hoofdgroepen,type=int]
+     * @param int $groupLimit [name=Aantal subgroepen,type=int]
+     */
+    public function productMainGroupNavigation($pageId = 0, $limit = 99, $groupLimit = 99)
+    {
+        $pageId = (int)$pageId;
+        if ($pageId <= 0) {
+            try {
+                $pageId = WebshopController::getProductGridPageId();
+            } catch (\RuntimeException $exception) {
+                return '';
+            }
+        }
+
+        $items = $this->getCatalogMainGroups((int)$limit);
+        if (!$items) {
+            return '';
+        }
+
+        $groupLimit = (int)$groupLimit;
+        foreach ($items as $index => $item) {
+            $items[$index]['groups'] = array_slice($item['groups'], 0, $groupLimit > 0 ? $groupLimit : 99);
+        }
+
+        return new TemplateResponse('Flexgrid/Modules/Webshop/src/Templates/ProductMainGroupNavigation/ProductMainGroupNavigation.php', [
+            'items' => $items,
+            'pageId' => $pageId,
         ]);
     }
 
@@ -316,6 +336,29 @@ class WebshopProductMainGroupController extends ModuleController
         }
 
         return null;
+    }
+
+    private function getCatalogMainGroups(int $limit): array
+    {
+        $groupsByMainGroupId = [];
+        foreach ((new WebshopProductGroupRepository())->getWithProducts(0, 9999) as $group) {
+            $groupsByMainGroupId[(int)$group->getMainGroupId()][] = $group;
+        }
+
+        $items = [];
+        foreach ((new WebshopProductMainGroupRepository())->getActive() as $mainGroup) {
+            $groups = $groupsByMainGroupId[(int)$mainGroup->getId()] ?? [];
+            if (!$groups) {
+                continue;
+            }
+
+            $items[] = ['entity' => $mainGroup, 'groups' => $groups];
+            if (count($items) >= ($limit > 0 ? $limit : 99)) {
+                break;
+            }
+        }
+
+        return $items;
     }
 
     protected function getModuleTemplate(string $relativePath, string $fallback): string

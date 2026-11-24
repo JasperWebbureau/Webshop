@@ -156,7 +156,6 @@ class WebshopAdminController
             'filters' => $filters,
             'mainGroupOptions' => $this->getProductMainGroupOptions(true),
             'groupOptions' => $this->getProductGroupOptions(true),
-            'statusOptions' => $this->getProductStatusOptions(),
             'visibilityOptions' => $this->getVisibilityOptions(),
             'colorOptions' => $this->getProductPropertyOptions('color', t('webshop_admin_products_all_colors', 'Alle kleuren')),
             'sizeOptions' => $this->getProductPropertyOptions('size', t('webshop_admin_products_all_sizes', 'Alle maten')),
@@ -244,7 +243,6 @@ class WebshopAdminController
             'product' => $product,
             'groupOptions' => $this->getProductGroupOptions(false),
             'taxRateOptions' => $this->getTaxRateOptions(),
-            'statusOptions' => $this->getProductStatusOptions(),
             'visibilityOptions' => $this->getVisibilityOptions(),
             'productGridPageId' => $this->getProductGridPageId(),
         ]);
@@ -594,9 +592,7 @@ class WebshopAdminController
     protected function getProductFilters(): array
     {
         $request = new Request();
-        $statusOptions = $this->getProductStatusOptions();
         $visibilityOptions = $this->getVisibilityOptions();
-        $status = trim((string)$request->get('status', ''));
         $hidden = trim((string)$request->get('is_hidden', ''));
         $mainGroupId = max(0, (int)$request->get('main_group_id', 0));
         $color = trim((string)$request->get('color', ''));
@@ -606,7 +602,6 @@ class WebshopAdminController
             'q' => trim((string)$request->get('q', '')),
             'main_group_id' => $mainGroupId,
             'group_id' => max(0, (int)$request->get('group_id', 0)),
-            'status' => isset($statusOptions[$status]) ? $status : '',
             'is_hidden' => isset($visibilityOptions[$hidden]) ? $hidden : '',
             'color' => $color,
             'size' => $size,
@@ -671,15 +666,6 @@ class WebshopAdminController
         }
 
         return $options;
-    }
-
-    protected function getProductStatusOptions(): array
-    {
-        return [
-            'draft' => 'Concept',
-            'published' => 'Gepubliceerd',
-            'archived' => 'Archief',
-        ];
     }
 
     protected function getVisibilityOptions(): array

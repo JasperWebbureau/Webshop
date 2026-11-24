@@ -9,7 +9,6 @@ use Flexgrid\Modules\Webshop\Controller\WebshopProductController;
 
 $showQuantity = $showQuantity ?? true;
 $isAvailable = (int)$product->getIsHidden() === 0
-    && (string)$product->getStatus() === 'published'
     && ((int)$product->getTrackStock() !== 1 || (int)$product->getStock() > 0);
 
 $addToCartEvent = new AjaxEvent(WebshopProductController::class, 'addToCart');

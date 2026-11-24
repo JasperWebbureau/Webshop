@@ -31,10 +31,6 @@ foreach ($items as $item) {
         continue;
     }
 
-    if (method_exists($product, 'getStatus') && (string)$product->getStatus() !== 'published') {
-        continue;
-    }
-
     $visibleItems[] = [
         'item' => $item,
         'product' => $product,

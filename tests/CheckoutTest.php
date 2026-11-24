@@ -29,7 +29,7 @@ foreach (['webshopproduct', 'webshopcustomer', 'webshoporder', 'webshoporderline
     $schema = $db->query('SHOW CREATE TABLE `' . $table . '`')->fetch(PDO::FETCH_NUM)[1];
     $db->exec(preg_replace('/^CREATE TABLE/', 'CREATE TEMPORARY TABLE', $schema));
 }
-$product = (new WebshopProduct())->setTitle('Checkout fixture')->setPrice(4.03)->setStock(5)->setTrackStock(1)->setStatus('published');
+$product = (new WebshopProduct())->setTitle('Checkout fixture')->setPrice(4.03)->setStock(5)->setTrackStock(1);
 $product = (new WebshopProductRepository())->add($product);
 $cart = new class($product) extends CartService {
     private $product;

@@ -27,7 +27,7 @@ class StockService
         usort($items, static function ($left, $right) { return (int)$left['product_id'] <=> (int)$right['product_id']; });
         foreach ($items as &$item) {
             $product = $this->productRepository->findForStockUpdate((int)$item['product_id']);
-            if (!$product || (string)$product->getStatus() !== 'published' || (int)$product->getIsHidden() !== 0) {
+            if (!$product || (int)$product->getIsHidden() !== 0) {
                 return ['success' => false, 'message' => 'Een product is niet meer beschikbaar.'];
             }
             $item['product'] = $product;

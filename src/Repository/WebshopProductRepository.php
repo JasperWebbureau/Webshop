@@ -7,6 +7,23 @@ use Repository\Repository;
 
 class WebshopProductRepository extends Repository
 {
+    public function add($entity)
+    {
+        if (defined('__DOMAIN__') && strcasecmp((string)parse_url(__DOMAIN__, PHP_URL_HOST), 'localhost') === 0) {
+            if (is_array($entity)) {
+                $data = $entity;
+                $entity = $this->getEntity();
+                $entity->populate($data);
+            }
+
+            if ($entity instanceof WebshopProduct && (int)$entity->getId() <= 0) {
+                $entity->setIsHidden(0);
+            }
+        }
+
+        return parent::add($entity);
+    }
+
     public function findForStockUpdate(int $id)
     {
         $db = \Flexgrid\Database\Connection::getConnections();
@@ -57,7 +74,7 @@ class WebshopProductRepository extends Repository
     {
         $orderConfig = $this->getOrderConfig($order, 'title');
         $products = $this->select(true)
-            ->where('status = ? AND (is_hidden = ? OR is_hidden IS NULL)', ['published', 0])
+            ->where('(is_hidden = ? OR is_hidden IS NULL)', [0])
             ->orderBy($orderConfig['field'], $orderConfig['direction'])
             ->limit(max((int)$limit * 3, (int)$limit))
             ->get();
@@ -72,7 +89,6 @@ class WebshopProductRepository extends Repository
         $search = trim((string)($filters['q'] ?? ''));
         $groupId = (int)($filters['group_id'] ?? 0);
         $mainGroupId = (int)($filters['main_group_id'] ?? 0);
-        $status = trim((string)($filters['status'] ?? ''));
         $hidden = trim((string)($filters['is_hidden'] ?? ''));
         $color = trim((string)($filters['color'] ?? ''));
         $size = trim((string)($filters['size'] ?? ''));
@@ -99,10 +115,6 @@ class WebshopProductRepository extends Repository
             $query->where('`group_id` IN (' . implode(',', array_fill(0, count($groupIds), '?')) . ')', $groupIds);
         }
 
-        if ($status !== '') {
-            $query->where('`status` = ?', [$status]);
-        }
-
         if (in_array($hidden, ['0', '1'], true)) {
             $query->where('COALESCE(`is_hidden`, 0) = ?', [(int)$hidden]);
         }
@@ -126,7 +138,7 @@ class WebshopProductRepository extends Repository
         $orderConfig = $this->getOrderConfig($order, 'title');
 
         $products = $this->select(true)
-            ->where('group_id = ? AND status = ? AND (is_hidden = ? OR is_hidden IS NULL)', [(int)$groupId, 'published', 0])
+            ->where('group_id = ? AND (is_hidden = ? OR is_hidden IS NULL)', [(int)$groupId, 0])
             ->orderBy($orderConfig['field'], $orderConfig['direction'])
             ->limit(max((int)$limit * 3, (int)$limit))
             ->get();
@@ -143,7 +155,7 @@ class WebshopProductRepository extends Repository
 
         $orderConfig = $this->getOrderConfig($order, 'title');
         $products = $this->select(true)
-            ->where('group_id IN (' . implode(',', array_fill(0, count($groupIds), '?')) . ') AND (is_hidden IS NULL OR is_hidden = ?) AND status = ?', array_merge($groupIds, [0, 'published']))
+            ->where('group_id IN (' . implode(',', array_fill(0, count($groupIds), '?')) . ') AND (is_hidden IS NULL OR is_hidden = ?)', array_merge($groupIds, [0]))
             ->orderBy($orderConfig['field'], $orderConfig['direction'])
             ->limit(max((int)$limit * 3, (int)$limit))
             ->get();
@@ -167,7 +179,7 @@ class WebshopProductRepository extends Repository
 
         $visibleIds = [];
         foreach ($products as $product) {
-            if ((string)$product->getStatus() === 'published' && (int)$product->getIsHidden() === 0) {
+            if ((int)$product->getIsHidden() === 0) {
                 $visibleIds[(int)$product->getGroupId()] = true;
             }
         }
@@ -185,7 +197,7 @@ class WebshopProductRepository extends Repository
         }
 
         $products = $this->select(true)
-            ->where('`group_id` IN (' . implode(',', array_fill(0, count($groupIds), '?')) . ') AND `image` IS NOT NULL AND `image` != ? AND status = ? AND (is_hidden = ? OR is_hidden IS NULL)', array_merge($groupIds, ['', 'published', 0]))
+            ->where('`group_id` IN (' . implode(',', array_fill(0, count($groupIds), '?')) . ') AND `image` IS NOT NULL AND `image` != ? AND (is_hidden = ? OR is_hidden IS NULL)', array_merge($groupIds, ['', 0]))
             ->orderBy('title', 'ASC')
             ->limit(1)
             ->get();

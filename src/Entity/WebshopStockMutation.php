@@ -5,7 +5,7 @@ namespace Flexgrid\Modules\Webshop\Entity;
 use Repository\ModuleEntity;
 
 /**
- * @FG\Entity[name=WebshopStockMutation,repository=Flexgrid\Modules\Webshop\Repository\WebshopStockMutationRepository,type=Webshop,in_menu=true,defaultOrder=id:DESC]
+ * @FG\Entity[name=WebshopStockMutation,label=Voorraadmutatie,repository=Flexgrid\Modules\Webshop\Repository\WebshopStockMutationRepository,type=Webshop,in_menu=true,defaultOrder=id:DESC]
  */
 class WebshopStockMutation extends ModuleEntity
 {

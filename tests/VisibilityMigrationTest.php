@@ -15,22 +15,33 @@ foreach (['webshopproduct', 'webshopproductgroup', 'webshopproductmaingroup', 'w
         $db->exec('ALTER TABLE `' . $table . '` ADD COLUMN is_active TINYINT NULL');
     }
 }
+if (!$db->query("SHOW COLUMNS FROM webshopproduct WHERE Field = 'status'")->fetchColumn()) {
+    $db->exec('ALTER TABLE webshopproduct ADD COLUMN status VARCHAR(20) NULL');
+}
 $db->exec("INSERT INTO webshopproduct (id,title,is_hidden,is_active,status) VALUES
     (990001,'Existing visible product',0,0,NULL),
     (990002,'Explicit draft',0,1,'draft'),
-    (990003,'Hidden published product',1,1,'published')");
-$before = $db->query('SELECT id,is_hidden FROM webshopproduct ORDER BY id')->fetchAll(PDO::FETCH_ASSOC);
+    (990003,'Hidden published product',1,1,'published'),
+    (990004,'Archived product',NULL,1,'archived'),
+    (990005,'Visible published product',NULL,1,'published')");
 $backup = sys_get_temp_dir() . '/webshop-visibility-' . bin2hex(random_bytes(8)) . '.json';
 try {
     $migration = new WebshopVisibilityMigration($db);
     $result = $migration->apply($backup);
-    if ($result['published_products'] !== 1 || count($result['removed_columns']) !== 7) { throw new RuntimeException('Migration result differs from the planned legacy fields.'); }
-    if ($before !== $db->query('SELECT id,is_hidden FROM webshopproduct ORDER BY id')->fetchAll(PDO::FETCH_ASSOC)) { throw new RuntimeException('Existing hidden flags changed.'); }
-    $statuses = $db->query('SELECT id,status FROM webshopproduct ORDER BY id')->fetchAll(PDO::FETCH_KEY_PAIR);
-    if ($statuses !== [990001 => 'published', 990002 => 'draft', 990003 => 'published']) { throw new RuntimeException('Explicit publication states were changed.'); }
+    if ($result['hidden_products'] !== 2 || !$result['removed_product_status'] || count($result['removed_columns']) !== 7) {
+        throw new RuntimeException('Migration result differs from the planned legacy fields.');
+    }
+    $visibility = $db->query('SELECT id,is_hidden FROM webshopproduct ORDER BY id')->fetchAll(PDO::FETCH_KEY_PAIR);
+    if ($visibility !== [990001 => 0, 990002 => 1, 990003 => 1, 990004 => 1, 990005 => null]) {
+        throw new RuntimeException('The migration did not preserve product visibility.');
+    }
     $plan = $migration->inspect();
-    if ($plan['legacy_columns'] || $plan['empty_product_statuses']) { throw new RuntimeException('Second inspection must be empty.'); }
+    if ($plan['legacy_columns'] || $plan['product_status'] !== null) {
+        throw new RuntimeException('Second inspection must be empty.');
+    }
     $snapshot = json_decode(file_get_contents($backup), true, 512, JSON_THROW_ON_ERROR);
-    if (count($snapshot['legacy_columns']['webshopproduct']['rows']) !== 3) { throw new RuntimeException('Flag backup is incomplete.'); }
-    echo "Visibility migration verified: hidden flags and drafts preserved, blank status repaired, seven legacy columns removed, rerun empty. Temporary tables only.\n";
+    if (count($snapshot['product_status']['rows']) !== 5 || $snapshot['product_status']['rows'][1]['status'] !== 'draft') {
+        throw new RuntimeException('Product visibility backup is incomplete.');
+    }
+    echo "Visibility migration verified: hidden flags preserved, drafts and archived products hidden, legacy columns removed, rerun empty. Temporary tables only.\n";
 } finally { if (file_exists($backup)) { unlink($backup); } }

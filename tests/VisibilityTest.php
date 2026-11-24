@@ -30,30 +30,27 @@ foreach (['WebshopProduct', 'WebshopProductGroup', 'WebshopProductMainGroup', 'W
 }
 $db->exec("INSERT INTO webshopproductmaingroup (id,title,is_hidden) VALUES (990001,'Visible main group',0),(990002,'Hidden main group',1),(990003,'Only hidden products',0)");
 $db->exec("INSERT INTO webshopproductgroup (id,title,main_group_id,is_hidden) VALUES (991001,'Visible group',990001,0),(991002,'Hidden parent',990002,0),(991003,'No visible product',990003,0)");
-$db->exec("INSERT INTO webshopproduct (id,title,group_id,price,status,is_hidden) VALUES
-    (992001,'Visible product',991001,10,'published',0),
-    (992002,'Hidden product',991001,10,'published',1),
-    (992003,'Draft product',991001,10,'draft',0),
-    (992004,'Hidden parent product',991002,10,'published',0),
-    (992005,'Only hidden product',991003,10,'published',1)");
+$db->exec("INSERT INTO webshopproduct (id,title,group_id,price,is_hidden) VALUES
+    (992001,'Visible product',991001,10,NULL),
+    (992002,'Hidden product',991001,10,1),
+    (992004,'Hidden parent product',991002,10,0),
+    (992005,'Only hidden product',991003,10,1)");
 $arguments = new ReflectionProperty(\Flexgrid\Response\Response::class, 'arguments');
 $arguments->setAccessible(true);
 $mainIds = static function () use ($arguments) {
     $response = (new WebshopProductMainGroupController())->productMainGroupGrid(48);
     return array_map(static function ($entity) { return (int)$entity->getId(); }, $arguments->getValue($response)['entities']);
 };
-$assert($mainIds() === [990001], 'Only the main group with a visible published product is shown');
+$assert($mainIds() === [990001], 'Only the main group with a visible product is shown');
 $banner = (new WebshopProductMainGroupController())->banner(990002);
 $assert($arguments->getValue($banner)['entity'] === null, 'A direct hidden main-group banner receives no entity');
 $generator = (new ReflectionClass(\Flexgrid\Modules\Webshop\Service\ProductAiGeneratorService::class))->newInstanceWithoutConstructor();
 $factory = new ReflectionMethod($generator, 'createProductFromData');
 $factory->setAccessible(true);
-$generated = $factory->invoke($generator, ['title' => 'Generated fixture', 'groupId' => 991001, 'isHidden' => 1, 'status' => 'draft'], 'Fallback');
-$assert($generated instanceof \Flexgrid\Modules\Webshop\Entity\WebshopProduct && $generated->getIsHidden() === 1 && $generated->getStatus() === 'draft', 'AI data mapping uses inherited visibility without relying on a fluent setter');
-$generated = $factory->invoke($generator, ['title' => 'Default generated fixture'], 'Fallback');
-$assert($generated->getIsHidden() === 0, 'AI mapping defaults to not hidden');
+$generated = $factory->invoke($generator, ['title' => 'Generated fixture', 'groupId' => 991001], 'Fallback');
+$assert($generated instanceof \Flexgrid\Modules\Webshop\Entity\WebshopProduct && $generated->getIsHidden() === 1, 'AI data mapping uses inherited visibility without relying on a fluent setter');
 $products = new WebshopProductRepository();
-$assert(count($products->getByGroupId(991001)) === 1, 'Hidden and draft products are excluded');
+$assert(count($products->getByGroupId(991001)) === 1, 'Hidden products are excluded');
 $product = $products->findForStockUpdate(992001);
 $product->setIsHidden(1);
 $products->add($product);

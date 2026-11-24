@@ -15,9 +15,9 @@ $activePrice = $salePrice > 0 && $salePrice < $price ? $salePrice : $price;
 $groupTitle = '';
 $mainGroupTitle = '';
 $manufacturer = trim((string)$product->getManufacturer());
-$isPublished = (int)$product->getIsHidden() === 0 && (string)$product->getStatus() === 'published';
+$isVisible = (int)$product->getIsHidden() === 0;
 $isInStock = (int)$product->getTrackStock() !== 1 || (int)$product->getStock() > 0;
-$isAvailable = $isPublished && $isInStock;
+$isAvailable = $isVisible && $isInStock;
 $productGridUrl = '';
 $image = $product->getImage();
 $highlightImage = method_exists($product, 'getHighlightImage') ? $product->getHighlightImage() : null;
@@ -140,7 +140,13 @@ if ((float)$product->getTaxRate() > 0) {
                     <?php if ($salePrice > 0 && $salePrice < $price) { ?>
                         <span class="webshop-product-detail__price-old">&euro; <?=number_format($price, 2, ',', '.')?></span>
                     <?php } ?>
-                    <span class="webshop-product-detail__price-current">&euro; <?=number_format($activePrice, 2, ',', '.')?></span>
+                    <span class="webshop-product-detail__price-current">
+                        <?php if (!$isInStock && $product->getPrice() === null) { ?>
+                            <?=t('webshop_product_price_pending', 'Prijs volgt')?>
+                        <?php } else { ?>
+                            &euro; <?=number_format($activePrice, 2, ',', '.')?>
+                        <?php } ?>
+                    </span>
                 </div>
 
                 <?php if (trim((string)$product->getShortDescription()) !== '') { ?>
@@ -151,7 +157,7 @@ if ((float)$product->getTaxRate() > 0) {
 
                 <div class="webshop-product-detail__availability <?=$isAvailable ? 'is-available' : 'is-unavailable'?>">
                     <span></span>
-                    <?php if (!$isPublished) { ?>
+                    <?php if (!$isVisible) { ?>
                         <?=t('webshop_product_not_available', 'Niet beschikbaar')?>
                     <?php } else { ?>
                         <?=$isInStock ? t('webshop_product_available_shipping', 'Op voorraad binnen 2-3 werkdagen verzonden') : t('webshop_product_unavailable', 'Niet op voorraad')?>

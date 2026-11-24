@@ -27,8 +27,12 @@ $image = $product->getImage();
         <?php if ($showDescription && $description !== '') { ?><div class="card__description"><?=htmlspecialchars($description, ENT_QUOTES, 'UTF-8')?></div><?php } ?>
         <p class="card__availability <?=$isInStock ? 'card__availability--available' : ''?>"><?=$isInStock ? t('webshop_product_available', 'Op voorraad') : t('webshop_product_unavailable', 'Niet op voorraad')?></p>
         <div class="card__price">
-            <?php if ($pricing['sale']) { ?><del>&euro; <?=number_format($pricing['original'], 2, ',', '.')?></del><?php } ?>
-            <span><?=$pricing['from'] ? t('webshop_product_card_from', 'Vanaf') . ' ' : ''?>&euro; <?=number_format($pricing['price'], 2, ',', '.')?></span>
+            <?php if (!$isInStock && !$pricing['hasPrice']) { ?>
+                <span><?=t('webshop_product_price_pending', 'Prijs volgt')?></span>
+            <?php } else { ?>
+                <?php if ($pricing['sale']) { ?><del>&euro; <?=number_format($pricing['original'], 2, ',', '.')?></del><?php } ?>
+                <span><?=$pricing['from'] ? t('webshop_product_card_from', 'Vanaf') . ' ' : ''?>&euro; <?=number_format($pricing['price'], 2, ',', '.')?></span>
+            <?php } ?>
         </div>
         <div class="card__read-more"><a class="button button-primary" href="<?=$detailUrl?>"><?=t('webshop_product_view_button', 'Bekijk product')?></a></div>
     </div>

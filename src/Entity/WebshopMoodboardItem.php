@@ -6,7 +6,7 @@ use Flexgrid\Modules\Webshop\Repository\WebshopProductRepository;
 use Repository\ModuleEntity;
 
 /**
- * @FG\Entity[name=WebshopMoodboardItem,repository=Flexgrid\Modules\Webshop\Repository\WebshopMoodboardItemRepository,type=Webshop,in_menu=true,defaultOrder=order:ASC]
+ * @FG\Entity[name=WebshopMoodboardItem,label=Moodboarditem,repository=Flexgrid\Modules\Webshop\Repository\WebshopMoodboardItemRepository,type=Webshop,in_menu=true,defaultOrder=order:ASC]
  */
 class WebshopMoodboardItem extends ModuleEntity
 {

@@ -5,7 +5,7 @@ namespace Flexgrid\Modules\Webshop\Entity;
 use Repository\ModuleEntity;
 
 /**
- * @FG\Entity[name=WebshopDiscountCode,repository=Flexgrid\Modules\Webshop\Repository\WebshopDiscountCodeRepository,type=Webshop,in_menu=true,defaultOrder=id:DESC]
+ * @FG\Entity[name=WebshopDiscountCode,label=Kortingscode,repository=Flexgrid\Modules\Webshop\Repository\WebshopDiscountCodeRepository,type=Webshop,in_menu=true,defaultOrder=id:DESC]
  */
 class WebshopDiscountCode extends ModuleEntity
 {

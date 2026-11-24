@@ -279,7 +279,7 @@ class ProductAiGeneratorService
             'Schrijf description als eenvoudige HTML met minimaal ' . $minimumDescriptionParagraphs . ' p-tags.',
             'Return uitsluitend geldige JSON zonder markdown.',
             'Schema voor een product:',
-            '{"title":"string","sku":"string","groupId":0,"newGroupTitle":"string","newGroupMainGroupId":0,"imageIndexes":[0],"highlightImageIndex":0,"shortDescription":"string","description":"html string","highlightText":"html string","price":0,"purchasePrice":0,"salePrice":0,"taxRateId":0,"taxRate":21,"stock":0,"trackStock":0,"isHidden":0,"status":"draft","color":"string","size":"string","manufacturer":"string"}',
+            '{"title":"string","sku":"string","groupId":0,"newGroupTitle":"string","newGroupMainGroupId":0,"imageIndexes":[0],"highlightImageIndex":0,"shortDescription":"string","description":"html string","highlightText":"html string","price":0,"purchasePrice":0,"salePrice":0,"taxRateId":0,"taxRate":21,"stock":0,"trackStock":0,"color":"string","size":"string","manufacturer":"string"}',
         ];
 
         if ($allowVariantDetection) {
@@ -365,8 +365,6 @@ class ProductAiGeneratorService
             'productGroups' => $this->getProductGroupsForPrompt(),
             'taxRates' => $this->getTaxRatesForPrompt(),
             'defaults' => [
-                'status' => 'draft',
-                'isHidden' => 0,
                 'trackStock' => 0,
                 'stock' => 0,
                 'taxRate' => 21,
@@ -616,11 +614,10 @@ class ProductAiGeneratorService
             ->setTaxRate((float)str_replace(',', '.', (string)($data['taxRate'] ?? $data['tax_rate'] ?? 21)))
             ->setStock(max(0, (int)($data['stock'] ?? 0)))
             ->setTrackStock((int)!empty($data['trackStock'] ?? $data['track_stock'] ?? 0))
-            ->setStatus(in_array((string)($data['status'] ?? 'draft'), ['draft', 'published', 'archived'], true) ? (string)$data['status'] : 'draft')
             ->setColor($this->text($data['color'] ?? ''))
             ->setSize($this->text($data['size'] ?? ''))
             ->setManufacturer($this->text($data['manufacturer'] ?? ''));
-        $product->setIsHidden((int)!empty($data['isHidden'] ?? $data['is_hidden'] ?? 0));
+        $product->setIsHidden(1);
 
         return $product;
     }

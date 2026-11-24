@@ -227,7 +227,7 @@ class WebshopController extends ModuleController
         $productId = (int)$request->get('product_id', 0);
         $product = (new WebshopProductController())->getRepository()->findById($productId);
 
-        if (!$product || (int)$product->getId() <= 0 || (int)$product->getIsHidden() !== 0 || (string)$product->getStatus() !== 'published') {
+        if (!$product || (int)$product->getId() <= 0 || (int)$product->getIsHidden() !== 0) {
             $response = new AjaxResponse();
             $response->success = false;
             $response->error = 'Product niet gevonden.';

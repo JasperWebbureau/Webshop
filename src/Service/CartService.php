@@ -185,8 +185,7 @@ class CartService
         return $product instanceof WebshopProduct
             && (int)$product->getId() > 0
 
-              && (int)$product->getIsHidden() === 0
-            && (string)$product->getStatus() === 'published';
+              && (int)$product->getIsHidden() === 0;
     }
 
     protected function hasEnoughStock(WebshopProduct $product, int $quantity): bool

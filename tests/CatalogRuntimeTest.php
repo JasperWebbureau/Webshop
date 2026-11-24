@@ -44,16 +44,14 @@ $assertCardNavigation = static function ($rendered, $card, $hasFavorite = false)
 };
 $product = (new CatalogFixtureProduct())->setId(923456)->setTitle('Een lange producttitel met <tekst> & details')
     ->setShortDescription('<p>Een beschrijving met HTML en details.</p>')->setPrice(121)->setSalePrice(99)
-    ->setStock(3)->setTrackStock(1)->setImage('')->setStatus('published');
+    ->setStock(3)->setTrackStock(1)->setImage('');
 $pricing = (new PriceService())->getCardPricing($product);
 $assert($pricing['price'] === 99.0 && $pricing['sale'], 'Single sale price');
-$variant = (new CatalogFixtureProduct())->setId(923457)->setPrice(80)->setStatus('published');
+$variant = (new CatalogFixtureProduct())->setId(923457)->setPrice(80);
 $product->variants = [$variant];
 $pricing = (new PriceService())->getCardPricing($product);
 $assert($pricing['price'] === 80.0 && $pricing['from'] && !$pricing['sale'], 'Cluster minimum does not display a misleading original price');
-$variant->setStatus('draft');
-$assert(count($product->getVariantClusterProducts(true)) === 1, 'Draft sibling is hidden');
-$variant->setStatus('published'); $variant->setIsHidden(1);
+$variant->setIsHidden(1);
 $assert(count($product->getVariantClusterProducts(true)) === 1, 'Hidden sibling is hidden');
 $product->variants = [];
 AssetManager::reset();

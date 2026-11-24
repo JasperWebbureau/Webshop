@@ -11,11 +11,15 @@ class PriceService
         $variants = $product->getVariantClusterProducts(true);
         $variants = $variants ?: [$product];
         $prices = array_map([$this, 'getUnitPrice'], $variants);
+        $pricedVariants = array_filter($variants, static function (WebshopProduct $variant): bool {
+            return $variant->getPrice() !== null;
+        });
         $minimum = min($prices);
         $maximum = max($prices);
 
         return [
             'price' => $minimum,
+            'hasPrice' => $pricedVariants !== [],
             'original' => count($variants) === 1 ? (float)$product->getPrice() : $minimum,
             'from' => $minimum !== $maximum,
             'sale' => count($variants) === 1 && $minimum < (float)$product->getPrice(),

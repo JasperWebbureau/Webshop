@@ -5,7 +5,7 @@ namespace Flexgrid\Modules\Webshop\Entity;
 use Repository\ModuleEntity;
 
 /**
- * @FG\Entity[name=WebshopOrderLine,repository=Flexgrid\Modules\Webshop\Repository\WebshopOrderLineRepository,type=Webshop,hide=true]
+ * @FG\Entity[name=WebshopOrderLine,label=Bestelregel,repository=Flexgrid\Modules\Webshop\Repository\WebshopOrderLineRepository,type=Webshop,hide=true]
  */
 class WebshopOrderLine extends ModuleEntity
 {

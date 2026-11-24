@@ -248,10 +248,9 @@ class WebshopProductController extends ModuleController
         if (mb_strlen($query, 'UTF-8') >= 3 && mb_strlen($query, 'UTF-8') <= 120) {
             $limit = max(1, min(10, (int)$limit));
             $repository = $this->getRepository();
-            $matches = array_filter($repository->search(['q' => $query, 'is_hidden' => '0', 'status' => 'published'], $limit * 3), static function ($product) {
+            $matches = array_filter($repository->search(['q' => $query, 'is_hidden' => '0'], $limit * 3), static function ($product) {
                 return $product
-                    && (int)$product->getIsHidden() === 0
-                    && (string)$product->getStatus() === 'published';
+                    && (int)$product->getIsHidden() === 0;
             });
             $products = array_slice($repository->filterVariantClusters(array_values($matches)), 0, $limit);
         }
@@ -408,8 +407,6 @@ class WebshopProductController extends ModuleController
         }
 
         $constraints = [
-            ['sql' => 'status = :product_status',
-             'params' => [':product_status' => 'published']],
             [
                 'sql' => '(is_hidden = :is_hidden OR is_hidden IS NULL)',
                 'params' => [
@@ -501,8 +498,7 @@ class WebshopProductController extends ModuleController
     protected function renderProductDetail(int $productId, int $pageId = 0)
     {
         $product = $this->getRepository()->findById($productId);
-        if (!$product || (int)$product->getId() <= 0 || (int)$product->getIsHidden() !== 0
-            || (string)$product->getStatus() !== 'published') {
+        if (!$product || (int)$product->getId() <= 0 || (int)$product->getIsHidden() !== 0) {
             return '';
         }
 

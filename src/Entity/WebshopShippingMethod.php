@@ -5,7 +5,7 @@ namespace Flexgrid\Modules\Webshop\Entity;
 use Repository\ModuleEntity;
 
 /**
- * @FG\Entity[name=WebshopShippingMethod,repository=Flexgrid\Modules\Webshop\Repository\WebshopShippingMethodRepository,type=Webshop,in_menu=true,defaultOrder=order:ASC]
+ * @FG\Entity[name=WebshopShippingMethod,label=Verzendmethode,repository=Flexgrid\Modules\Webshop\Repository\WebshopShippingMethodRepository,type=Webshop,in_menu=true,defaultOrder=order:ASC]
  */
 class WebshopShippingMethod extends ModuleEntity
 {

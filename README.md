@@ -15,11 +15,11 @@ define('__WEBSHOP_SHOP_ID__', 'unieke-stabiele-winkel-id');
 
 Gebruik een eigen shop-id per gekopieerde winkel. De identiteit wordt bij checkout bevroren; wijzig haar niet voor bestaande orders. Installeer met een lege database voor transactionele webshop- en administratiedata. Neem geen betalingen, administratietaken of nummerreeksen uit een andere winkel over.
 
-Voer de normale bevoegde `force_aw=true` scan uit. Gebruik geen `clean=true` voor deze installatie. Die scan ontdekt de module, relations, publicatievelden, kaarten, beheer en template-overrides. Stel in Webshop → Instellingen de product-, winkelwagen-, favorieten-, checkout- en betaalretourpagina in. Pagina-ID's komen uit de betreffende installatie. Maak hoofdgroepen, productgroepen en producten via de bestaande EntityEditor; de installatie mag geen branchegegevens vereisen. Installerautomatisering en voorbeeldinhoud volgen in een afzonderlijke opdracht.
+Voer de normale bevoegde `force_aw=true` scan uit. Gebruik geen `clean=true` voor deze installatie. Die scan ontdekt de module, relations, zichtbaarheid, kaarten, beheer en template-overrides. Stel in Webshop → Instellingen de product-, winkelwagen-, favorieten-, checkout- en betaalretourpagina in. Pagina-ID's komen uit de betreffende installatie. Maak hoofdgroepen, productgroepen en producten via de bestaande EntityEditor; de installatie mag geen branchegegevens vereisen. Installerautomatisering en voorbeeldinhoud volgen in een afzonderlijke opdracht.
 
 ## Catalogus en templates
 
-`WebshopProductController::productSlider()` is de algemene productvariant van `ModuleController::slider()`, met hetzelfde presentatiecontract voor template, kaart, desktop-/tabletaantallen, pagina, limiet, overzichtsknop, groep, parentbreedte, controls, autoplay, extra selectie en optionele cache. De standaardtemplate `ProductSlider/ProductSlider.php` geeft deze gegevens door aan dezelfde gedeelde `App/Slider/Slider.php`; er is geen eigen webshop-carousel of tweede initialisatie. De module controleert productpublicatie en zichtbaarheid van product, groep en hoofdgroep, clustert varianten vóór de limiet en retourneert niets bij een lege selectie. Ondersteunde kaarten: `ProductCard`, `ProductCard2`, `ProductCardCompact`. De extra selectie is een vertrouwde CMS-/controller-WHERE-expressie; sortering is op titel. Dienstselecties horen in een App-subclass.
+`WebshopProductController::productSlider()` is de algemene productvariant van `ModuleController::slider()`, met hetzelfde presentatiecontract voor template, kaart, desktop-/tabletaantallen, pagina, limiet, overzichtsknop, groep, parentbreedte, controls, autoplay, extra selectie en optionele cache. De standaardtemplate `ProductSlider/ProductSlider.php` geeft deze gegevens door aan dezelfde gedeelde `App/Slider/Slider.php`; er is geen eigen webshop-carousel of tweede initialisatie. De module controleert zichtbaarheid van product, groep en hoofdgroep, clustert varianten vóór de limiet en retourneert niets bij een lege selectie. Ondersteunde kaarten: `ProductCard`, `ProductCard2`, `ProductCardCompact`. De extra selectie is een vertrouwde CMS-/controller-WHERE-expressie; sortering is op titel. Dienstselecties horen in een App-subclass.
 
 | Onderdeel | Contract |
 | --- | --- |
@@ -27,7 +27,6 @@ Voer de normale bevoegde `force_aw=true` scan uit. Gebruik geen `clean=true` voo
 | Productgroep | `WebshopProductGroup.mainGroupId`, verwijst naar één hoofdgroep |
 | Product | `WebshopProduct.groupId`, verwijst naar één productgroep |
 | Zichtbaarheid | Alleen het geërfde `isHidden` / `is_hidden`: `0` of `NULL` zichtbaar, `1` verborgen; dezelfde vlag als de lijsteditors |
-| Publicatie | Producten vereisen daarnaast `status=published`; expliciete concepten blijven buiten de publieke selectie |
 | ProductCard | Uitgebreide verticale kaart met beschrijving |
 | ProductCard2 | Visuele kaart zonder beschrijving |
 | ProductCardCompact | Horizontale kaart, stapelt op mobiel |
@@ -39,14 +38,16 @@ Alle drie kaarten zijn via de bestaande `card`-parameter beschikbaar in productg
 
 Zichtbaarheid gebruikt voor alle webshop-entities de bestaande `ModuleEntity`-vlag, ook voor verzendmethoden, btw-tarieven, kortingscodes en moodboards. Er is geen aparte activatieproperty. De beheerfilters bieden zichtbaar/verborgen aan en de standaard lijsteditor kan deze waarden direct wijzigen. Bestaande repositorymethoden met de naam `getActive()` selecteren zichtbare records; hun naam introduceert geen extra vlag.
 
-Een hoofdgroepgrid toont alleen zichtbare hoofdgroepen met zichtbare productgroepen die zichtbare gepubliceerde producten hebben. Controleer daarom bij een ontbrekende hoofdgroep zowel de groep als haar producten. Voor de eenmalige overgang van de ontwikkelversie is er een CLI-migratie:
+Wanneer de ingestelde site-URL `localhost` als host heeft, worden alle nieuwe producten zichtbaar opgeslagen, ook bij AI-aanmaak en imports. Elders worden AI-producten verborgen aangemaakt.
+
+Een hoofdgroepgrid toont alleen zichtbare hoofdgroepen met zichtbare productgroepen die zichtbare producten hebben. Controleer daarom bij een ontbrekende hoofdgroep zowel de groep als haar producten. Voor de eenmalige overgang van de ontwikkelversie is er een CLI-migratie:
 
 ```text
 php Flexgrid/Modules/Webshop/tools/migrate-visibility.php
 php Flexgrid/Modules/Webshop/tools/migrate-visibility.php --apply --backup=C:/backups/webshop-visibility.json
 ```
 
-De eerste opdracht inspecteert alleen. De tweede vereist een nieuw backupbestand in een bestaande schrijfbare map, bewaart schema's en oorspronkelijke vlaggen en verwijdert uitsluitend de oude `is_active`-kolommen uit de vaste webshop-tabellen. `is_hidden` wordt nooit vanuit de oude vlag ingevuld of omgekeerd: die bestaande waarden blijven leidend. Lege productstatussen uit de vroegere versie worden gepubliceerd; expliciete concept-/archiefstatussen blijven behouden. De migratie loopt nooit automatisch tijdens een request of force scan. Voer na de codewijziging ook `force_aw=true` uit; gebruik hiervoor geen brede database-cleanup.
+De eerste opdracht inspecteert alleen. Voer de tweede opdracht uit tijdens onderhoud, voordat de nieuwe code publiek draait. Gebruik een nieuw backupbestand in een bestaande schrijfbare map. De migratie bewaart de schema's en oorspronkelijke waarden. Ze zet bestaande concepten en gearchiveerde producten op verborgen en verwijdert daarna de oude productkolom `status`. Lege statuswaarden volgen de bestaande `is_hidden`-vlag. De migratie verwijdert ook eventuele oude `is_active`-kolommen uit de vaste webshoptabellen. Voer na de migratie en codewijziging de bevoegde `force_aw=true`-scan uit, zonder `clean=true`.
 
 Clustering gebeurt vóór paginering, zodat een vaste fetchfactor geen producten tussen pagina's overslaat. De huidige implementatie laadt de gefilterde collectie om clusters te bepalen. Voor zeer grote catalogi is een geïndexeerde clusterrepresentatie nodig; behoud daarbij dezelfde pagineringsuitkomst.
 
@@ -59,6 +60,14 @@ Elke runtimevariant heeft eigen, gelijknamige assets. De drie kaarten renderen d
 De standaard hoofdgroep- en productgroepkaarten gebruiken dezelfde oppervlakken, randen en accentkleur als de productkaarten. `ProductGroupCard` heeft een beschrijving en knop; `ProductGroupCard2` toont beeld en titel met een pijl. Er zijn geen wisselende kleuren per kaartindex. Afbeeldingen worden zonder crop aangevraagd en met `object-fit: contain` getoond; ontbrekende beelden krijgen een neutraal icoon. Lange titels mogen ombreken, beschrijvingen worden visueel tot drie regels beperkt. Knoppen volgen de gedeelde buttonstijl; de module stelt daarvoor geen eigen fontproperties in.
 
 Alle product-, groep- en hoofdgroepkaarten, inclusief zoekresultaatkaarten, gebruiken `.clickable` met één zichtbare navigatielink: de actieknop of een benoemde pijl. Titel, afbeelding en overige inhoud zijn geen linkwrappers. De bestaande frontendhandler maakt de rest van de kaart muisklikbaar; de echte link verzorgt toetsenbordnavigatie. Favorietenbuttons blijven afzonderlijke controls en worden door die handler overgeslagen. Cursor en hover-schaduw komen uit de gedeelde `.clickable`-stijl; de kaartvarianten dupliceren deze animatie niet. Zie `docs/templates/cards.md`.
+
+## Productcategoriebalk
+
+Het PageBuilder-blok **Productcategoriebalk** gebruikt `WebshopProductMainGroupController::productMainGroupNavigation($pageId = 0, $limit = 99, $groupLimit = 99)`. Plaats het blok in een eigen headersectie of andere PageBuilder-kolom. Bij pagina-ID 0 gebruikt het de ingestelde productoverzichtpagina.
+
+De balk volgt dezelfde catalogusselectie als het hoofdgroepgrid. Een hoofdgroep verschijnt zodra een zichtbare onderliggende groep een zichtbaar gepubliceerd product bevat. De hoofdgroeptitel linkt naar de hoofdgroep. Met de pijl open je de subgroepen. De dropdown werkt met muis, aanraking en toetsenbord. Escape sluit hem en zet de focus terug op de pijl wanneer de focus in de dropdown staat.
+
+Het template bezit zijn eigen SCSS en JavaScript. De PageBuilder bepaalt de plaatsing en kolombreedte.
 
 ## Headeracties
 

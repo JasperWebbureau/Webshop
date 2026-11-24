@@ -1,0 +1,96 @@
+.webshop-category-navigation {
+  &__list,
+  &__dropdown {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    column-gap: clamp(.75rem, 3vw, 2.5rem);
+  }
+
+  &__item {
+    display: flex;
+    align-items: stretch;
+    position: relative;
+    max-inline-size: 100%;
+  }
+
+  &__link {
+    @include textNode(nav);
+    display: flex;
+    align-items: center;
+    min-block-size: 44px;
+    padding-inline: .25rem;
+    overflow-wrap: anywhere;
+    text-decoration: none;
+  }
+
+  &__toggle {
+    flex: 0 0 44px;
+    min-block-size: 44px;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    color: var(--nav-color, var(--color));
+    cursor: pointer;
+
+    > i { font-size: .6875rem; }
+    &[aria-expanded="true"] > i { transform: rotate(180deg); }
+  }
+
+  &__item:focus-within > &__link,
+  &__item:hover > &__link,
+  &__toggle:hover,
+  &__toggle[aria-expanded="true"] {
+    color: var(--nav-hover-color, var(--primary));
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--primary, currentColor);
+    outline-offset: -2px;
+  }
+
+  &__dropdown {
+    position: absolute;
+    z-index: 5;
+    inset-block-start: 100%;
+    inset-inline-start: 0;
+    inline-size: max-content;
+    min-inline-size: min(13rem, calc(100vw - 24px));
+    max-inline-size: min(22rem, calc(100vw - 24px));
+    max-block-size: 60vh;
+    max-block-size: 60dvh;
+    overflow: auto;
+    box-sizing: border-box;
+    padding: .375rem;
+    transform: translateX(var(--webshop-category-navigation-offset, 0px));
+    background: var(--webshop-category-navigation-surface, var(--header-background, var(--off-white, #fff)));
+    border: 1px solid var(--border-color);
+    border-radius: var(--webshop-category-navigation-radius, var(--border-radius, .5rem));
+    box-shadow: var(--webshop-category-navigation-shadow, 0 8px 24px rgba(0, 0, 0, .09));
+
+    &[hidden] { display: none; }
+    > li + li { border-block-start: 1px solid var(--border-color); }
+
+    a {
+      @include textNode(link);
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      min-block-size: 44px;
+      padding: .5rem .75rem;
+      overflow-wrap: anywhere;
+      text-decoration: none;
+
+      &:hover, &:focus-visible {
+        @include textNode(link-hover, 'link-');
+        background: var(--default-background);
+      }
+    }
+  }
+}

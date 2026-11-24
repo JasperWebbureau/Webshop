@@ -11,6 +11,7 @@ $priceService = new PriceService();
 $price = (float)$product->getPrice();
 $activePrice = $priceService->getUnitPrice($product);
 $hasSale = $activePrice < $price;
+$hasPendingPrice = $product->getPrice() === null && (int)$product->getTrackStock() === 1 && (int)$product->getStock() <= 0;
 $url = (string)$product->getDetailUrl((int)$pageId);
 $title = method_exists($product, 'getTitleShort') ? trim((string)$product->getTitleShort()) : '';
 $title = $title !== '' ? $title : (string)$product->getTitle();
@@ -32,7 +33,7 @@ $sku = trim((string)$product->getSku());
         <?php } ?>
         <div class="card__prices">
             <?php if ($hasSale) { ?><del class="card__price-old"><?=$priceService->format($price)?></del><?php } ?>
-            <strong class="card__price"><?=$priceService->format($activePrice)?></strong>
+            <strong class="card__price"><?=$hasPendingPrice ? t('webshop_product_price_pending', 'Prijs volgt') : $priceService->format($activePrice)?></strong>
         </div>
     </div>
     <a class="card__arrow" href="<?=htmlspecialchars($url, ENT_QUOTES, 'UTF-8')?>" aria-label="<?=htmlspecialchars($title, ENT_QUOTES, 'UTF-8')?>"><i class="fas fa-arrow-right" aria-hidden="true"></i></a>

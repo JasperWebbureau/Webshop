@@ -7,7 +7,7 @@ use Flexgrid\Utils\Files\ImageFile;
 use Repository\ModuleEntity;
 
 /**
- * @FG\Entity[name=WebshopProductMainGroup,repository=Flexgrid\Modules\Webshop\Repository\WebshopProductMainGroupRepository,type=Webshop,in_menu=true,defaultOrder=title:ASC]
+ * @FG\Entity[name=WebshopProductMainGroup,label=Hoofdgroep,repository=Flexgrid\Modules\Webshop\Repository\WebshopProductMainGroupRepository,type=Webshop,in_menu=true,defaultOrder=title:ASC]
  */
 class WebshopProductMainGroup extends ModuleEntity
 {

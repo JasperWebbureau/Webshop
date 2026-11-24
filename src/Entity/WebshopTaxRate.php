@@ -5,7 +5,7 @@ namespace Flexgrid\Modules\Webshop\Entity;
 use Repository\ModuleEntity;
 
 /**
- * @FG\Entity[name=WebshopTaxRate,repository=Flexgrid\Modules\Webshop\Repository\WebshopTaxRateRepository,type=Webshop,in_menu=true,defaultOrder=rate:DESC]
+ * @FG\Entity[name=WebshopTaxRate,label=Btw-tarief,repository=Flexgrid\Modules\Webshop\Repository\WebshopTaxRateRepository,type=Webshop,in_menu=true,defaultOrder=rate:DESC]
  */
 class WebshopTaxRate extends ModuleEntity
 {
