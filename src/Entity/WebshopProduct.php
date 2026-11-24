@@ -142,6 +142,11 @@ class WebshopProduct extends ModuleEntity
      */
     protected $manufacturer;
 
+    /**
+     * @FG\Column[type=varchar,length=255,label=Kaartlabel,group=Productinformatie,width=6,order=145]
+     * @FG\listForm[ignore=true]
+     */
+    protected $label;
 
     public function getId()
     {
@@ -162,6 +167,17 @@ class WebshopProduct extends ModuleEntity
     public function setTitle($value)
     {
         $this->title = $value;
+        return $this;
+    }
+
+    public function getLabel()
+    {
+        return $this->label;
+    }
+
+    public function setLabel($value)
+    {
+        $this->label = $value;
         return $this;
     }
 

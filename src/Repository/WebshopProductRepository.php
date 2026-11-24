@@ -2,11 +2,45 @@
 
 namespace Flexgrid\Modules\Webshop\Repository;
 
+use Flexgrid\App\Settings\Settings;
 use Flexgrid\Modules\Webshop\Entity\WebshopProduct;
 use Repository\Repository;
 
 class WebshopProductRepository extends Repository
 {
+    public const NEW_ARRIVALS_DAYS_SETTING = 'webshop_new_arrivals_days';
+    public const DEFAULT_NEW_ARRIVALS_DAYS = 7;
+
+    public static function newArrivalsConstraint(): array
+    {
+        [$cutoff, $now] = self::newArrivalsWindow();
+
+        return [
+            'sql' => 'webshopproduct.make_time > :new_arrivals_cutoff AND webshopproduct.make_time <= :new_arrivals_now',
+            'params' => [
+                ':new_arrivals_cutoff' => $cutoff,
+                ':new_arrivals_now' => $now,
+            ],
+        ];
+    }
+
+    public static function isNewArrival(WebshopProduct $product): bool
+    {
+        [$cutoff, $now] = self::newArrivalsWindow();
+        $created = (int)$product->getMakeTime();
+        return $created > $cutoff && $created <= $now;
+    }
+
+    private static function newArrivalsWindow(): array
+    {
+        new Settings();
+        $value = Settings::get(self::NEW_ARRIVALS_DAYS_SETTING)['value'] ?? self::DEFAULT_NEW_ARRIVALS_DAYS;
+        $days = filter_var($value, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0]]);
+        $days = $days === false ? self::DEFAULT_NEW_ARRIVALS_DAYS : $days;
+        $now = (int)($_SERVER['REQUEST_TIME'] ?? time());
+        return [max(0, $now - $days * 86400), $now];
+    }
+
     public function add($entity)
     {
         if (defined('__DOMAIN__') && strcasecmp((string)parse_url(__DOMAIN__, PHP_URL_HOST), 'localhost') === 0) {

@@ -716,6 +716,17 @@ class WebshopAdminController
 
         return [
             [
+                'title' => t('webshop_admin_settings_catalog', 'Catalogus'),
+                'fields' => [
+                    WebshopProductRepository::NEW_ARRIVALS_DAYS_SETTING => $this->settingField(
+                        WebshopProductRepository::NEW_ARRIVALS_DAYS_SETTING,
+                        'Aantal dagen voor Nieuw binnen',
+                        WebshopProductRepository::DEFAULT_NEW_ARRIVALS_DAYS,
+                        'number'
+                    ),
+                ],
+            ],
+            [
                 'title' => t('webshop_admin_settings_pages', 'Pagina koppelingen'),
                 'fields' => [
                     'page_product_grid_page_id' => $this->settingField('page_product_grid_page_id', 'Product grid pagina', 0, 'number'),

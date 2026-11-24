@@ -6,9 +6,9 @@ use Flexgrid\Modules\Webshop\Entity\WebshopProduct;
 
 class PriceService
 {
-    public function getCardPricing(WebshopProduct $product): array
+    public function getCardPricing(WebshopProduct $product, bool $includeVariants = true): array
     {
-        $variants = $product->getVariantClusterProducts(true);
+        $variants = $includeVariants ? $product->getVariantClusterProducts(true) : [$product];
         $variants = $variants ?: [$product];
         $prices = array_map([$this, 'getUnitPrice'], $variants);
         $pricedVariants = array_filter($variants, static function (WebshopProduct $variant): bool {

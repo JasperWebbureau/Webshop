@@ -10,6 +10,7 @@
           toggle: item.querySelector('.webshop-category-navigation__toggle'),
           dropdown: item.querySelector('.webshop-category-navigation__dropdown'),
         };
+        if (!entry.toggle || !entry.dropdown) return;
 
         entry.toggle.addEventListener('click', () => {
           if (this.active === entry && !this.openedByHover) this.close();
